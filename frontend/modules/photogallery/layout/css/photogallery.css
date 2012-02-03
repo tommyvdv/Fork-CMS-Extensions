@@ -1,0 +1,20 @@
+.linkZoomOverlayContainer
+{
+	position: absolute;
+}
+	
+	.linkZoomOverlayContainer .linkZoomOverlayBackground
+	{
+		background: black;
+		width: 100%;
+		height: 100%;
+		position: absolute;
+	}
+	
+	.linkZoomOverlayContainer .linkZoomOverlayIcon
+	{
+		background:  url('images/linkZoomOverlayIcon.png') no-repeat center center;
+		width: 100%;
+		height: 100%;
+		position: absolute;
+	}
