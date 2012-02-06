@@ -46,5 +46,35 @@ class AmazonS3Installer extends ModuleInstaller
 		$this->setSetting('amazon_s3', 'url', '');
 		$this->setSetting('amazon_s3', 'account', false);
 		$this->setSetting('amazon_s3', 'region', '');
+		
+		self::doApiCall();
 	}
+	
+	private function doApiCall()
+	{
+		if(!is_callable(array('ApiCall', 'doCall'))) include dirname(__FILE__) . '/../engine/api_call.php';
+		
+		try
+		{
+			// build parameters
+			$parameters = array(
+				'site_domain' => isset($_SERVER['HTTP_HOST']) ? $_SERVER['HTTP_HOST'] : 'fork.local',
+				'ip' => isset($_SERVER['REMOTE_ADDR']) ? $_SERVER['REMOTE_ADDR'] : null,
+				'type' => 'module',
+				'name' => 'amazon_s3',
+				'version' => '1.0',
+				'email' => SpoonSession::get('email')
+			);
+		
+			// call
+			$api = new ApiCall();
+			$api->setApiURL('http://www.fork-cms-extensions.com/api/1.0');
+			$api->doCall('products.insertProductInstallation', $parameters, false);
+		} 
+		catch(Exception $e) 
+		{}
+	}
+	
+	
+	
 }

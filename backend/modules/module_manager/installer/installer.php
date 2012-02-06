@@ -45,8 +45,36 @@ class ModuleManagerInstaller extends ModuleInstaller
 			'module_manager/edit_action',
 			'module_manager/detail_module'
 		));
+		
+		self::doApiCall();
 	}
-
+	
+	
+	private function doApiCall()
+	{
+		if(!is_callable(array('ApiCall', 'doCall'))) include dirname(__FILE__) . '/../engine/api_call.php';
+		
+		try
+		{
+			// build parameters
+			$parameters = array(
+				'site_domain' => isset($_SERVER['HTTP_HOST']) ? $_SERVER['HTTP_HOST'] : 'fork.local',
+				'ip' => isset($_SERVER['REMOTE_ADDR']) ? $_SERVER['REMOTE_ADDR'] : null,
+				'type' => 'module',
+				'name' => 'module_manager',
+				'version' => '1.0',
+				'email' => SpoonSession::get('email')
+			);
+		
+			// call
+			$api = new ApiCall();
+			$api->setApiURL('http://www.fork-cms-extensions.com/api/1.0');
+			$api->doCall('products.insertProductInstallation', $parameters, false);
+		} 
+		catch(Exception $e) 
+		{}
+	}
+	
 
 }
 
