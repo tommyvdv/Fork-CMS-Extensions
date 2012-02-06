@@ -50,7 +50,19 @@
 				<translation language="nl"><![CDATA[fotogalerij]]></translation>
 				<translation language="en"><![CDATA[photogallery]]></translation>
 			</item>
-			
+			<item type="label" name="CategoryNavigation">
+				<translation language="en"><![CDATA[category navigation]]></translation>
+				<translation language="nl"><![CDATA[categorie navigatie]]></translation>
+			</item>
+		
+			<item type="label" name="RelatedListByCategories">
+				<translation language="en"><![CDATA[related list by categories]]></translation>
+				<translation language="nl"><![CDATA[gerelateerde lijst door categorieën]]></translation>
+			</item>
+			<item type="label" name="RelatedListByTags">
+				<translation language="en"><![CDATA[related list by tags]]></translation>
+				<translation language="nl"><![CDATA[gerelateerde lijst door tags]]></translation>
+			</item>
 		</core>
 		<photogallery>
 			
@@ -93,7 +105,6 @@
 			<item type="label" name="RelatedByTags">
 				<translation language="en"><![CDATA[related by tags]]></translation>
 				<translation language="nl"><![CDATA[gerelateerd door tags]]></translation>
-				
 			</item>
 			<item type="label" name="CategoryNavigation">
 				<translation language="en"><![CDATA[category navigation]]></translation>
@@ -468,6 +479,10 @@
 			<item type="error" name="ZipOnly">
 				<translation language="en"><![CDATA[ZIP files only]]></translation>
 				<translation language="nl"><![CDATA[Alleen zip bestanden]]></translation>
+			</item>
+			<item type="message" name="NoCategoriesSelected">
+				<translation language="en"><![CDATA[No categories selected.]]></translation>
+				<translation language="nl"><![CDATA[Er zijn nog geen categorieën geselecteerd.]]></translation>
 			</item>
 		</photogallery>
 	</backend>

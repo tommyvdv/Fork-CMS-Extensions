@@ -9,12 +9,13 @@
 				{* Written on *}
 				{$widgetPhotogalleryPaged.publish_on|date:{$dateFormatLong}:{$LANGUAGE}}
 
-				{* Category *}
-				{option:widgetPhotogalleryPaged.category_title}
+				{* Category*}
+				{option:widgetPhotogalleryPaged.categories}
 					{$lblIn} {$lblThe} {$lblCategory} 
-					<a href="{$widgetPhotogalleryPaged.category_full_url}" title="{$widgetPhotogalleryPaged.category_title}">{$widgetPhotogalleryPaged.category_title}</a>
-					{option:!widgetPhotogalleryPaged.tags}.{/option:!widgetPhotogalleryPaged.tags}
-				{/option:widgetPhotogalleryPaged.category_title}
+					{iteration:widgetPhotogalleryPaged.categories}
+						<a href="{$widgetPhotogalleryPaged.categories.full_url}" rel="tag" title="{$widgetPhotogalleryPaged.categories.title}">{$widgetPhotogalleryPaged.categories.title}</a>{option:!widgetPhotogalleryPaged.categories.last}, {/option:!widgetPhotogalleryPaged.categories.last}{option:widgetPhotogalleryPaged.categories.last}.{/option:widgetPhotogalleryPaged.categories.last}
+					{/iteration:widgetPhotogalleryPaged.categories}
+				{/option:widgetPhotogalleryPaged.categories}
 			
 				{* Tags *}
 				{option:widgetPhotogalleryPaged.tags}

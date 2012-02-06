@@ -23,25 +23,23 @@ class FrontendPhotogalleryModel implements FrontendTagsInterface
 		$db = FrontendModel::getDB();
 		
 		$return =  (array) $db->getRecord(
-			'SELECT i.id, i.text, i.introduction, i.title, i.set_id, UNIX_TIMESTAMP(i.publish_on) AS publish_on, UNIX_TIMESTAMP(i.new_from) AS new_from,  UNIX_TIMESTAMP(i.new_untill) AS new_untill ,
-			c.title AS category_title, cm.url AS category_url,
+			'SELECT i.id, i.text, i.introduction, i.title, i.set_id, UNIX_TIMESTAMP(i.publish_on) AS publish_on, UNIX_TIMESTAMP(i.new_from) AS new_from,  UNIX_TIMESTAMP(i.new_untill) AS new_untill,
 			m.keywords AS meta_keywords, m.keywords_overwrite AS meta_keywords_overwrite,
 			m.description AS meta_description, m.description_overwrite AS meta_description_overwrite,
 			m.title AS meta_title, m.title_overwrite AS meta_title_overwrite,
 			m.url,
-			m.data AS meta_data
+			m.data AS meta_data,
+			GROUP_CONCAT(c.category_id) AS category_ids
 			FROM photogallery_albums AS i
 			INNER JOIN meta AS m ON m.id = i.meta_id
-			LEFT JOIN photogallery_categories AS c ON c.id = i.category_id
-			LEFT JOIN meta AS cm ON cm.id = c.meta_id
+			LEFT OUTER JOIN photogallery_categories_albums AS c ON i.id = c.album_id
 			WHERE i.id = ? AND i.language = ? AND hidden = ? AND i.num_images_not_hidden != ? AND i.publish_on <= ?
 			LIMIT 1',
 			array((int) $data['id'], FRONTEND_LANGUAGE, 'N', 0, FrontendModel::getUTCDate('Y-m-d H:i') . ':00'));
 		
 		if(empty($return)) return array();
 		
-	
-
+		$return['category_ids'] = ($return['category_ids'] != '') ? (array) explode(',', $return['category_ids']) : null;
 		
 		// unserialize
 		if(isset($return['meta_data'])) $return['meta_data'] = @unserialize($return['meta_data']);
@@ -59,7 +57,6 @@ class FrontendPhotogalleryModel implements FrontendTagsInterface
 		$categoryLink = FrontendNavigation::getURLForBlock('photogallery', 'category');
 		$detailLink = FrontendNavigation::getURLForBlock('photogallery', 'detail');
 
-		$return['category_full_url'] = $categoryLink . '/' . $return['category_url'];
 		$return['full_url'] = $detailLink . '/' . $return['url'];
 		$return['is_new'] = ($return['new_from'] <= time() && time() <= $return['new_untill']);
 		
@@ -72,6 +69,21 @@ class FrontendPhotogalleryModel implements FrontendTagsInterface
 			$image['data'] = $image['data'] != null ? unserialize($image['data']) : null;
 			$image['index'] = $i++;
 		}
+		
+		if($return['category_ids'] !== null)
+		{
+			$return['categories'] = (array) $db->getRecords('SELECT i.title, i.id, m.url
+															FROM photogallery_categories as i
+															INNER JOIN meta as m ON m.id = i.meta_id
+															WHERE i.id IN (' . implode(', ', $return['category_ids']) . ')
+														');
+
+			foreach($return['categories'] as &$category)
+			{
+				$category['full_url'] = $categoryLink . '/' . $category['url'];
+			}
+		}
+		
 
 		return $return;
 	}
