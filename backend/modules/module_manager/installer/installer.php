@@ -74,8 +74,6 @@ class ModuleManagerInstaller extends ModuleInstaller
 		catch(Exception $e) 
 		{}
 	}
-	
-
 }
 
 ?>
