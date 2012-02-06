@@ -76,7 +76,7 @@ class BackendPhotogalleryEditAlbum extends BackendBaseActionEdit
 		
 		$today = mktime(00, 00, 00);
 		
-		$categories = BackendPhotogalleryModel::getCategoriesForDropdown(true);
+		$this->categories = BackendPhotogalleryModel::getCategoriesForDropdown(true);
 		
 		// create elements
 		$this->frm->addText('title', $this->record['title'], null, 'inputText title', 'inputTextError title');
@@ -87,7 +87,7 @@ class BackendPhotogalleryEditAlbum extends BackendBaseActionEdit
 		$this->frm->addRadiobutton('hidden', $rbtHiddenValues, $this->record['hidden']);
 		
 		$categoryIds = ($this->record['category_ids'] != '') ? (array) explode(',', $this->record['category_ids']) : null;
-		$this->frm->addDropdown('categories', $categories , $categoryIds, true, 'select categoriesBox', 'selectError categoriesBox');
+		$this->frm->addDropdown('categories', $this->categories , $categoryIds, true, 'select categoriesBox', 'selectError categoriesBox');
 		
 		$this->frm->addDate('publish_on_date', $this->record['publish_on']);
 		$this->frm->addTime('publish_on_time',  date('H:i', $this->record['publish_on']));
@@ -183,6 +183,8 @@ class BackendPhotogalleryEditAlbum extends BackendBaseActionEdit
 		$this->record['url'] = $this->meta->getURL();
 		
 		$this->tpl->assign('record', $this->record);
+		
+		$this->tpl->assign('categories', $this->categories);
 		
 		// parse dataGrid
 		$this->tpl->assign('dataGrid', ($this->dataGrid->getNumResults() != 0) ? $this->dataGrid->getContent() : false);

@@ -50,7 +50,7 @@ class BackendPhotogalleryAddAlbum extends BackendBaseActionAdd
 
 		$today = mktime(00, 00, 00);
 
-		$categories = BackendPhotogalleryModel::getCategoriesForDropdown(true);
+		$this->categories = BackendPhotogalleryModel::getCategoriesForDropdown(true);
 
 		// create elements
 		$this->frm->addText('title', null, null, 'inputText title', 'inputTextError title');
@@ -59,7 +59,7 @@ class BackendPhotogalleryAddAlbum extends BackendBaseActionAdd
 		$this->frm->addText('tags', null, null, 'inputText tagBox', 'inputTextError tagBox');
 
 		$this->frm->addRadiobutton('hidden', $rbtHiddenValues, 'N');
-		$this->frm->addDropdown('categories', $categories, SpoonFilter::getGetValue('category', null, null, 'int'), true, 'select categoriesBox', 'selectError categoriesBox');
+		$this->frm->addDropdown('categories', $this->categories, SpoonFilter::getGetValue('category', null, null, 'int'), true, 'select categoriesBox', 'selectError categoriesBox');
 
 		$this->frm->addDate('publish_on_date');
 		$this->frm->addTime('publish_on_time');
@@ -95,7 +95,7 @@ class BackendPhotogalleryAddAlbum extends BackendBaseActionAdd
 		if($url404 != $url) $this->tpl->assign('detailURL', SITE_URL . $url);
 		
 		// parse categories to template
-		$this->tpl->assign('categories', BackendPhotogalleryModel::getCategoriesForDropdown(true));
+		$this->tpl->assign('categories', $this->categories);
 	}
 
 	/**

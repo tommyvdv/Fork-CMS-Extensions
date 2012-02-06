@@ -66,15 +66,17 @@
 						</div>
 					
 						{* Categories *}
-						<div class="box">
-							<div class="heading">
-								<h3>{$lblCategories|ucfirst}</h3>
+						{option:categories}
+							<div class="box">
+								<div class="heading">
+									<h3>{$lblCategories|ucfirst}</h3>
+								</div>
+								<div class="options">
+								 	<label for="categoryId">{$lblCategory|ucfirst}</label>
+								 	{$ddmCategories} {$ddmCategoriesError}
+								 </div>
 							</div>
-							<div class="options">
-							 	<label for="categoryId">{$lblCategory|ucfirst}</label>
-							 	{$ddmCategories} {$ddmCategoriesError}
-							 </div>
-						</div>
+						{/option:categories}
 						
 					</td>
 
