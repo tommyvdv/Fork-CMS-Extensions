@@ -55,7 +55,7 @@ class BackendModulemanagerAddAction extends BackendBaseActionAdd
 		$this->frm->addText('action',$action);
 		$this->frm->addDropdown('group_id', BackendModulemanagerModel::getGroupsForDropdown());
 		$this->frm->addDropdown('modules_list', BackendModulemanagerModel::getModulesForDropdown(), $this->module);
-		$this->frm->addDropdown('levels', array('1' => '1','3' => '3','5' => '5','7' => '7'), '7');
+		$this->frm->addDropdown('levels', array('1' => '1', '3' => '3', '5' => '5', '7' => '7'), '7');
 		
 		$this->frm->getField('group_id')->setDefaultElement(ucfirst(BL::getLabel('ChooseAGroup')));
 		$this->frm->getField('modules_list')->setDefaultElement(ucfirst(BL::getLabel('ChooseAModule')));
@@ -109,7 +109,7 @@ class BackendModulemanagerAddAction extends BackendBaseActionAdd
 			if($this->frm->isCorrect())
 			{
 				BackendModulemanagerModel::insertAction($item);
-				$this->redirect(BackendModel::createURLForAction('modules') . '&report=added-action');
+				$this->redirect(BackendModel::createURLForAction('detail_module') . '&report=added-action&module=' . $this->module . "#tabActions");
 			}
 		}
 	}
