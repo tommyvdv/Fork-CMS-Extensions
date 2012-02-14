@@ -12,7 +12,7 @@ Copyright (c) 2011-2012 Figure8 bvba - frederik@fork-cms-extensions.com
 
 ##### Photogallery
 
-* **You are free to use the module for your personal or non-profit website projects. 
+* **You are free to use the module for your personal website project. 
 You can get the author's permission to use the module for commercial websites by paying a fee.**
 
 * **Multi Domain License**: Allows the module to be used with an unlimited number on any commercial website you develop in the future, at no further cost.
@@ -25,7 +25,7 @@ You can get the author's permission to use the module for commercial websites by
 
 ##### Amazon S3
 
-* **You are free to use the module for your personal or non-profit website projects. 
+* **You are free to use the module for your personal website project. 
 You can get the author's permission to use the module for commercial websites by paying a fee.**
 
 * Allows the module to be used with an unlimited number on any commercial website you develop in the future, at no further cost.
