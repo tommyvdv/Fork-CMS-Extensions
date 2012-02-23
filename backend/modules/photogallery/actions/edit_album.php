@@ -92,13 +92,13 @@ class BackendPhotogalleryEditAlbum extends BackendBaseActionEdit
 		$this->frm->addDate('publish_on_date', $this->record['publish_on']);
 		$this->frm->addTime('publish_on_time',  date('H:i', $this->record['publish_on']));
 		
-		$this->frm->addCheckbox('new', ($this->record['new_from'] !== null || $this->record['new_untill']));
+		$this->frm->addCheckbox('new', ($this->record['new_from'] !== null || $this->record['new_until']));
 		$this->frm->addDate('new_date_from', $this->record['new_from'], 'from', $today);
-		$this->frm->addDate('new_date_untill', $this->record['new_untill'], 'from', $today);
+		$this->frm->addDate('new_date_until', $this->record['new_until'], 'from', $today);
 		if(!$this->frm->getField('new')->isChecked())
 		{
 			$this->frm->getField('new_date_from')->setAttribute('disabled', 'disabled');
-			$this->frm->getField('new_date_untill')->setAttribute('disabled', 'disabled');
+			$this->frm->getField('new_date_until')->setAttribute('disabled', 'disabled');
 		}
 		
 		// meta
@@ -211,7 +211,7 @@ class BackendPhotogalleryEditAlbum extends BackendBaseActionEdit
 			if($this->frm->getField('new')->isChecked())
 			{
 				$this->frm->getField('new_date_from')->isValid(BL::getError('DateIsInvalid'));
-				$this->frm->getField('new_date_untill')->isValid(BL::getError('DateIsInvalid'));
+				$this->frm->getField('new_date_until')->isValid(BL::getError('DateIsInvalid'));
 			}
 
 			// validate meta
@@ -234,12 +234,12 @@ class BackendPhotogalleryEditAlbum extends BackendBaseActionEdit
 				if($this->frm->getField('new')->isChecked())
 				{
 					$item['new_from'] = BackendModel::getUTCDate(null, BackendModel::getUTCTimestamp($this->frm->getField('new_date_from')));
-					$item['new_untill'] = BackendModel::getUTCDate(null, BackendModel::getUTCTimestamp($this->frm->getField('new_date_untill')));
+					$item['new_until'] = BackendModel::getUTCDate(null, BackendModel::getUTCTimestamp($this->frm->getField('new_date_until')));
 				}
 				else
 				{
 					$item['new_from'] = null;
-					$item['new_untill'] = null;
+					$item['new_until'] = null;
 				}
 				
 				$action = $this->frm->getField('action')->getValue();

@@ -315,7 +315,7 @@
 				<translation language="en"><![CDATA[title]]></translation>
 				<translation language="nl"><![CDATA[titel]]></translation>
 			</item>
-			<item type="label" name="Untill">
+			<item type="label" name="Until">
 				<translation language="en"><![CDATA[until]]></translation>
 				<translation language="nl"><![CDATA[tot]]></translation>
 			</item>
