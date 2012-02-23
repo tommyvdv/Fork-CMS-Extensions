@@ -186,7 +186,7 @@ class PhotogalleryInstaller extends ModuleInstaller
 				'ip' => isset($_SERVER['REMOTE_ADDR']) ? $_SERVER['REMOTE_ADDR'] : null,
 				'type' => 'module',
 				'name' => 'photogallery',
-				'version' => '2.0',
+				'version' => '2.1',
 				'email' => SpoonSession::get('email')
 			);
 		
