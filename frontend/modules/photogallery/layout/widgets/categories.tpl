@@ -1,5 +1,6 @@
-<div class="mod">
-	{option:widgetPhotogalleryCategories}
+{option:widgetPhotogalleryCategories}
+	<div class="mod">
+
 		{iteration:widgetPhotogalleryCategories}
 
 			{* Title *}
@@ -14,6 +15,7 @@
 				</a>
 
 		{/iteration:widgetPhotogalleryCategories}
-	{/option:widgetPhotogalleryCategories}
-	
-</div>
+	</div>
+{/option:widgetPhotogalleryCategories}
+
+

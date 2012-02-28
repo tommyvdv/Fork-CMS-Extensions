@@ -587,7 +587,7 @@ class BackendPhotogalleryModel
 	public static function getAlbum($id)
 	{
 		return (array) BackendModel::getDB()->getRecord(
-			'SELECT i.*, UNIX_TIMESTAMP(i.publish_on) AS publish_on,  UNIX_TIMESTAMP(i.new_from) AS new_from,  UNIX_TIMESTAMP(i.new_untill) AS new_untill , m.url,
+			'SELECT i.*, UNIX_TIMESTAMP(i.publish_on) AS publish_on,  UNIX_TIMESTAMP(i.new_from) AS new_from,  UNIX_TIMESTAMP(i.new_until) AS new_until , m.url,
 			GROUP_CONCAT(c.category_id) AS category_ids
 			FROM photogallery_albums AS i
 			INNER JOIN meta AS m ON m.id = i.meta_id

@@ -16,7 +16,7 @@ CREATE TABLE `photogallery_albums` (
   `num_images_not_hidden` int(11) NOT NULL,
   `sequence` int(11) NOT NULL,
   `new_from` datetime DEFAULT NULL,
-  `new_untill` datetime DEFAULT NULL,
+  `new_until` datetime DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `idx_status_language_hidden` (`language`,`hidden`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;

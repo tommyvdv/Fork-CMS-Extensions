@@ -133,8 +133,8 @@
 									<label for="newDateFrom">{$lblFrom|ucfirst}</label>
 									{$txtNewDateFrom} {$txtNewDateFromError}
 
-									<label for="newDateUntill">{$lblUntill}</label>
-									{$txtNewDateUntill} {$txtNewDateUntillError}
+									<label for="newDateUntil">{$lblUntil}</label>
+									{$txtNewDateUntil} {$txtNewDateUntilError}
 								</p>
 							</div>
 						</div>

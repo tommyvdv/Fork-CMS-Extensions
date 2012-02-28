@@ -66,11 +66,11 @@ class BackendPhotogalleryAddAlbum extends BackendBaseActionAdd
 
 		$this->frm->addCheckbox('new', false);
 		$this->frm->addDate('new_date_from', null, 'from', $today);
-		$this->frm->addDate('new_date_untill', null, 'from', $today);
+		$this->frm->addDate('new_date_until', null, 'from', $today);
 		if(!$this->frm->getField('new')->isChecked())
 		{
 			$this->frm->getField('new_date_from')->setAttribute('disabled', 'disabled');
-			$this->frm->getField('new_date_untill')->setAttribute('disabled', 'disabled');
+			$this->frm->getField('new_date_until')->setAttribute('disabled', 'disabled');
 		}
 
 		// meta
@@ -117,7 +117,7 @@ class BackendPhotogalleryAddAlbum extends BackendBaseActionAdd
 			if($this->frm->getField('new')->isChecked())
 			{
 				$this->frm->getField('new_date_from')->isValid(BL::getError('DateIsInvalid'));
-				$this->frm->getField('new_date_untill')->isValid(BL::getError('DateIsInvalid'));
+				$this->frm->getField('new_date_until')->isValid(BL::getError('DateIsInvalid'));
 			}
 
 
@@ -143,12 +143,12 @@ class BackendPhotogalleryAddAlbum extends BackendBaseActionAdd
 				if($this->frm->getField('new')->isChecked())
 				{
 					$item['new_from'] = BackendModel::getUTCDate(null, BackendModel::getUTCTimestamp($this->frm->getField('new_date_from')));
-					$item['new_untill'] = BackendModel::getUTCDate(null, BackendModel::getUTCTimestamp($this->frm->getField('new_date_untill')));
+					$item['new_until'] = BackendModel::getUTCDate(null, BackendModel::getUTCTimestamp($this->frm->getField('new_date_until')));
 				}
 				else
 				{
 					$item['new_from'] = null;
-					$item['new_untill'] = null;
+					$item['new_until'] = null;
 				}
 
 			  	// insert the item

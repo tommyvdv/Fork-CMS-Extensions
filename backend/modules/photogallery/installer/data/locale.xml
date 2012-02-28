@@ -66,6 +66,31 @@
 		</core>
 		<photogallery>
 			
+			 <item type="message" name="HelpMeta">
+		        <translation language="nl"><![CDATA[Toon de meta informatie van deze blogpost in de RSS feed (categorie)]]></translation>
+		        <translation language="en"><![CDATA[Show the meta information for this blogpost in the RSS feed (category)]]></translation>
+		        <translation language="it"><![CDATA[Mostra le meta informazioni di questo articolo nel feed RSS (categoria)]]></translation>
+		        <translation language="ru"><![CDATA[Показать Мета данные для записей в RSS.]]></translation>
+		        <translation language="cn"><![CDATA[在RSS源（分类）中显示博客文章的所有信息]]></translation>
+		        <translation language="hu"><![CDATA[Mutasd ennek a blogposztnak a meta információit RSS feed-ben (katagória)]]></translation>
+		        <translation language="de"><![CDATA[Zeige die Meta-Informationen für diesen Blogpost im RSS Feed (Kategorie)]]></translation>
+		        <translation language="fr"><![CDATA[Afficher les informations meta pour ce post dans le flux RSS (catégorie)]]></translation>
+		        <translation language="es"><![CDATA[muestra la meta information de este post en el RSS feed (category)]]></translation>
+		      </item>
+		
+		
+			 <item type="message" name="HelpPingServices">
+		        <translation language="nl"><![CDATA[Laat verschillende blogservices weten wanneer je een nieuw bericht plaatst.]]></translation>
+		        <translation language="en"><![CDATA[Let various blogservices know when you've posted a new article.]]></translation>
+		        <translation language="it"><![CDATA[Informa diversi blogservices quando pubblichi un nuovo articolo.]]></translation>
+		        <translation language="ru"><![CDATA[Разрешить другим блого-сервисам знать о дате новых записей.]]></translation>
+		        <translation language="cn"><![CDATA[让多个不同的博客服务提供商知道你发布了一篇新文章。]]></translation>
+		        <translation language="de"><![CDATA[Informiere verschiedene Blogging-Dienste sobald du einen neuen Artikel veröffentlicht hast.]]></translation>
+		        <translation language="hu"><![CDATA[Tudj meg több más blogszolgáltatást, mikor új cikket teszel közzé.]]></translation>
+		        <translation language="fr"><![CDATA[Informez plusieurs services de blog que vous avez posté un nouvel article.]]></translation>
+		        <translation language="es"><![CDATA[avisa a varios servicios de blog cuando publicas un nuevo artículo.]]></translation>
+		      </item>
+			
 			<item type="label" name="ItemsPerPage">
 				<translation language="en"><![CDATA[items per page]]></translation>
 				<translation language="nl"><![CDATA[items per pagina]]></translation>
@@ -315,7 +340,7 @@
 				<translation language="en"><![CDATA[title]]></translation>
 				<translation language="nl"><![CDATA[titel]]></translation>
 			</item>
-			<item type="label" name="Untill">
+			<item type="label" name="Until">
 				<translation language="en"><![CDATA[until]]></translation>
 				<translation language="nl"><![CDATA[tot]]></translation>
 			</item>
