@@ -23,7 +23,7 @@ class FrontendPhotogalleryModel implements FrontendTagsInterface
 		$db = FrontendModel::getDB();
 		
 		$return =  (array) $db->getRecord(
-			'SELECT i.id, i.text, i.introduction, i.title, i.set_id, UNIX_TIMESTAMP(i.publish_on) AS publish_on, UNIX_TIMESTAMP(i.new_from) AS new_from,  UNIX_TIMESTAMP(i.new_untill) AS new_untill,
+			'SELECT i.id, i.text, i.introduction, i.title, i.set_id, UNIX_TIMESTAMP(i.publish_on) AS publish_on, UNIX_TIMESTAMP(i.new_from) AS new_from,  UNIX_TIMESTAMP(i.new_until) AS new_until,
 			m.keywords AS meta_keywords, m.keywords_overwrite AS meta_keywords_overwrite,
 			m.description AS meta_description, m.description_overwrite AS meta_description_overwrite,
 			m.title AS meta_title, m.title_overwrite AS meta_title_overwrite,
@@ -58,7 +58,7 @@ class FrontendPhotogalleryModel implements FrontendTagsInterface
 		$detailLink = FrontendNavigation::getURLForBlock('photogallery', 'detail');
 
 		$return['full_url'] = $detailLink . '/' . $return['url'];
-		$return['is_new'] = ($return['new_from'] <= time() && time() <= $return['new_untill']);
+		$return['is_new'] = ($return['new_from'] <= time() && time() <= $return['new_until']);
 		
 		// loop
 		$i = 1;
@@ -99,7 +99,7 @@ class FrontendPhotogalleryModel implements FrontendTagsInterface
 		$db = FrontendModel::getDB();
 		
 		$return =  (array) $db->getRecord(
-			'SELECT i.id, i.text, i.introduction, i.title, i.set_id, UNIX_TIMESTAMP(i.publish_on) AS publish_on, UNIX_TIMESTAMP(i.new_from) AS new_from,  UNIX_TIMESTAMP(i.new_untill) AS new_untill ,
+			'SELECT i.id, i.text, i.introduction, i.title, i.set_id, UNIX_TIMESTAMP(i.publish_on) AS publish_on, UNIX_TIMESTAMP(i.new_from) AS new_from,  UNIX_TIMESTAMP(i.new_until) AS new_until ,
 			m.keywords AS meta_keywords, m.keywords_overwrite AS meta_keywords_overwrite,
 			m.description AS meta_description, m.description_overwrite AS meta_description_overwrite,
 			m.title AS meta_title, m.title_overwrite AS meta_title_overwrite,
@@ -134,7 +134,7 @@ class FrontendPhotogalleryModel implements FrontendTagsInterface
 		$detailLink = FrontendNavigation::getURLForBlock('photogallery', 'detail');
 
 		$return['full_url'] = $detailLink . '/' . $return['url'];
-		$return['is_new'] = ($return['new_from'] <= time() && time() <= $return['new_untill']);
+		$return['is_new'] = ($return['new_from'] <= time() && time() <= $return['new_until']);
 		
 		// loop
 		foreach($return['images'] as &$image)
@@ -391,7 +391,7 @@ class FrontendPhotogalleryModel implements FrontendTagsInterface
 		$db = FrontendModel::getDB();
 		
 		$return =  (array) $db->getRecords(
-			'SELECT i.id, i.text, i.introduction, i.title, i.set_id, UNIX_TIMESTAMP(i.publish_on) AS publish_on, UNIX_TIMESTAMP(i.new_from) AS new_from,  UNIX_TIMESTAMP(i.new_untill) AS new_untill, m.url,
+			'SELECT i.id, i.text, i.introduction, i.title, i.set_id, UNIX_TIMESTAMP(i.publish_on) AS publish_on, UNIX_TIMESTAMP(i.new_from) AS new_from,  UNIX_TIMESTAMP(i.new_until) AS new_until, m.url,
 			GROUP_CONCAT(c.category_id) AS category_ids
 			FROM photogallery_albums AS i
 			INNER JOIN meta AS m ON m.id = i.meta_id
@@ -411,7 +411,7 @@ class FrontendPhotogalleryModel implements FrontendTagsInterface
 		foreach($return as &$row)
 		{
 			$row['full_url'] = $detailLink . '/' . $row['url'];
-			$row['is_new'] = ($row['new_from'] <= time() && time() <= $row['new_untill']);
+			$row['is_new'] = ($row['new_from'] <= time() && time() <= $row['new_until']);
 			$row['image'] =  (array) $db->getRecord('SELECT i.filename, m.url, c.title, c.text, i.set_id, c.data
 														FROM photogallery_sets_images AS i
 														INNER JOIN photogallery_sets_images_content AS c ON i.id = c.set_image_id
@@ -463,7 +463,7 @@ class FrontendPhotogalleryModel implements FrontendTagsInterface
 		$db = FrontendModel::getDB();
 
 		$return =  (array) $db->getRecords(
-			'SELECT i.id, i.text, i.introduction, i.title, i.set_id, UNIX_TIMESTAMP(i.publish_on) AS publish_on, UNIX_TIMESTAMP(i.new_from) AS new_from,  UNIX_TIMESTAMP(i.new_untill) AS new_untill, m.url,
+			'SELECT i.id, i.text, i.introduction, i.title, i.set_id, UNIX_TIMESTAMP(i.publish_on) AS publish_on, UNIX_TIMESTAMP(i.new_from) AS new_from,  UNIX_TIMESTAMP(i.new_until) AS new_until, m.url,
 			GROUP_CONCAT(c.category_id) AS category_ids
 			FROM photogallery_albums AS i
 			INNER JOIN meta AS m ON m.id = i.meta_id
@@ -483,7 +483,7 @@ class FrontendPhotogalleryModel implements FrontendTagsInterface
 		foreach($return as &$row)
 		{
 			$row['full_url'] = $detailLink . '/' . $row['url'];
-			$row['is_new'] = ($row['new_from'] <= time() && time() <= $row['new_untill']);
+			$row['is_new'] = ($row['new_from'] <= time() && time() <= $row['new_until']);
 			$row['image'] =  (array) $db->getRecord('SELECT i.filename, m.url, c.title, c.text, i.set_id, c.data
 														FROM photogallery_sets_images AS i
 														INNER JOIN photogallery_sets_images_content AS c ON i.id = c.set_image_id
