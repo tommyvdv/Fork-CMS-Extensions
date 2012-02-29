@@ -80,8 +80,8 @@
 		
 		
 			 <item type="message" name="HelpPingServices">
-		        <translation language="nl"><![CDATA[Laat verschillende blogservices weten wanneer je een nieuw bericht plaatst.]]></translation>
-		        <translation language="en"><![CDATA[Let various blogservices know when you've posted a new article.]]></translation>
+		        <translation language="nl"><![CDATA[Laat verschillende blogservices weten wanneer je een nieuw album plaatst.]]></translation>
+		        <translation language="en"><![CDATA[Let various blogservices know when you've posted a new album.]]></translation>
 		        <translation language="it"><![CDATA[Informa diversi blogservices quando pubblichi un nuovo articolo.]]></translation>
 		        <translation language="ru"><![CDATA[Разрешить другим блого-сервисам знать о дате новых записей.]]></translation>
 		        <translation language="cn"><![CDATA[让多个不同的博客服务提供商知道你发布了一篇新文章。]]></translation>
