@@ -39,7 +39,7 @@ class BackendPhotogalleryDeleteImage extends BackendBaseActionDelete
 			$emptySetsAfterDelete =  $deleted['empty_set_ids'];
 			
 			// Delete cronjob
-			BackendAmazonS3Model::deleteCronjobByData($this->URL->getModule(), 's:8:"image_id";i:' . (int) $this->id . ';');
+			if(BackendPhotogalleryHelper::existsAmazonS3()) BackendAmazonS3Model::deleteCronjobByData($this->URL->getModule(), 's:8:"image_id";i:' . (int) $this->id . ';');
 
 			// Delete files
 			$setsFilesPath = FRONTEND_FILES_PATH . '/' . $this->URL->getModule() . '/sets';
