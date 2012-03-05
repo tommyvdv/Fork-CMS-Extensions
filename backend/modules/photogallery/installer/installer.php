@@ -125,7 +125,7 @@ class PhotogalleryInstaller extends ModuleInstaller
 		$this->setSetting('photogallery', 's3_region', '');
 		
 		// ping service (feedburner)
-		$this->setSetting('photogallery', 'ping_services', true);
+		$this->setSetting('photogallery', 'ping_services', false);
 
 		$db = $this->getDB();
 
