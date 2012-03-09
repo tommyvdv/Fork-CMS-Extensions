@@ -22,7 +22,7 @@ class PhotogalleryInstaller extends ModuleInstaller
 		// load install.sql
 		//$this->importSQL(dirname(__FILE__) . '/data/install.sql');
 
-		// add 'blog' as a module
+		// add 'photogallery' as a module
 		$this->addModule('photogallery', 'The multilingual photogallery with dynamic widgets.');
 
 		// import locale
@@ -136,7 +136,7 @@ class PhotogalleryInstaller extends ModuleInstaller
 		$db->insert('photogallery_extras_resolutions', array('extra_id' => $extraId, 'width' => 200, 'height' => 200, 'method' => 'crop', 'kind' => 'album_overview_thumbnail'));
 		
 		// Module Extra
-		$this->insertExtra('photogallery', 'block', 'Photogallery', null, serialize(array('action' => 'lightbox', 'display' => 'albums', 'extra_id' => $extraId)));
+		$extraBlockId = $this->insertExtra('photogallery', 'block', 'Photogallery', null, serialize(array('action' => 'lightbox', 'display' => 'albums', 'extra_id' => $extraId)));
 
 		// Slideshow
 		$extraId = $db->insert('photogallery_extras', array('action' => 'slideshow', 'kind' => 'widget', 'allow_delete' => 'Y', 'edited_on' => gmdate('Y-m-d H:i:00'), 'created_on' => gmdate('Y-m-d H:i:00')));
@@ -172,8 +172,35 @@ class PhotogalleryInstaller extends ModuleInstaller
 			$this->setSetting('photogallery', 'rss_description_' . $language, '');
 		}
 		
+		// Insert page
+		self::insertPhotogalleryPage('Photogallery', $extraBlockId );
+		
+		// Do API Call
 		self::doApiCall();
 	}
+
+	private function insertPhotogalleryPage($title, $extraId)
+	{
+		// loop languages
+		foreach($this->getLanguages() as $language)
+		{
+			
+			// check if a page for blog already exists in this language
+			if(!(bool) $this->getDB()->getVar('SELECT COUNT(p.id)
+												FROM pages AS p
+												INNER JOIN pages_blocks AS b ON b.revision_id = p.revision_id
+												WHERE b.extra_id = ? AND p.language = ?',
+												array($extraId, $language)))
+			{
+				$this->insertPage(
+					array('title' =>  $title, 'language' => $language, 'type' => 'root'),
+					null,
+					array('extra_id' => $extraId, 'position' => 'main')
+				);
+			}
+		}
+	}
+
 	private function doApiCall()
 	{
 		if(!is_callable(array('ApiCall', 'doCall'))) include dirname(__FILE__) . '/../engine/api_call.php';
