@@ -12,6 +12,83 @@
  */
 class FrontendPhotogalleryModel implements FrontendTagsInterface
 {
+	
+	public static function getCategoryNavigationHTML($tpl = 'navigation.tpl')
+	{
+		/* 
+			HOW TO USE
+			====================
+			
+			Add this piece of code in /frontend/core/navigaton.php on L318
+		
+			if(($navigation[$type][$parentId][$id]['link'] == FrontendNavigation::getUrlForBlock('photogallery')))
+			{
+				$navigation[$type][$parentId][$id]['children'] = FrontendPhotogalleryModel::getCategoryNavigationHTML();
+				continue;
+			}
+		
+		*/
+		
+		// Get DB
+		$db = FrontendModel::getDB();
+		
+		// Get all categories
+		$categories = (array) self::getAllCategories();
+		
+		// Get URL's
+		$urlCategory = FrontendNavigation::getURLForBlock('products','category');
+		$urlDetail = FrontendNavigation::getURLForBlock('products','detail');
+		
+		// Loop categories
+		foreach($categories as $categoryKey => $category)
+		{
+			// Set variabels needed for the template
+			$categories[$categoryKey]['link'] = $urlCategory . '/' . $category['url'];
+			$categories[$categoryKey]['navigation_title'] = $category['label'];
+			
+			// Get children for categories
+			$albums = self::getAllForCategory($category['url']);
+			
+			// Has children?
+			if(!empty($albums))
+			{
+				foreach($albums as $albumKey => $child)
+				{
+					// Set variabels needed for the template
+					$albums[$albumKey]['link'] = $urlDetail . '/' . $child['url'];
+					$albums[$albumKey]['navigation_title'] = $child['title'];
+					$albums[$albumKey]['children'] = false;
+				}
+				
+				// create template
+				$categoriesChildrenTpl = new FrontendTemplate(false);
+
+				// assign navigation to template
+				$categoriesChildrenTpl->assign('navigation', $albums);
+
+				// return parsed content
+				$categories[$categoryKey]['children'] = $categoriesChildrenTpl->getContent(FRONTEND_PATH . '/themes/' . FrontendModel::getModuleSetting('core', 'theme', 'default') . '/core/layout/templates/' . (string) $tpl, true, true);
+			}
+			else
+			{
+				$categories[$categoryKey]['children'] = false;
+			}
+		}
+		
+		// create template
+		$categoriesTpl = new FrontendTemplate(false);
+
+		// assign navigation to template
+		$categoriesTpl->assign('navigation', $categories);
+
+		// return parsed content
+		$return =  $categoriesTpl->getContent(FRONTEND_PATH . '/themes/' . FrontendModel::getModuleSetting('core', 'theme', 'default') . '/core/layout/templates/' . (string) $tpl, true, true);
+		
+		return $return;
+	}
+	
+	
+	
 	/**
 	 * Get the album data
 	 *
