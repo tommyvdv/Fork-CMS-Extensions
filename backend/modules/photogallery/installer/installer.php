@@ -20,7 +20,7 @@ class PhotogalleryInstaller extends ModuleInstaller
 	public function install()
 	{
 		// load install.sql
-		//$this->importSQL(dirname(__FILE__) . '/data/install.sql');
+		$this->importSQL(dirname(__FILE__) . '/data/install.sql');
 
 		// add 'photogallery' as a module
 		$this->addModule('photogallery', 'The multilingual photogallery with dynamic widgets.');
