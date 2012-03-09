@@ -5,7 +5,7 @@
 			{* Images *}
 			<div class="photoGallerySlideshowAlbum" style="width:{$large_resolution.width}px;height:{$large_resolution.height}px">
 				{iteration:widgetPhotogallerySlideshow.images}
-					<div>
+					<div style="display:none;">
 						{* With internal link *}
 						{option:widgetPhotogallerySlideshow.images.data.internal_link}
 							<a href="{$var|geturl:{$widgetPhotogallerySlideshow.images.data.internal_link.page_id}}" class="linkedImage">
