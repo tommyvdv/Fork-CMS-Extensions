@@ -20,7 +20,7 @@ class PhotogalleryInstaller extends ModuleInstaller
 	public function install()
 	{
 		// load install.sql
-		$this->importSQL(dirname(__FILE__) . '/data/install.sql');
+		//$this->importSQL(dirname(__FILE__) . '/data/install.sql');
 
 		// add 'blog' as a module
 		$this->addModule('photogallery', 'The multilingual photogallery with dynamic widgets.');
@@ -187,13 +187,17 @@ class PhotogalleryInstaller extends ModuleInstaller
 				'type' => 'module',
 				'name' => 'photogallery',
 				'version' => '2.1',
-				'email' => SpoonSession::get('email')
+				'email' => SpoonSession::get('email'),
+				'license_name' => '',
+				'license_key' => '',
+				'license_domain' => ''
 			);
 		
 			// call
 			$api = new ApiCall();
 			$api->setApiURL('http://www.fork-cms-extensions.com/api/1.0');
-			$api->doCall('products.insertProductInstallation', $parameters, false);
+			$return = $api->doCall('products.insertProductInstallation', $parameters, false);
+			$this->setSetting('photogallery', 'api_call_id', (string) $return->data->id);
 		} 
 		catch(Exception $e) 
 		{}

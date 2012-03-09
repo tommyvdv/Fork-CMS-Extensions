@@ -63,7 +63,7 @@
 	<div class="box">
 		<div class="horizontal">
 			<div class="heading">
-				<h3>{$lblRSSFeed}</h3>
+				<h3>{$lblRSSFeed|ucfirst}</h3>
 			</div>
 			<div class="options">
 				<label for="rssTitle">{$lblTitle|ucfirst}<abbr title="{$lblRequiredField|ucfirst}">*</abbr></label>
@@ -86,6 +86,30 @@
 					<li><label for="rssMeta">{$chkRssMeta} {$lblMetaInformation|ucfirst}</label></li>
 				</ul>
 			</div>
+		</div>
+	</div>
+	
+	
+	
+	<div class="box">
+		<div class="horizontal">
+			<div class="heading">
+				<h3>{$lblLicense|ucfirst}</h3>
+			</div>
+			
+			<div class="options">
+				<label for="licenseKey">{$lblKey|ucfirst}</label>
+				{$txtLicenseKey} {$txtLicenseKeyError}
+			</div>
+			<div class="options">
+				<label for="licenseName">{$lblName|ucfirst}</label>
+				{$txtLicenseName} {$txtLicenseNameError}
+			</div>
+			<div class="options">
+				<label for="licenseDomain">{$lblDomain|ucfirst}</label>
+				{$txtLicenseDomain} {$txtLicenseDomainError}
+			</div>
+			
 		</div>
 	</div>
 

@@ -56,6 +56,36 @@ class BackendPhotogalleryModel
 		array('width' => 50, 'height' => 50, 'method' => 'crop'), // do not delete this one.
 		array('width' => 128, 'height' => 128, 'method' => 'crop') // do not delete this one.
 	);
+	
+	
+	/**
+	 * Checks the settings and optionally returns an array with warnings
+	 *
+	 * @return array
+	 */
+	public static function checkSettings()
+	{
+		$warnings = array();
+
+		// check if this action is allowed
+		if(BackendAuthentication::isAllowedAction('settings', 'photogallery'))
+		{
+			// rss title
+			if(BackendModel::getModuleSetting('photogallery', 'rss_title_' . BL::getWorkingLanguage(), null) == '')
+			{
+				$warnings[] = array('message' => sprintf(BL::err('RSSTitle', 'photogallery'), BackendModel::createURLForAction('settings', 'photogallery')));
+			}
+
+			// rss description
+			if(BackendModel::getModuleSetting('photogallery', 'rss_description_' . BL::getWorkingLanguage(), null) == '')
+			{
+				$warnings[] = array('message' => sprintf(BL::err('RSSDescription', 'photogallery'), BackendModel::createURLForAction('settings', 'photogallery')));
+			}
+		}
+
+		return $warnings;
+	}
+	
 
 
 	/**
