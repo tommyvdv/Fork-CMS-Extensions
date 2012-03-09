@@ -158,7 +158,6 @@ class BackendPhotogallerySettings extends BackendBaseActionEdit
 							} 
 							catch(Exception $e) 
 							{
-								Spoon::dump($e);
 							}
 						}
 					}
