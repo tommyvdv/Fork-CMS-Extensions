@@ -25,7 +25,7 @@ $(document).ready(function() {
 				closeClick: true
 			},
 			buttons : {
-				tpl: '<div id="fancybox-buttons"><ul><li><a class="btnPrev linkedImage" title="Previous" href="javascript:$.fancybox.prev();">Previous</a></li><li><a class="btnPlay linkedImage" title="Slideshow" href="javascript:$.fancybox.play();;">Play</a></li><li><a class="btnNext linkedImage" title="Next" href="javascript:$.fancybox.next();">Next</a></li><li><a class="btnToggle linkedImage" title="Toggle size" href="javascript:$.fancybox.toggle();">Toggle</a></li><li><a class="btnClose linkedImage" title="Close" href="javascript:$.fancybox.close();">Close</a></li></ul></div>'
+				tpl: '<div id="fancybox-buttons"><ul><li><a class="btnPrev linkedImage" title="Previous" href="javascript:$.fancybox.prev();">Previous</a></li><li><a class="btnPlay linkedImage" title="Slideshow" href="javascript:$.fancybox.play();">Play</a></li><li><a class="btnNext linkedImage" title="Next" href="javascript:$.fancybox.next();">Next</a></li><li><a class="btnToggle linkedImage" title="Toggle size" href="javascript:$.fancybox.toggle();">Toggle</a></li><li><a class="btnClose linkedImage" title="Close" href="javascript:$.fancybox.close();">Close</a></li></ul></div>'
 			},
 			thumbs	: {
 				width	: 50,
