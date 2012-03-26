@@ -1,21 +1,17 @@
 {option:widgetPhotogalleryCategories}
-	<div class="mod">
+	{iteration:widgetPhotogalleryCategories}
 
-		{iteration:widgetPhotogalleryCategories}
+		{* Title *}
+			<h3>
+				<a href="{$widgetPhotogalleryCategories.full_url}" title="{$widgetPhotogalleryCategories.label}">{$widgetPhotogalleryCategories.label}</a>
+			</h3>
 
-			{* Title *}
-				<h3>
-					<a href="{$widgetPhotogalleryCategories.full_url}" title="{$widgetPhotogalleryCategories.label}">{$widgetPhotogalleryCategories.label}</a>
-				</h3>
+		{* Image *}
+			<a href="{$widgetPhotogalleryCategories.full_url}"  class="linkedImage" title="{$widgetPhotogalleryCategories.label}">
+				<img src="{$widgetPhotogalleryCategories.filename_url}" alt="{$widgetPhotogalleryCategories.image.title}" title="{$widgetPhotogalleryCategories.label}" />
+			</a>
 
-
-			{* Image *}
-				<a href="{$widgetPhotogalleryCategories.full_url}"  class="linkedImage" title="{$widgetPhotogalleryCategories.label}">
-					<img src="{$widgetPhotogalleryCategories.filename_url}" alt="{$widgetPhotogalleryCategories.image.title}" title="{$widgetPhotogalleryCategories.label}" />
-				</a>
-
-		{/iteration:widgetPhotogalleryCategories}
-	</div>
+	{/iteration:widgetPhotogalleryCategories}
 {/option:widgetPhotogalleryCategories}
 
 
