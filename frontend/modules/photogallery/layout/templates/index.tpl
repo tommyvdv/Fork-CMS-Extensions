@@ -1,9 +1,6 @@
 {* Albums *}
 	{option:displayAlbums}
 
-		{* RSS link *}
-			<a id="RSSfeed" href="{$var|geturlforblock:'photogallery':'rss'}">{$lblSubscribeToTheRSSFeed|ucfirst}</a>
-
 		{option:modulePhotogalleryAlbums}
 			{iteration:modulePhotogalleryAlbums}
 
@@ -46,6 +43,10 @@
 					</a>
 
 			{/iteration:modulePhotogalleryAlbums}
+			
+			{* RSS link *}
+				<p><a id="RSSfeed" href="{$var|geturlforblock:'photogallery':'rss'}">{$lblSubscribeToTheRSSFeed|ucfirst}</a></p>
+				
 		{/option:modulePhotogalleryAlbums}
 	{/option:displayAlbums}
 
@@ -65,5 +66,9 @@
 					</a>
 
 			{/iteration:modulePhotogalleryCategories}
+			
+			{* RSS link *}
+				<p><a id="RSSfeed" href="{$var|geturlforblock:'photogallery':'rss'}">{$lblSubscribeToTheRSSFeed|ucfirst}</a></p>
+				
 		{/option:modulePhotogalleryCategories}
 	{/option:displayCategories}
