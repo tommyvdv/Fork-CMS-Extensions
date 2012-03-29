@@ -200,7 +200,7 @@ class BackendPhotogalleryAddAlbum extends BackendBaseActionAdd
 				}
 
 				// add search index
-				if(is_callable(array('BackendSearchModel', 'addIndex'))) BackendSearchModel::addIndex('photogallery', $item['id'], array('title' => $item['title'], 'text' => $item['text']));
+				BackendSearchModel::saveIndex('photogallery', $item['id'], array('title' => $item['title'], 'text' => $item['text']));
 
 				// ping
 				if(BackendModel::getModuleSetting($this->getModule(), 'ping_services', false)) BackendModel::ping(SITE_URL . BackendModel::getURLForBlock('photogallery', 'detail') . '/' . $this->meta->getURL());
