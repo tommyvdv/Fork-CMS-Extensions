@@ -4,6 +4,7 @@ $(document).ready(function() {
 		prevEffect: 'elastic',
 		closeBtn: false,
 		closeClick: false,
+		modal:false,
 		tpl: {
 			closeBtn: '<div title="Close" class="fancybox-item fancybox-close linkedImage"></div>',
 			next: '<a title="Next" class="fancybox-item fancybox-next linkedImage"><span></span></a>',
@@ -43,8 +44,6 @@ $(document).ready(function() {
 	});
 
 	// if actLightboxImage parameter is set, show image on page load
-	if(utils.url.getGetValue('{$actLightboxImage}'))
-	{
-		$(".photogalleryDetailLightbox li a[data-image_id=" + utils.url.getGetValue('{$actLightboxImage}') + "]").trigger('click');
-	}
+	var imageId = utils.url.getGetValue('{$actLightboxImage}');
+	if(imageId) $(".photogalleryDetailLightbox li a[data-image_id=" + imageId + "]").trigger('click');
 });
