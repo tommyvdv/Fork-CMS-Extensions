@@ -36,8 +36,9 @@ class FrontendPhotogalleryModel implements FrontendTagsInterface
 		$categories = (array) self::getAllCategories();
 		
 		// Get URL's
-		$urlCategory = FrontendNavigation::getURLForBlock('products','category');
-		$urlDetail = FrontendNavigation::getURLForBlock('products','detail');
+		$urlCategory = FrontendNavigation::getURLForBlock('photogallery','category');
+		$urlDetail = FrontendNavigation::getURLForBlock('photogallery','detail');
+		$categoryParam = Spoon::get('url')->getParameter(1);
 		
 		// Loop categories
 		foreach($categories as $categoryKey => $category)
@@ -48,6 +49,11 @@ class FrontendPhotogalleryModel implements FrontendTagsInterface
 			
 			// Get children for categories
 			$albums = self::getAllForCategory($category['url']);
+			
+			// Is the page selected?
+			$selected = $category['url'] == $categoryParam;
+			$categories[$categoryKey]['selected'] = $selected;
+			
 			
 			// Has children?
 			if(!empty($albums))
@@ -973,7 +979,7 @@ class FrontendPhotogalleryModel implements FrontendTagsInterface
 			array('N', FRONTEND_LANGUAGE, date('Y-m-d H:i') . ':00', 0), 'id'
 		);
 
-		$url = FrontendNavigation::getURLForBlock('projects', 'detail');
+		$url = FrontendNavigation::getURLForBlock('photogallery', 'detail');
 		
 		// prepare items for search
 		foreach($items as &$item)

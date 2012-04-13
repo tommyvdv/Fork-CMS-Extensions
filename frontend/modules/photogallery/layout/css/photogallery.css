@@ -18,3 +18,20 @@
 		height: 100%;
 		position: absolute;
 	}
+	
+
+ul.photogalleryLightbox li,
+ul.photogalleryDetailLightbox li,
+ul.photoGalleryPaged li,
+ul.photoGalleryRelatedByCategories li,
+ul.photoGalleryRelatedByTags li
+{
+	float: left;
+	margin:0 10px 10px 0;
+}
+
+.photogalleryLightbox .caption,
+.photogalleryDetailLightbox .caption
+{
+	display:none;
+}

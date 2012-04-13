@@ -49,7 +49,7 @@
 {* Lightbox *}
 	{option:lightbox}
 		{option:blockPhotogalleryAlbum.images}
-			<ul class="photogalleryLightbox">
+			<ul class="photogalleryDetailLightbox">
 				{iteration:blockPhotogalleryAlbum.images}
 				<li>
 					<a data-image_id="{$blockPhotogalleryAlbum.images.id}" href="{$blockPhotogalleryAlbum.images.large_url}" rel="{$blockPhotogalleryAlbum.id}" class="linkedImage linkZoomOverlay" title="{$blockPhotogalleryAlbum.images.title}">
@@ -83,7 +83,7 @@
 
 
 {* Navigation *}
-	<ul>
+	<ul class="photogalleryDetailAlbumsNavigation">
 		{option:blockPhotogalleryAlbumNavigation.previous}
 			<li class="previousLink">
 				<a href="{$blockPhotogalleryAlbumNavigation.previous.url}" rel="prev">{$lblPreviousAlbum|ucfirst}: <em>{$blockPhotogalleryAlbumNavigation.previous.title}</em></a>
@@ -98,7 +98,8 @@
 	
 	
 {* Navigation in the same category *}
-	<ul>
+{*
+	<ul class="photogalleryDetailAlbumsInCategoryNavigation">
 		{option:blockPhotogalleryAlbumNavigationInCategory.previous}
 			<li class="previousLink">
 				<a href="{$blockPhotogalleryAlbumNavigationInCategory.previous.url}" rel="prev">{$lblPreviousAlbum|ucfirst}: <em>{$blockPhotogalleryAlbumNavigationInCategory.previous.title}</em></a>
@@ -110,3 +111,4 @@
 			</li>
 		{/option:blockPhotogalleryAlbumNavigationInCategory.next}
 	</ul>
+*}

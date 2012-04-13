@@ -1,5 +1,5 @@
 $(document).ready(function() {
-	$(".photogalleryLightbox li a").fancybox({
+	$(".photogalleryLightbox li a, .photogalleryDetailLightbox li a").fancybox({
 		nextEffect: 'elastic', // elastic, fade or none. default: elastic
 		prevEffect: 'elastic',
 		closeBtn: false,
@@ -45,6 +45,6 @@ $(document).ready(function() {
 	// if actLightboxImage parameter is set, show image on page load
 	if(utils.url.getGetValue('{$actLightboxImage}'))
 	{
-		$(".photogalleryLightbox li a[data-image_id=" + utils.url.getGetValue('{$actLightboxImage}') + "]").trigger('click');
+		$(".photogalleryDetailLightbox li a[data-image_id=" + utils.url.getGetValue('{$actLightboxImage}') + "]").trigger('click');
 	}
 });
