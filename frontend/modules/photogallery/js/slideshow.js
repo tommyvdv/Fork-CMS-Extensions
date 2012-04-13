@@ -11,7 +11,7 @@ $(document).ready(function()
 			activePagerClass: 'selected',
 		    pagerAnchorBuilder: function(idx, slide)
 			{ 
-				return elPager.find('li:eq(' + idx + ') a');
+				if(elPager.length) return elPager.find('li:eq(' + idx + ') a');
 			},
 			after: function(currentImage, nextImage, options)
 			{

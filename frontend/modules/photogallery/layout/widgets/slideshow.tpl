@@ -31,7 +31,6 @@
 			</div>
 			
 			{* Pager *}
-			{* Do not delete the parent element, you can delete the list element inside it. *}
 				<div class="photoGallerySlideshowPager">
 					<ul>
 						{iteration:widgetPhotogallerySlideshow.images}
