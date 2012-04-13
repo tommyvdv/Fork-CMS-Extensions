@@ -67,5 +67,5 @@
 
 $(document).ready(function ()
 {
-	$('a.linkZoomOverlay').linkZoomIcon({background:{css:{'opacity': .65}}});
+	$('a.linkZoomOverlay').linkZoomIcon({background:{css:{'opacity': 0.65}}});
 });
