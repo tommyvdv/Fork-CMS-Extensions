@@ -51,14 +51,14 @@
 			elBackground.css(opts.background.css);
 			elIcon.css(opts.icon.css);
 			
-			// Appending
+			// Prepending
 			$(this).prepend(elContainer);
 			elContainer.prepend(elIcon);
 			elContainer.prepend(elBackground);
 		},
 		function ()
 		{
-			// Hide container
+			// Remove container
 			$this.find('div.' + opts.container.class).remove();
 		}); 
 	};
