@@ -623,7 +623,6 @@ class BackendPhotogalleryModel
 			INNER JOIN meta AS m ON m.id = i.meta_id
 			LEFT OUTER JOIN photogallery_categories_albums AS c ON i.id = c.album_id
 			WHERE i.id = ?
-			GROUP BY c.category_id
 			LIMIT 1',
 			array((int) $id));
 	}

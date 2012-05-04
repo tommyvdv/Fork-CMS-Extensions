@@ -93,8 +93,8 @@ class BackendPhotogalleryEditAlbum extends BackendBaseActionEdit
 		$this->frm->addTime('publish_on_time',  date('H:i', $this->record['publish_on']));
 		
 		$this->frm->addCheckbox('new', ($this->record['new_from'] !== null || $this->record['new_until']));
-		$this->frm->addDate('new_date_from', $this->record['new_from'], 'from', $today);
-		$this->frm->addDate('new_date_until', $this->record['new_until'], 'from', $today);
+		$this->frm->addDate('new_date_from', $this->record['new_from'], null, $today);
+		$this->frm->addDate('new_date_until', $this->record['new_until'], null, $today);
 		if(!$this->frm->getField('new')->isChecked())
 		{
 			$this->frm->getField('new_date_from')->setAttribute('disabled', 'disabled');
