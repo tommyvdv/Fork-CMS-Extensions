@@ -1,9 +1,9 @@
 {* Images *}
 	{option:widgetPhotogallerySlideshow.images}
-		<div class="photoGallerySlideshowWrapper photoGallerySlideshowWrapperId{$widgetPhotogallerySlideshow.id}">
+		<div class="photogallerySlideshowWrapper photogallerySlideshowWrapperId{$widgetPhotogallerySlideshow.id}">
 			
 			{* Images *}
-			<div class="photoGallerySlideshowAlbum" style="width:{$large_resolution.width}px;height:{$large_resolution.height}px">
+			<div class="photogallerySlideshowAlbum" style="width:{$large_resolution.width}px;height:{$large_resolution.height}px">
 				{iteration:widgetPhotogallerySlideshow.images}
 					<div style="display:none;">
 						{* With internal link *}
@@ -31,7 +31,7 @@
 			</div>
 			
 			{* Pager *}
-				<div class="photoGallerySlideshowPager">
+				<div class="photogallerySlideshowPager">
 					<ul>
 						{iteration:widgetPhotogallerySlideshow.images}
 							<li><a href="#">{$widgetPhotogallerySlideshow.images.index}</a></li>
@@ -40,7 +40,7 @@
 				</div>
 
 			{* Captions *}
-				<div class="photoGallerySlideshowCaptions">
+				<div class="photogallerySlideshowCaptions">
 					{iteration:widgetPhotogallerySlideshow.images}
 						{* Do not remove this div, you can change the class *}
 						<div class="caption">

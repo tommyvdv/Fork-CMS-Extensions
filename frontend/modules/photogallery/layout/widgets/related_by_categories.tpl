@@ -1,6 +1,6 @@
 {option:widgetPhotogalleryRelatedByCategories}
-	<div class="photoGalleryRelatedByCategoriesWrapper photoGalleryRelatedByCategoriesId{$widgetPhotogalleryRelatedByCategories.id}">
-		<ul class="photoGalleryRelatedByCategories">
+	<div class="photogalleryRelatedByCategoriesWrapper photogalleryRelatedByCategoriesId{$widgetPhotogalleryRelatedByCategories.id}">
+		<ul class="photogalleryRelatedByCategories">
 			{iteration:widgetPhotogalleryRelatedByCategories}
 			<li>
 				<a href="{$widgetPhotogalleryRelatedByCategories.full_url}" rel="{$widgetPhotogalleryRelatedByCategories.id}" class="linkedImage" title="{$widgetPhotogalleryRelatedByCategories.image.title}">

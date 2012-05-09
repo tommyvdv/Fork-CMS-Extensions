@@ -1,8 +1,8 @@
 $(document).ready(function()
 {
-	$('.photoGallerySlideshowAlbum').each(function(index, value)
+	$('.photogallerySlideshowAlbum').each(function(index, value)
 	{
-		var elPager = $(this).parent().find('.photoGallerySlideshowPager');
+		var elPager = $(this).parent().find('.photogallerySlideshowPager');
 		
 	    $($(this)).cycle(
 		{
@@ -15,7 +15,7 @@ $(document).ready(function()
 			},
 			after: function(currentImage, nextImage, options)
 			{
-				var captions = $(this).parent().parent().find('.photoGallerySlideshowCaptions').children().hide();
+				var captions = $(this).parent().parent().find('.photogallerySlideshowCaptions').children().hide();
 				var caption = $(captions[options.currSlide]);
 				caption.show();
 			}

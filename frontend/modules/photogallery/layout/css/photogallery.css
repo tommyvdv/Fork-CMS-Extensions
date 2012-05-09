@@ -22,9 +22,9 @@
 
 ul.photogalleryLightbox li,
 ul.photogalleryDetailLightbox li,
-ul.photoGalleryPaged li,
-ul.photoGalleryRelatedByCategories li,
-ul.photoGalleryRelatedByTags li
+ul.photogalleryPaged li,
+ul.photogalleryRelatedByCategories li,
+ul.photogalleryRelatedByTags li
 {
 	float: left;
 	margin:0 10px 10px 0;

@@ -1,7 +1,7 @@
 {* Images *}
 	{option:widgetPhotogallerySlideshow.images}
-		<div class="photoGallerySlideshowWrapper">	
-			<div class="photoGallerySlideshow" id="photoGallerySlideshowAlbum{$widgetPhotogallerySlideshow.id}ExtraId{$data.extra_id}" style="width:{$large_resolution.width}px;height:{$large_resolution.height}px">
+		<div class="photogallerySlideshowWrapper">	
+			<div class="photogallerySlideshow" id="photogallerySlideshowAlbum{$widgetPhotogallerySlideshow.id}ExtraId{$data.extra_id}" style="width:{$large_resolution.width}px;height:{$large_resolution.height}px">
 				{iteration:widgetPhotogallerySlideshow.images}
 		
 					{* With internal link *}
@@ -29,9 +29,9 @@
 			</div>
 		
 			{* Captions *}
-			<div class="photoGallerySlideshowCaptions">
+			<div class="photogallerySlideshowCaptions">
 				{iteration:widgetPhotogallerySlideshow.images}			
-					<div class="caption" id="photoGallerySlideshowAlbumImageCaption{$widgetPhotogallerySlideshow.images.id}ExtraId{$data.extra_id}">
+					<div class="caption" id="photogallerySlideshowAlbumImageCaption{$widgetPhotogallerySlideshow.images.id}ExtraId{$data.extra_id}">
 						{option:widgetPhotogallerySlideshow.images.title}
 							<h3>{$widgetPhotogallerySlideshow.images.title}</h3>
 						{/option:widgetPhotogallerySlideshow.images.title}
@@ -43,21 +43,21 @@
 	{/option:widgetPhotogallerySlideshow.images}
 	
 	{* Caption display *}
-		<div class="photoGallerySlideshowAlbumCaptionDisplay" id="photoGallerySlideshowAlbumCaptionDisplay{$widgetPhotogallerySlideshow.id}ExtraId{$data.extra_id}">
+		<div class="photogallerySlideshowAlbumCaptionDisplay" id="photogallerySlideshowAlbumCaptionDisplay{$widgetPhotogallerySlideshow.id}ExtraId{$data.extra_id}">
 			{* Caption will come here *}
 		</div>
 
 {* Javascript *}
 	<script type="text/javascript" charset="utf-8">
 		$(document).ready(function() {
-		    $('#photoGallerySlideshowAlbum{$widgetPhotogallerySlideshow.id}ExtraId{$data.extra_id}').cycle({
+		    $('#photogallerySlideshowAlbum{$widgetPhotogallerySlideshow.id}ExtraId{$data.extra_id}').cycle({
 				fx: 'fade',
 				before: function()
 				{
 					var id = $(this).data('id');
 					var extra_id = $(this).data('extra_id')
-					var caption = $('#photoGallerySlideshowAlbumImageCaption' + id + 'ExtraId' + extra_id).html();
-					$('#photoGallerySlideshowAlbumCaptionDisplay{$widgetPhotogallerySlideshow.id}ExtraId{$data.extra_id}').html(caption);
+					var caption = $('#photogallerySlideshowAlbumImageCaption' + id + 'ExtraId' + extra_id).html();
+					$('#photogallerySlideshowAlbumCaptionDisplay{$widgetPhotogallerySlideshow.id}ExtraId{$data.extra_id}').html(caption);
 				}
 			});
 		});

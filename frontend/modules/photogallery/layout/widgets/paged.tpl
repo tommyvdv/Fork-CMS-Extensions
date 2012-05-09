@@ -1,5 +1,5 @@
 {option:widgetPhotogalleryPaged.images}
-	<div class="photoGalleryPagedWrapper photoGalleryPagedId{$widgetPhotogalleryPaged.id}">
+	<div class="photogalleryPagedWrapper photogalleryPagedId{$widgetPhotogalleryPaged.id}">
 	{* Title *}
 		<h3>{$widgetPhotogalleryPaged.title}</h3>
 	
@@ -39,7 +39,7 @@
 		{/option:!widgetPhotogalleryPaged.introduction}
 	
 	{* Images *}
-		<ul class="photoGalleryPaged">
+		<ul class="photogalleryPaged">
 			{iteration:widgetPhotogalleryPaged.images}
 			<li>
 				<a href="{$widgetPhotogalleryPaged.images.full_url}" rel="{$widgetPhotogalleryPaged.id}" class="linkedImage" title="{$widgetPhotogalleryPaged.images.title}">

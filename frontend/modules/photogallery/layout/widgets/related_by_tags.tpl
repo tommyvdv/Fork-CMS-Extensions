@@ -1,6 +1,6 @@
 {option:widgetPhotogalleryRelatedByTags}
-	<div class="photoGalleryRelatedByTagsrapper photoGalleryRelatedByTagsId{$widgetPhotogalleryRelatedByTags.id}">
-		<ul class="photoGalleryRelatedByTagss">
+	<div class="photogalleryRelatedByTagsrapper photogalleryRelatedByTagsId{$widgetPhotogalleryRelatedByTags.id}">
+		<ul class="photogalleryRelatedByTagss">
 			{iteration:widgetPhotogalleryRelatedByTags}
 			<li>
 				<a href="{$widgetPhotogalleryRelatedByTags.full_url}" rel="{$widgetPhotogalleryRelatedByTags.id}" class="linkedImage" title="{$widgetPhotogalleryRelatedByTags.image.title}">

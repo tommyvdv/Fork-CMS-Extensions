@@ -69,6 +69,9 @@ class BackendPhotogalleryEditCategory extends BackendBaseActionEdit
 
 		// meta object
 		$this->meta = new BackendMeta($this->frm, $this->record['meta_id'], 'title', true);
+
+		// set callback for generating an unique URL
+		$this->meta->setUrlCallback('BackendPhotogalleryModel', 'getURLForCategory', array($this->record['id']));
 	}
 
 	/**
@@ -96,9 +99,6 @@ class BackendPhotogalleryEditCategory extends BackendBaseActionEdit
 		{
 			// cleanup the submitted fields, ignore fields that were added by hackers
 			$this->frm->cleanupFields();
-
-			// set callback for generating an unique URL
-			$this->meta->setUrlCallback('BackendPhotogalleryModel', 'getURLForCategory', array($this->record['id']));
 
 			// validate fields
 			$this->frm->getField('title')->isFilled(BL::getError('TitleIsRequired'));

@@ -169,50 +169,58 @@ class FrontendPhotogalleryRSS extends FrontendBaseBlock
 				// any tags
 				if(isset($item['tags']))
 				{
-					// append tags-paragraph
-					$description .= '	<p>' . SpoonFilter::ucfirst(FL::lbl('Tags')) . ': ';
-					$first = true;
-
-					// loop tags
-					foreach($item['tags'] as $tag)
+					if(!empty($item['tags']))
 					{
-						// prepend separator
-						if(!$first) $description .= ', ';
+						// append tags-paragraph
+						$description .= '	<p>' . SpoonFilter::ucfirst(FL::lbl('Tags')) . ': ';
+						$first = true;
 
-						// add
-						$description .= '<a href="' . $tag['full_url'] . '" rel="tag" title="' . $tag['name'] . '">' . $tag['name'] . '</a>';
+						// loop tags
+						foreach($item['tags'] as $tag)
+						{
+							// prepend separator
+							if(!$first) $description .= ', ';
 
-						// reset
-						$first = false;
+							// add
+							$description .= '<a href="' . $tag['full_url'] . '" rel="tag" title="' . $tag['name'] . '">' . $tag['name'] . '</a>';
+
+							// reset
+							$first = false;
+						}
+
+						// end
+						$description .= '.</p>' . "\n";
 					}
-
-					// end
-					$description .= '.</p>' . "\n";
+					
 				}
 
 				// any categories
 				if(isset($item['categories']))
 				{
-					// append tags-paragraph
-					$description .= '	<p>' . SpoonFilter::ucfirst(FL::lbl('Categories')) . ': ';
-					$first = true;
-
-					// loop tags
-					foreach($item['categories'] as $category)
+					if(!empty($item['categories']))
 					{
-						// prepend separator
-						if(!$first) $description .= ', ';
+						// append tags-paragraph
+						$description .= '	<p>' . SpoonFilter::ucfirst(FL::lbl('Categories')) . ': ';
+						$first = true;
 
-						// add
-						$description .= '<a href="' . $category['full_url'] . '" rel="tag" title="' . $category['title'] . '">' . $category['title'] . '</a>';
+						// loop tags
+						foreach($item['categories'] as $category)
+						{
+							// prepend separator
+							if(!$first) $description .= ', ';
 
-						// reset
-						$first = false;
+							// add
+							$description .= '<a href="' . $category['full_url'] . '" rel="tag" title="' . $category['title'] . '">' . $category['title'] . '</a>';
+
+							// reset
+							$first = false;
+						}
+
+						// end
+						$description .= '.</p>' . "\n";
 					}
-
-					// end
-					$description .= '.</p>' . "\n";
 				}
+
 
 				// end HTML
 				$description .= '</div>' . "\n";
