@@ -327,7 +327,7 @@ class BackendPhotogalleryEditAlbum extends BackendBaseActionEdit
 						$resolutions = BackendPhotogalleryModel::getUniqueExtrasResolutions();
 						foreach($resolutions as $resolution)
 						{
-							SpoonFile::delete($setsFilesPath . '/backend/' . $this->record['set_id'] . '/' . $resolution['width'] . 'x' . $resolution['height'] . '_' . $resolution['method'] . '/' . $image['filename']);
+							SpoonFile::delete($setsFilesPath . '/frontend/' . $this->record['set_id'] . '/' . $resolution['width'] . 'x' . $resolution['height'] . '_' . $resolution['method'] . '/' . $image['filename']);
 							
 							$cronjob = array();
 							$cronjob['module'] = $this->URL->getModule();
