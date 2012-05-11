@@ -65,17 +65,39 @@
 			</item>
 		</core>
 		<photogallery>
-			
+			<item type="error" name="RSSDescription">
+				<translation language="en"><![CDATA[Photogallery RSS description is not yet provided. <a href="%1$s">Configure</a>]]></translation>
+				<translation language="nl"><![CDATA[Fotogallerij RSS beschrijving is nog niet geconfigureerd. <a href="%1$s">Configureer</a>]]></translation>
+			</item>
+
+			<item type="error" name="AmazonS3NotConfigured">
+				<translation language="en"><![CDATA[Amazon S3 is not configured]]></translation>
+				<translation language="nl"><![CDATA[Amazon S3 is niet geconfigureerd]]></translation>
+			</item>
+
+			<item type="error" name="FileSizeIsToLarge">
+				<translation language="en"><![CDATA[The filesize is to large]]></translation>
+				<translation language="nl"><![CDATA[De bestandsgrootte is te groot]]></translation>
+			</item>
+
+			<item type="message" name="AddedCronjobs">
+				<translation language="en"><![CDATA[The cronjobs are added.]]></translation>
+				<translation language="nl"><![CDATA[De cronjobs zijn toegevoegd.]]></translation>
+			</item>
+
+			<item type="message" name="ConfirmMassPublish">
+				<translation language="en"><![CDATA[Confirm to publish.]]></translation>
+				<translation language="nl"><![CDATA[Bevestig om te publiceren.]]></translation>
+			</item>
+
+			<item type="message" name="ConfirmMassHidden">
+				<translation language="en"><![CDATA[Confirm to hide.]]></translation>
+				<translation language="nl"><![CDATA[Bevestig om te verbergen.]]></translation>
+			</item>
+
 			 <item type="message" name="HelpMeta">
-		        <translation language="nl"><![CDATA[Toon de meta informatie van deze blogpost in de RSS feed (categorie)]]></translation>
-		        <translation language="en"><![CDATA[Show the meta information for this blogpost in the RSS feed (category)]]></translation>
-		        <translation language="it"><![CDATA[Mostra le meta informazioni di questo articolo nel feed RSS (categoria)]]></translation>
-		        <translation language="ru"><![CDATA[Показать Мета данные для записей в RSS.]]></translation>
-		        <translation language="cn"><![CDATA[在RSS源（分类）中显示博客文章的所有信息]]></translation>
-		        <translation language="hu"><![CDATA[Mutasd ennek a blogposztnak a meta információit RSS feed-ben (katagória)]]></translation>
-		        <translation language="de"><![CDATA[Zeige die Meta-Informationen für diesen Blogpost im RSS Feed (Kategorie)]]></translation>
-		        <translation language="fr"><![CDATA[Afficher les informations meta pour ce post dans le flux RSS (catégorie)]]></translation>
-		        <translation language="es"><![CDATA[muestra la meta information de este post en el RSS feed (category)]]></translation>
+		        <translation language="nl"><![CDATA[Toon de meta informatie van deze album in de RSS feed (categorie)]]></translation>
+		        <translation language="en"><![CDATA[Show the meta information for this album in the RSS feed (category)]]></translation>
 		      </item>
 		
 		
