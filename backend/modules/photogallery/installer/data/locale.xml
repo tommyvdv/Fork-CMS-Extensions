@@ -462,6 +462,10 @@
 				<translation language="en"><![CDATA[The widget was saved.]]></translation>
 				<translation language="nl"><![CDATA[De widget is opgeslagen.]]></translation>
 			</item>
+			<item type="message" name="EditedAlbum">
+				<translation language="en"><![CDATA[The album was saved.]]></translation>
+				<translation language="nl"><![CDATA[Het album is opgeslagen.]]></translation>
+			</item>
 			<item type="message" name="EditImage">
 				<translation language="en"><![CDATA[edit image]]></translation>
 				<translation language="nl"><![CDATA[wijzig afbeelding]]></translation>
