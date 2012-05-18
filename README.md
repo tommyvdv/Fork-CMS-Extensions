@@ -39,3 +39,7 @@ You can get the author's permission to use the module for commercial websites by
 
 * Free for all websites
 * License: Creative Commons Attribution 3.0 Unported (http://creativecommons.org/licenses/by/3.0/)
+
+
+######Note 
+All modules do an API call for statistic purposes.
