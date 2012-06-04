@@ -139,6 +139,12 @@ class FrontendPhotogalleryDetail extends FrontendBaseBlock
 				FrontendPhotogalleryHelper::getPathJS('/fancybox/2.0.6/helpers/jquery.fancybox-thumbs.js', $this->getModule())
 			);	
 
+			// Media
+			);
+			$this->header->addJS(
+				FrontendPhotogalleryHelper::getPathJS('/fancybox/2.0.6/helpers/jquery.fancybox-media.js', $this->getModule())
+			);	
+
 			// Link Icon
 			$this->header->addCSS(
 				FrontendPhotogalleryHelper::getPathJS('/link-icon/link-icon.css', $this->getModule())
