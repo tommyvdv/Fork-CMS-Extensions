@@ -94,6 +94,14 @@
 							{option:link.isExternal}
 									{$txtExternalLink} {$txtExternalLinkError}
 							{/option:link.isExternal}
+
+							{option:link.isEmbed}
+									{$txtEmbed} {$txtEmbedError}
+							{/option:link.isEmbed}
+
+							{option:link.isIframe}
+									{$txtIframe} {$txtIframeError}
+							{/option:link.isIframe}
 						</li>
 					{/iteration:link}
 				</ul>

@@ -9,3 +9,10 @@ td.small
 {
 	width:5%;
 }
+
+#externalLink,
+#iframe,
+#embed
+{
+	width: 50%;
+}

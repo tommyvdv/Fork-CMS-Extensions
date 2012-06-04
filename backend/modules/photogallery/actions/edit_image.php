@@ -81,15 +81,23 @@ class BackendPhotogalleryEditImage extends BackendBaseActionEdit
 		$linkValue = 'none';
 		if(isset($this->record['data']['internal_link']['page_id'])) $linkValue = 'internal';
 		if(isset($this->record['data']['external_link']['url'])) $linkValue = 'external';
+		if(isset($this->record['data']['iframe']['url'])) $linkValue = 'iframe';
+		if(isset($this->record['data']['embed']['code'])) $linkValue = 'embed';
 
 		$linkValues = array(
 			array('value' => 'none', 'label' => SpoonFilter::ucfirst(BL::lbl('None'))),
 			array('value' => 'internal', 'label' => SpoonFilter::ucfirst(BL::lbl('InternalLink')), 'variables' => array('isInternal' => true)),
 			array('value' => 'external', 'label' => SpoonFilter::ucfirst(BL::lbl('ExternalLink')), 'variables' => array('isExternal' => true)),
+			array('value' => 'embed', 'label' => SpoonFilter::ucfirst(BL::lbl('Embed')), 'variables' => array('isEmbed' => true)),
+			array('value' => 'iframe', 'label' => SpoonFilter::ucfirst(BL::lbl('Iframe')), 'variables' => array('isIframe' => true)),
 		);
 		$this->frm->addRadiobutton('link', $linkValues, $linkValue);
 		$this->frm->addDropdown('internal_link', BackendPagesModel::getPagesForDropdown(), ($linkValue == 'internal') ? $this->record['data']['internal_link']['page_id'] : null);
 		$this->frm->addText('external_link', ($linkValue == 'external') ? $this->record['data']['external_link']['url'] : null, null, null, null, true);
+
+		$this->frm->addText('iframe', ($linkValue == 'iframe') ? $this->record['data']['iframe']['url'] : null, null, null, null, true);
+		$this->frm->addText('embed', ($linkValue == 'embed') ? $this->record['data']['embed']['code'] : null, null, null, null, true);
+
 
 		$this->meta = new BackendMeta($this->frm, $this->record['meta_id'], 'title', true);
 
@@ -143,6 +151,8 @@ class BackendPhotogalleryEditImage extends BackendBaseActionEdit
 			$linkValue = $this->frm->getField('link')->getValue();
 			if($linkValue == 'internal') $this->frm->getField('internal_link')->isFilled(BL::err('FieldIsRequired'));
 			if($linkValue == 'external') $this->frm->getField('external_link')->isURL(BL::err('InvalidURL'));
+			if($linkValue == 'iframe') $this->frm->getField('iframe')->isURL(BL::err('InvalidURL'));
+			if($linkValue == 'embed') $this->frm->getField('embed')->isFilled(BL::err('FieldIsRequired'));
 
 			// no errors?
 			if($this->frm->isCorrect())
@@ -154,6 +164,9 @@ class BackendPhotogalleryEditImage extends BackendBaseActionEdit
 				// build data
 				if($linkValue == 'internal') $data['internal_link'] = array('page_id' => $this->frm->getField('internal_link')->getValue());
 				if($linkValue == 'external') $data['external_link'] = array('url' => $this->frm->getField('external_link')->getValue());
+				if($linkValue == 'iframe') $data['iframe'] = array('url' => $this->frm->getField('iframe')->getValue());
+				if($linkValue == 'embed') $data['embed'] = array('code' => $this->frm->getField('embed')->getValue());
+
 
 				// build item
 				$content['meta_id'] = $this->meta->save(true);
