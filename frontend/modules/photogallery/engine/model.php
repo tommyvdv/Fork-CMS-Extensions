@@ -15,6 +15,8 @@ class FrontendPhotogalleryModel implements FrontendTagsInterface
 	
 	public static function getCategoryNavigationHTML($tpl = 'navigation.tpl')
 	{
+
+		// FRONTEND_PATH . '/themes/' . FrontendModel::getModuleSetting('core', 'theme', 'default') . '/core/layout/templates/' . (string) $tpl
 		/* 
 			HOW TO USE
 			====================
@@ -31,6 +33,10 @@ class FrontendPhotogalleryModel implements FrontendTagsInterface
 		
 		// Get DB
 		$db = FrontendModel::getDB();
+
+		// redefine
+		$tpl = (string) $tpl;
+		$tpl = FrontendTheme::getPath($tpl);
 		
 		// Get all categories
 		$categories = (array) self::getAllCategories();
@@ -39,7 +45,8 @@ class FrontendPhotogalleryModel implements FrontendTagsInterface
 		$urlCategory = FrontendNavigation::getURLForBlock('photogallery','category');
 		$urlDetail = FrontendNavigation::getURLForBlock('photogallery','detail');
 		$categoryParam = Spoon::get('url')->getParameter(1);
-		
+		$childParam = Spoon::get('url')->getParameter(3);
+
 		// Loop categories
 		foreach($categories as $categoryKey => $category)
 		{
@@ -64,6 +71,8 @@ class FrontendPhotogalleryModel implements FrontendTagsInterface
 					$albums[$albumKey]['link'] = $urlDetail . '/' . $child['url'];
 					$albums[$albumKey]['navigation_title'] = $child['title'];
 					$albums[$albumKey]['children'] = false;
+
+					// $albums[$albumKey]['selected'] = $child['url'] == $childParam; // Not tested!
 				}
 				
 				// create template
@@ -73,7 +82,7 @@ class FrontendPhotogalleryModel implements FrontendTagsInterface
 				$categoriesChildrenTpl->assign('navigation', $albums);
 
 				// return parsed content
-				$categories[$categoryKey]['children'] = $categoriesChildrenTpl->getContent(FRONTEND_PATH . '/themes/' . FrontendModel::getModuleSetting('core', 'theme', 'default') . '/core/layout/templates/' . (string) $tpl, true, true);
+				$categories[$categoryKey]['children'] = $categoriesChildrenTpl->getContent($tpl, true, true);
 			}
 			else
 			{
@@ -88,7 +97,7 @@ class FrontendPhotogalleryModel implements FrontendTagsInterface
 		$categoriesTpl->assign('navigation', $categories);
 
 		// return parsed content
-		$return =  $categoriesTpl->getContent(FRONTEND_PATH . '/themes/' . FrontendModel::getModuleSetting('core', 'theme', 'default') . '/core/layout/templates/' . (string) $tpl, true, true);
+		$return =  $categoriesTpl->getContent($tpl, true, true);
 		
 		return $return;
 	}
