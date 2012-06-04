@@ -43,7 +43,7 @@
 			<ul class="photogalleryLightbox">
 				{iteration:widgetPhotogalleryLightbox.images}
 				<li>
-					<a href="{$widgetPhotogalleryLightbox.images.large_url}" rel="{$widgetPhotogalleryLightbox.id}" class="linkedImage linkZoomOverlay">
+					<a href="{$widgetPhotogalleryLightbox.images.large_url}" rel="{$widgetPhotogalleryLightbox.id}" class="linkedImage linkOverlay">
 						<img src="{$widgetPhotogalleryLightbox.images.thumbnail_url}" />
 					</a>
 					

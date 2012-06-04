@@ -23,6 +23,47 @@ class FrontendPhotogalleryHelper
 		return false;
 	}
 
+
+	/**
+	 * Generate a correct path
+	 *
+	 * @return string
+	 */
+	public static function getPathJS($file, $module)
+	{
+		$file = (string) $file;
+		$module = (string) $module;
+
+		$theme = FrontendTheme::getTheme();
+		$themePath = '/frontend/themes/' . $theme . '/core/js';
+
+		$filePath = $themePath . $file;
+
+		if(SpoonFile::exists(PATH_WWW . str_replace(PATH_WWW, '', $filePath))) return $filePath;
+
+		return '/frontend/modules/' . $module . '/js' . $file;
+	}
+
+	/**
+	 * Generate a correct path
+	 *
+	 * @return string
+	 */
+	public static function getPathCSS($file, $module)
+	{
+		$file = (string) $file;
+		$module = (string) $module;
+
+		$theme = FrontendTheme::getTheme();
+		$themePath = '/frontend/themes/' . $theme . '/core/layout/css';
+
+		$filePath = $themePath . $file;
+
+		if(SpoonFile::exists(PATH_WWW . str_replace(PATH_WWW, '', $filePath))) return $filePath;
+
+		return '/frontend/modules/' . $module . '/layout/css' . $file;
+	}
+
 	/**
 	 * Get the url for an image
 	 *

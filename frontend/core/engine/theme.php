@@ -49,7 +49,6 @@ class FrontendTheme
 				if(SpoonFile::exists(PATH_WWW . str_replace(PATH_WWW, '', $themeTemplate))) $file = $themeTemplate;
 			}
 		}
-
 		// check if the file exists
 		if(!SpoonFile::exists(PATH_WWW . str_replace(PATH_WWW, '', $file))) throw new FrontendException('The template (' . $file . ') doesn\'t exists.');
 

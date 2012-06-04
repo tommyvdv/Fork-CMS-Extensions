@@ -1,5 +1,5 @@
 (function($) {
-	$.fn.linkZoomIcon = function(options)
+	$.fn.linkIcon = function(options)
 	{	
 		// Options
 		var opts = $.extend(true, {
@@ -14,17 +14,17 @@
 					'margin-top': '0',
 					'margin-left': '0'
 				},
-				class: 'linkZoomOverlayContainer'
+				class: 'linkOverlayContainer'
 			},
 			background:{ 
 				css:{
 					'opacity': .65
 				},
-				class: 'linkZoomOverlayBackground'
+				class: 'linkOverlayBackground'
 			},
 			icon:{ 
 				css:{},
-				class: 'linkZoomOverlayIcon'
+				class: 'linkOverlayIcon'
 			}
 		}, options);
 		
@@ -64,8 +64,3 @@
 	};
 
 })(jQuery);
-
-$(document).ready(function ()
-{
-	$('a.linkZoomOverlay').linkZoomIcon({background:{css:{'opacity': 0.65}}});
-});

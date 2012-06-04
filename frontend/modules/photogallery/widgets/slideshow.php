@@ -87,7 +87,15 @@ class FrontendPhotogalleryWidgetSlideshow extends FrontendBaseWidget
 	private function parse()
 	{
 		$this->header->addCSS('/frontend/modules/' . $this->getModule() . '/layout/css/slideshow.css');
-		$this->header->addJS('/frontend/modules/' . $this->getModule() . '/js/cycle.js', false);
-		//$this->header->addJS('/frontend/modules/' . $this->getModule() . '/js/slideshow.js');
+		
+		$this->header->addJS(
+				FrontendPhotogalleryHelper::getPathJS('/cycle/2.995/cycle.js', $this->getModule()),
+				false
+		);
+
+		$this->header->addJS(
+				FrontendPhotogalleryHelper::getPathJS('/cycle-init.js', $this->getModule())
+		);	
+
 	}
 }

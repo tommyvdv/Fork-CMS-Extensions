@@ -52,7 +52,7 @@
 			<ul class="photogalleryDetailLightbox">
 				{iteration:blockPhotogalleryAlbum.images}
 				<li>
-					<a data-image_id="{$blockPhotogalleryAlbum.images.id}" href="{$blockPhotogalleryAlbum.images.large_url}" rel="{$blockPhotogalleryAlbum.id}" class="linkedImage linkZoomOverlay" title="{$blockPhotogalleryAlbum.images.title}">
+					<a data-image_id="{$blockPhotogalleryAlbum.images.id}" href="{$blockPhotogalleryAlbum.images.large_url}" rel="{$blockPhotogalleryAlbum.id}" class="linkedImage linkOverlay" title="{$blockPhotogalleryAlbum.images.title}">
 						<img src="{$blockPhotogalleryAlbum.images.thumbnail_url}" />
 					</a>
 					<div class="caption">

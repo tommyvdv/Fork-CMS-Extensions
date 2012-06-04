@@ -92,19 +92,47 @@ class FrontendPhotogalleryWidgetLightbox extends FrontendBaseWidget
 		$this->header->addCSS('/frontend/modules/' . $this->getModule() . '/layout/css/photogallery.css');
 		
 		// Lightbox
-		$this->header->addCSS('/frontend/modules/' . $this->getModule() . '/layout/css/jquery.fancybox.css');
-		$this->header->addJS('/frontend/modules/' . $this->getModule() . '/js/jquery.fancybox.js');
+		$this->header->addCSS(
+			FrontendPhotogalleryHelper::getPathJS('/fancybox/2.0.6/jquery.fancybox.css', $this->getModule())
+		);
+
+		$this->header->addJS(
+			FrontendPhotogalleryHelper::getPathJS('/fancybox/2.0.6/jquery.fancybox.js', $this->getModule())
+		);
 		
 		// Buttons
-		$this->header->addCSS('/frontend/modules/' . $this->getModule() . '/layout/css/helpers/jquery.fancybox-buttons.css');
-		$this->header->addJS('/frontend/modules/' . $this->getModule() . '/js/jquery.fancybox-buttons.js');
+		$this->header->addCSS(
+			FrontendPhotogalleryHelper::getPathJS('/fancybox/2.0.6/helpers/jquery.fancybox-buttons.css', $this->getModule())
+		);
+		$this->header->addJS(
+			FrontendPhotogalleryHelper::getPathJS('/fancybox/2.0.6/helpers/jquery.fancybox-buttons.js', $this->getModule())
+			);
 		
 		// Thumbs
-		$this->header->addCSS('/frontend/modules/' . $this->getModule() . '/layout/css/helpers/jquery.fancybox-thumbs.css');
-		$this->header->addJS('/frontend/modules/' . $this->getModule() . '/js/jquery.fancybox-thumbs.js');
+		$this->header->addCSS(
+			FrontendPhotogalleryHelper::getPathJS('/fancybox/2.0.6/helpers/jquery.fancybox-thumbs.css', $this->getModule())
+		);
+		$this->header->addJS(
+			FrontendPhotogalleryHelper::getPathJS('/fancybox/2.0.6/helpers/jquery.fancybox-thumbs.js', $this->getModule())
+		);	
 		
+		// Link Icon
+		$this->header->addCSS(
+			FrontendPhotogalleryHelper::getPathJS('/link-icon/link-icon.css', $this->getModule())
+		);	
+
+		$this->header->addJS(
+			FrontendPhotogalleryHelper::getPathJS('/link-icon/link-icon.js', $this->getModule())
+		);	
+
+		$this->header->addJS(
+			FrontendPhotogalleryHelper::getPathJS('/link-icon-init.js', $this->getModule())
+		);
+
 		// Initialize
-		//$this->header->addJS('/frontend/modules/' . $this->getModule() . '/js/lightbox.js');
+		$this->header->addJS(
+			FrontendPhotogalleryHelper::getPathJS('/fancybox-init.js', $this->getModule())
+		);
 		
 		$this->tpl->assign('widgetPhotogalleryLightbox', $this->record);
 	}
