@@ -140,7 +140,6 @@ class FrontendPhotogalleryDetail extends FrontendBaseBlock
 			);	
 
 			// Media
-			);
 			$this->header->addJS(
 				FrontendPhotogalleryHelper::getPathJS('/fancybox/2.0.6/helpers/jquery.fancybox-media.js', $this->getModule())
 			);	

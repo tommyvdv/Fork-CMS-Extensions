@@ -55,7 +55,9 @@ class BackendPhotogalleryMassAlbumsAction extends BackendBaseAction
 
 				foreach($emptySetsAfterDelete as $id)
 				{
-					SpoonDirectory::delete($setsFilesPath . '/' . $id);
+					SpoonDirectory::delete($setsFilesPath . '/frontend/' . $id);
+					SpoonDirectory::delete($setsFilesPath . '/backend/' . $id);
+					SpoonDirectory::delete($setsFilesPath . '/original/' . $id);
 
 					$cronjob = array();
 					$cronjob['module'] = $this->URL->getModule();

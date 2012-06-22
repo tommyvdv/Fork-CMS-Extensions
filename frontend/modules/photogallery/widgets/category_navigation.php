@@ -50,10 +50,13 @@ class FrontendPhotogalleryWidgetCategoryNavigation extends FrontendBaseWidget
 	 */
 	private function parse()
 	{
-		foreach($this->categories as &$category)
+		$onDetailURL = $this->URL->getParameter(0) == FL::getAction('Detail');
+		$onCategoryURL = $this->URL->getParameter(0) == FL::getAction('Category');
+
+		// Are we on a detail?
+		if($onDetailURL)
 		{
-			// Are we on a detail?
-			if($this->URL->getParameter(0) == FL::getAction('Detail'))
+			foreach($this->categories as &$category)
 			{
 				$this->record = FrontendPhotogalleryModel::get($this->URL->getParameter(1));
 				if(!empty($this->record))
@@ -72,9 +75,12 @@ class FrontendPhotogalleryWidgetCategoryNavigation extends FrontendBaseWidget
 					}
 				}
 			}
+		}
 			
-			// Are we on a category detail?
-			if($this->URL->getParameter(0) == FL::getAction('Category'))
+		// Are we on a category detail?
+		if($onCategoryURL)
+		{
+			foreach($this->categories as &$category)
 			{
 				$category['items'] = FrontendPhotogalleryModel::getAllForCategoryNavigation($category['url']);
 				$category['selected'] = (string) $category['url'] ==  (string) $this->URL->getParameter(1) ? true : false;

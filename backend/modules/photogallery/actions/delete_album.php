@@ -41,7 +41,10 @@ class BackendPhotogalleryDeleteAlbum extends BackendBaseActionDelete
 			
 			foreach($emptySetsAfterDelete as $id)
 			{
-				SpoonDirectory::delete($setsFilesPath . '/' . $id);
+
+				SpoonDirectory::delete($setsFilesPath . '/frontend/' . $id);
+				SpoonDirectory::delete($setsFilesPath . '/backend/' . $id);
+				SpoonDirectory::delete($setsFilesPath . '/original/' . $id);
 				
 				// Are there any cronjobs with the same prefix? Delete them
 				if(BackendPhotogalleryHelper::existsAmazonS3()) BackendAmazonS3Model::deleteCronjobByFullPathLike($this->URL->getModule(), $this->URL->getModule() . '/sets/' . $id);

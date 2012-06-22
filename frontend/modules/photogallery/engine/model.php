@@ -397,7 +397,7 @@ class FrontendPhotogalleryModel implements FrontendTagsInterface
 											FROM photogallery_albums AS i
 											INNER JOIN meta AS m ON i.meta_id = m.id
 											WHERE i.id != ? AND i.hidden = ? AND i.language = ? AND i.sequence <= ? AND i.num_images > 0 AND i.publish_on <= ?
-											ORDER BY i.publish_on DESC
+											ORDER BY i.sequence DESC
 											LIMIT 1',
 											array($id, 'N', FRONTEND_LANGUAGE, $sequence, FrontendModel::getUTCDate('Y-m-d H:i') . ':00'));
 
@@ -406,7 +406,7 @@ class FrontendPhotogalleryModel implements FrontendTagsInterface
 											FROM photogallery_albums AS i
 											INNER JOIN meta AS m ON i.meta_id = m.id
 											WHERE i.id != ? AND i.hidden = ? AND i.language = ? AND i.sequence > ? AND i.num_images > 0 AND i.publish_on <= ?
-											ORDER BY i.publish_on ASC
+											ORDER BY i.sequence ASC
 											LIMIT 1',
 											array($id,'N', FRONTEND_LANGUAGE, $sequence, FrontendModel::getUTCDate('Y-m-d H:i') . ':00'));
 
