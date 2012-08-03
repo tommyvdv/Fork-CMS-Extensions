@@ -35,15 +35,8 @@ class BackendPhotogalleryAjaxAlbumSequence extends BackendBaseAJAXAction
 			// build item
 			$item['id'] = (int) $id;
 
-			// fetch entire record
-			$item = BackendPhotogalleryModel::getAlbum($id);
-
 			// change sequence
 			$item['sequence'] = $i + 1;
-
-			unset($item['url']);
-			unset($item['publish_on']);
-			unset($item['category_ids']);
 
 			// update sequence
 			if(BackendPhotogalleryModel::existsAlbum($item['id'])) BackendPhotogalleryModel::updateAlbum($item);
