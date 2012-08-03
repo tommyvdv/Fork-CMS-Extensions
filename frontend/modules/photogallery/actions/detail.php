@@ -116,32 +116,32 @@ class FrontendPhotogalleryDetail extends FrontendBaseBlock
 
 			// Lightbox
 			$this->header->addCSS(
-				FrontendPhotogalleryHelper::getPathJS('/fancybox/2.0.6/jquery.fancybox.css', $this->getModule())
+				FrontendPhotogalleryHelper::getPathJS('/fancybox/' . FrontendPhotogalleryModel::FANCYBOX_VESRION . '/jquery.fancybox.css', $this->getModule())
 			);
 
 			$this->header->addJS(
-				FrontendPhotogalleryHelper::getPathJS('/fancybox/2.0.6/jquery.fancybox.js', $this->getModule())
+				FrontendPhotogalleryHelper::getPathJS('/fancybox/' . FrontendPhotogalleryModel::FANCYBOX_VESRION . '/jquery.fancybox.js', $this->getModule())
 			);
 			
 			// Buttons
 			$this->header->addCSS(
-				FrontendPhotogalleryHelper::getPathJS('/fancybox/2.0.6/helpers/jquery.fancybox-buttons.css', $this->getModule())
+				FrontendPhotogalleryHelper::getPathJS('/fancybox/' . FrontendPhotogalleryModel::FANCYBOX_VESRION . '/helpers/jquery.fancybox-buttons.css', $this->getModule())
 			);
 			$this->header->addJS(
-				FrontendPhotogalleryHelper::getPathJS('/fancybox/2.0.6/helpers/jquery.fancybox-buttons.js', $this->getModule())
+				FrontendPhotogalleryHelper::getPathJS('/fancybox/' . FrontendPhotogalleryModel::FANCYBOX_VESRION . '/helpers/jquery.fancybox-buttons.js', $this->getModule())
 				);
 			
 			// Thumbs
 			$this->header->addCSS(
-				FrontendPhotogalleryHelper::getPathJS('/fancybox/2.0.6/helpers/jquery.fancybox-thumbs.css', $this->getModule())
+				FrontendPhotogalleryHelper::getPathJS('/fancybox/' . FrontendPhotogalleryModel::FANCYBOX_VESRION . '/helpers/jquery.fancybox-thumbs.css', $this->getModule())
 			);
 			$this->header->addJS(
-				FrontendPhotogalleryHelper::getPathJS('/fancybox/2.0.6/helpers/jquery.fancybox-thumbs.js', $this->getModule())
+				FrontendPhotogalleryHelper::getPathJS('/fancybox/' . FrontendPhotogalleryModel::FANCYBOX_VESRION . '/helpers/jquery.fancybox-thumbs.js', $this->getModule())
 			);	
 
 			// Media
 			$this->header->addJS(
-				FrontendPhotogalleryHelper::getPathJS('/fancybox/2.0.6/helpers/jquery.fancybox-media.js', $this->getModule())
+				FrontendPhotogalleryHelper::getPathJS('/fancybox/' . FrontendPhotogalleryModel::FANCYBOX_VESRION . '/helpers/jquery.fancybox-media.js', $this->getModule())
 			);	
 
 			// Link Icon

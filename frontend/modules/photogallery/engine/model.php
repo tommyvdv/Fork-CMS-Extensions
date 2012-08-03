@@ -12,6 +12,8 @@
  */
 class FrontendPhotogalleryModel implements FrontendTagsInterface
 {
+
+	const FANCYBOX_VESRION = '2.0.6';
 	
 	public static function getCategoryNavigationHTML($tpl = 'navigation.tpl')
 	{
@@ -143,7 +145,7 @@ class FrontendPhotogalleryModel implements FrontendTagsInterface
 													INNER JOIN meta AS m ON m.id = c.meta_id
 													WHERE i.set_id = ? AND c.language = ? AND i.hidden = ?
 													ORDER BY sequence ASC',
-													array((int) $return['set_id'], FRONTEND_LANGUAGE, 'N'));
+													array((int) $return['set_id'], FRONTEND_LANGUAGE, 'N'), 'id');
 		
 	
 		$imageLink = FrontendNavigation::getURLForBlock('photogallery', 'image');
@@ -344,10 +346,10 @@ class FrontendPhotogalleryModel implements FrontendTagsInterface
 											INNER JOIN photogallery_sets_images_content AS c ON i.id = c.set_image_id
 											INNER JOIN photogallery_albums AS a ON c.album_id = a.id
 											INNER JOIN meta AS m ON m.id = c.meta_id
-											WHERE i.id != ? AND i.sequence < ? AND i.hidden = ? AND c.language = ? AND a.id = ?
+											WHERE i.id != ? AND i.sequence = ? AND i.hidden = ? AND c.language = ? AND a.id = ?
 											ORDER BY i.sequence DESC
 											LIMIT 1',
-											array((int) $id, $sequence, 'N', FRONTEND_LANGUAGE, (int) $album_id));
+											array((int) $id, $sequence-1, 'N', FRONTEND_LANGUAGE, (int) $album_id));
 
 		// get next post
 		$return['next'] = $db->getRecord(
@@ -356,10 +358,10 @@ class FrontendPhotogalleryModel implements FrontendTagsInterface
 											INNER JOIN photogallery_sets_images_content AS c ON i.id = c.set_image_id
 											INNER JOIN photogallery_albums AS a ON c.album_id = a.id
 											INNER JOIN meta AS m ON m.id = c.meta_id
-											WHERE i.id != ? AND i.sequence > ? AND i.hidden = ? AND c.language = ? AND a.id = ?
+											WHERE i.id != ? AND i.sequence = ? AND i.hidden = ? AND c.language = ? AND a.id = ?
 											ORDER BY i.sequence ASC
 											LIMIT 1',
-											array((int) $id, $sequence, 'N', FRONTEND_LANGUAGE, (int) $album_id));
+											array((int) $id, $sequence+1, 'N', FRONTEND_LANGUAGE, (int) $album_id));
 
 		// return
 		return $return;
@@ -396,19 +398,19 @@ class FrontendPhotogalleryModel implements FrontendTagsInterface
 		$return['previous'] = $db->getRecord('SELECT i.id, i.title, m.url
 											FROM photogallery_albums AS i
 											INNER JOIN meta AS m ON i.meta_id = m.id
-											WHERE i.id != ? AND i.hidden = ? AND i.language = ? AND i.sequence <= ? AND i.num_images > 0 AND i.publish_on <= ?
+											WHERE i.id != ? AND i.hidden = ? AND i.language = ? AND i.sequence = ? AND i.num_images > 0 AND i.publish_on <= ?
 											ORDER BY i.sequence DESC
 											LIMIT 1',
-											array($id, 'N', FRONTEND_LANGUAGE, $sequence, FrontendModel::getUTCDate('Y-m-d H:i') . ':00'));
+											array($id, 'N', FRONTEND_LANGUAGE, $sequence-1, FrontendModel::getUTCDate('Y-m-d H:i') . ':00'));
 
 		// get next post
 		$return['next'] = $db->getRecord('SELECT i.id, i.title, m.url
 											FROM photogallery_albums AS i
 											INNER JOIN meta AS m ON i.meta_id = m.id
-											WHERE i.id != ? AND i.hidden = ? AND i.language = ? AND i.sequence > ? AND i.num_images > 0 AND i.publish_on <= ?
+											WHERE i.id != ? AND i.hidden = ? AND i.language = ? AND i.sequence = ? AND i.num_images > 0 AND i.publish_on <= ?
 											ORDER BY i.sequence ASC
 											LIMIT 1',
-											array($id,'N', FRONTEND_LANGUAGE, $sequence, FrontendModel::getUTCDate('Y-m-d H:i') . ':00'));
+											array($id,'N', FRONTEND_LANGUAGE, $sequence+1, FrontendModel::getUTCDate('Y-m-d H:i') . ':00'));
 
 		// return
 		return $return;
@@ -449,22 +451,22 @@ class FrontendPhotogalleryModel implements FrontendTagsInterface
 											FROM photogallery_albums AS i
 											INNER JOIN meta AS m ON i.meta_id = m.id
 											INNER JOIN photogallery_categories_albums AS c ON c.album_id = i.id
-											WHERE c.category_id IN ('. implode(', ', $category_ids) . ') AND i.id != ? AND i.hidden = ? AND i.language = ? AND i.sequence <= ? AND i.num_images > 0 AND i.publish_on <= ?
+											WHERE c.category_id IN ('. implode(', ', $category_ids) . ') AND i.id != ? AND i.hidden = ? AND i.language = ? AND i.sequence = ? AND i.num_images > 0 AND i.publish_on <= ?
 											GROUP BY i.id
 											ORDER BY i.publish_on DESC
 											LIMIT 1',
-											array($id, 'N', FRONTEND_LANGUAGE, $sequence, FrontendModel::getUTCDate('Y-m-d H:i') . ':00'));
+											array($id, 'N', FRONTEND_LANGUAGE, $sequence-1, FrontendModel::getUTCDate('Y-m-d H:i') . ':00'));
 
 		// get next post
 		$return['next'] = $db->getRecord('SELECT i.id, i.title, m.url
 											FROM photogallery_albums AS i
 											INNER JOIN meta AS m ON i.meta_id = m.id
 											INNER JOIN photogallery_categories_albums AS c ON c.album_id = i.id
-											WHERE c.category_id IN ('. implode(', ', $category_ids) . ') AND i.id != ? AND i.hidden = ? AND i.language = ? AND i.sequence > ? AND i.num_images > 0 AND i.publish_on <= ?
+											WHERE c.category_id IN ('. implode(', ', $category_ids) . ') AND i.id != ? AND i.hidden = ? AND i.language = ? AND i.sequence = ? AND i.num_images > 0 AND i.publish_on <= ?
 											GROUP BY i.id
 											ORDER BY i.publish_on ASC
 											LIMIT 1',
-											array($id,'N', FRONTEND_LANGUAGE, $sequence, FrontendModel::getUTCDate('Y-m-d H:i') . ':00'));
+											array($id,'N', FRONTEND_LANGUAGE, $sequence+1, FrontendModel::getUTCDate('Y-m-d H:i') . ':00'));
 										
 		
 		// return

@@ -4,7 +4,7 @@ $(document).ready(function() {
 		prevEffect: 'elastic',
 		closeBtn: false,
 		closeClick: false,
-		modal:false,
+		modal: false,
 		tpl: {
 			closeBtn: '<div title="Close" class="fancybox-item fancybox-close linkedImage"></div>',
 			next: '<a title="Next" class="fancybox-item fancybox-next linkedImage"><span></span></a>',
@@ -12,6 +12,7 @@ $(document).ready(function() {
 		},
 		helpers:
 		{ 
+			media: {}, // Load media helper
 			title: {
 				type: 'outside' // float, inside, outside
 			},
