@@ -8,7 +8,7 @@ $(document).ready(function() {
 		tpl: {
 			closeBtn: '<div title="Close" class="fancybox-item fancybox-close linkedImage"></div>',
 			next: '<a title="Next" class="fancybox-item fancybox-next linkedImage"><span></span></a>',
-			prev: '<a title="Previous" class="fancybox-item fancybox-prev linkedImage"><span></span></a>'
+			prev: '<a title="Previous" class="fancybox-item fancybox-prev linkedImage"><span></span></a>',
 		},
 		helpers:
 		{ 
