@@ -1,0 +1,18 @@
+.dataGrid .preview
+{
+	width:60px;
+}
+
+
+th.small,
+td.small
+{
+	width:5%;
+}
+
+#externalLink,
+#iframe,
+#embed
+{
+	width: 50%;
+}

@@ -1,0 +1,1669 @@
+<?php
+
+/*
+ * This file is part of the products module.
+ *
+ * For the full copyright and license information, please view the license
+ * file that was distributed with this source code.
+ */
+
+/**
+ * In this file we store all generic functions that we will be using in the products module
+ *
+ * @author Frederik Heyninck <frederik@figure8.be>
+ */
+class BackendProductsModel
+{
+	const QRY_DATAGRID_BROWSE_CATEGORIES =
+		'SELECT i.id, i.title, COUNT(a.product_id) AS num_products, i.sequence
+		FROM products_categories AS i
+		LEFT OUTER JOIN products_categories_products AS a ON i.id = a.category_id
+		WHERE i.language = ?
+		GROUP BY i.id';
+
+	const QRY_DATAGRID_BROWSE_EXTRAS_BY_KIND =
+		'SELECT i.id, i.action
+		FROM products_extras AS i
+		INNER JOIN  products_extras_resolutions AS r on r.extra_id = i.id
+		WHERE i.kind = ?
+		GROUP BY i.id';
+
+
+	const QRY_DATAGRID_BROWSE_EXTRAS =
+		'SELECT i.id, i.kind, i.action
+		FROM products_extras AS i
+		INNER JOIN  products_extras_resolutions AS r on r.extra_id = i.id
+		GROUP BY i.id';
+
+	const QRY_DATAGRID_BROWSE_IMAGES_FOR_SET =
+		'SELECT i.id, i.filename, c.title, c.text, i.hidden as is_hidden, i.sequence
+		FROM products_sets_images AS i
+		INNER JOIN products_sets_images_content AS c on c.set_image_id = i.id
+		WHERE i.set_id = ? AND c.product_id = ? AND c.language = ?
+		GROUP BY i.id ORDER BY i.sequence ASC';
+
+	const RESIZE_ORIGINAL_IMAGE = true; // resize the original image?
+	const MAX_ORIGINAL_IMAGE_WIDTH = 2000; // if RESIZE_ORIGINAL_IMAGE resize to # in px
+	const MAX_ORIGINAL_IMAGE_HEIGHT = 2000; // if RESIZE_ORIGINAL_IMAGE resize to # in px
+	const MAX_ORIGINAL_FILE_SIZE = 10; // in mb
+	const IMAGE_QUALITY = 100; // 0 to 100
+	const MAX_IMAGES_UPLOAD = 5;
+	const DELETE_LOCAL_IN_TIME = '2 weeks';
+	const MAX_ZIP_FILE_SIZE = 10;
+	
+
+	public static $backendResolutions = array(
+		array('width' => 50, 'height' => 50, 'method' => 'crop'), // do not delete this one.
+		array('width' => 128, 'height' => 128, 'method' => 'crop') // do not delete this one.
+	);
+	
+	
+	/**
+	 * Checks the settings and optionally returns an array with warnings
+	 *
+	 * @return array
+	 */
+	public static function checkSettings()
+	{
+		$warnings = array();
+
+		// check if this action is allowed
+		if(BackendAuthentication::isAllowedAction('settings', 'products'))
+		{
+			// rss title
+			if(BackendModel::getModuleSetting('products', 'rss_title_' . BL::getWorkingLanguage(), null) == '')
+			{
+				$warnings[] = array('message' => sprintf(BL::err('RSSTitle', 'products'), BackendModel::createURLForAction('settings', 'photogallery')));
+			}
+
+			// rss description
+			if(BackendModel::getModuleSetting('products', 'rss_description_' . BL::getWorkingLanguage(), null) == '')
+			{
+				$warnings[] = array('message' => sprintf(BL::err('RSSDescription', 'products'), BackendModel::createURLForAction('settings', 'photogallery')));
+			}
+		}
+
+		return $warnings;
+	}
+	
+
+
+	/**
+	 * Checks if it is allowed to delete the a category
+	 *
+	 * @param int $id The id of the category.
+	 * @return bool
+	 */
+	public static function deleteCategoryAllowed($id)
+	{
+		return !(bool) BackendModel::getDB()->getVar(
+			'SELECT COUNT(category_id)
+			 FROM products_categories_products AS i
+			 WHERE i.category_id = ?',
+			array((int) $id)
+		);
+	}
+
+	/**
+	 * Deletes one or more items
+	 *
+	 * @param  mixed $ids The ids to delete.
+	 */
+	public static function deleteProduct($ids)
+	{
+		// make sure $ids is an array
+		$ids = (array) $ids;
+
+		// loop and cast to integers
+		foreach($ids as &$id) $id = (int) $id;
+
+		// create an array with an equal amount of questionmarks as ids provided
+		$idPlaceHolders = array_fill(0, count($ids), '?');
+
+		// get db
+		$db = BackendModel::getDB(true);
+
+		// get used meta ids
+		$metaIds = (array) $db->getColumn(
+			'SELECT meta_id
+			 FROM products_sets_images_content AS p
+			 WHERE product_id IN (' . implode(', ', $idPlaceHolders) . ') AND language = ?',
+			array_merge($ids, array(BL::getWorkingLanguage()))
+		);
+
+		// delete meta
+		if(!empty($metaIds)) $db->delete('meta', 'id IN (' . implode(',', $metaIds) . ')');
+		
+		// Delete linked categories ids
+		$db->delete('products_categories_products', 'product_id IN (' . implode(',', $ids) . ')');
+
+		// Get sets linked to an product
+		$setIds = self::getSetIdsForProduct($ids);
+		$emptySetIds  = array();
+
+		// delete records
+		$db->delete('products_products', 'id IN (' . implode(', ', $idPlaceHolders) . ') AND language = ?', array_merge($ids, array(BL::getWorkingLanguage())));
+		$db->delete('products_sets_images_content', 'product_id IN (' . implode(', ', $idPlaceHolders) . ') AND language = ?', array_merge($ids, array(BL::getWorkingLanguage())));
+
+		// Update stats based on the setIds
+		if(!empty($setIds)) self::updateSetStatistics($setIds);
+
+		if(!empty($setIds)) $emptySetIds = self::getSetIdsToDelete($setIds);
+
+		if(!empty($emptySetIds)) $db->delete('products_sets_images', 'set_id IN (' . implode(', ', $emptySetIds) . ')');
+		if(!empty($emptySetIds)) $db->delete('products_sets_images_content', 'set_id IN (' . implode(', ', $emptySetIds) . ')');
+		if(!empty($emptySetIds)) $db->delete('products_sets', 'id IN (' . implode(', ', $emptySetIds) . ')');
+
+		// Widgets
+		$extraIds = self::getModuleExtraIdsForProduct($ids);
+		$db->delete('products_extras_ids', 'product_id IN (' . implode(', ', $ids) . ')');
+		if(!empty($extraIds)) $db->delete('modules_extras', 'id IN (' . implode(', ', $extraIds) . ')');
+
+		// update blocks with this item linked
+		$db->update('pages_blocks', array('extra_id' => null, 'html' => ''), 'extra_id IN (' . implode(', ', $ids) . ')');
+
+		// update blocks with this item linked
+		if(!empty($extraIds)) $db->update('pages_blocks', array('extra_id' => null, 'html' => ''), 'extra_id IN (' . implode(', ', $extraIds) . ')');
+
+		// delete tags
+		foreach($ids as $id) BackendTagsModel::saveTags($id, '', 'products');
+
+		// invalidate the cache for blog
+		BackendModel::invalidateFrontendCache('products', BL::getWorkingLanguage());
+
+		return array('ids' => $ids, 'empty_set_ids' => $emptySetIds);
+	}
+
+	/**
+	 * Deletes one or more items
+	 *
+	 * @param  mixed $ids The ids to delete.
+	 */
+	public static function deleteExtra($ids)
+	{
+		// make sure $ids is an array
+		$ids = (array) $ids;
+
+		// loop and cast to integers
+		foreach($ids as &$id) $id = (int) $id;
+
+		// create an array with an equal amount of questionmarks as ids provided
+		$idPlaceHolders = array_fill(0, count($ids), '?');
+
+		// get db
+		$db = BackendModel::getDB(true);
+
+		// delete records
+		$db->delete('products_extras', 'id IN (' . implode(', ', $idPlaceHolders) . ') ', $ids);
+		$db->delete('products_extras_resolutions', 'extra_id IN (' . implode(', ', $idPlaceHolders) . ') ', $ids);
+
+		// Widgets
+		$extraIds = self::getModuleExtraIdsForExtra($ids);
+		$db->delete('products_extras_ids', 'extra_id IN (' . implode(', ', $ids) . ')');
+		if(!empty($extraIds)) $db->delete('modules_extras', 'id IN (' . implode(', ', $extraIds) . ')');
+
+		// update blocks with this item linked
+		if(!empty($extraIds)) $db->update('pages_blocks', array('extra_id' => null, 'html' => ''), 'extra_id IN (' . implode(', ', $extraIds) . ')');
+	}
+
+	/**
+	 * Get the ids to delete
+	 *
+	 * @param mixed $ids The ids.
+	 * @return array
+	 */
+	public static function getSetIdsToDelete($ids)
+	{
+		// make sure $ids is an array
+		$ids = (array) $ids;
+
+		// get db
+		$db = BackendModel::getDB(true);
+
+		// loop and cast to integers
+		foreach($ids as &$id) $id = (int) $id;
+
+		// create an array with an equal amount of questionmarks as ids provided
+		$idPlaceHolders = array_fill(0, count($ids), '?');
+
+		return (array) $db->getColumn(
+			'SELECT id
+			 FROM products_sets AS p
+			 WHERE id IN (' . implode(', ', $idPlaceHolders) . ') AND num_products = ?',
+			array_merge($ids, array(0))
+		);
+	}
+
+	/**
+	 * Deletes one or more items
+	 *
+	 * @param  mixed $ids The ids to delete.
+	 */
+	public static function deleteImage($ids)
+	{
+		// make sure $ids is an array
+		$ids = (array) $ids;
+
+		// loop and cast to integers
+		foreach($ids as &$id) $id = (int) $id;
+
+		// create an array with an equal amount of questionmarks as ids provided
+		$idPlaceHolders = array_fill(0, count($ids), '?');
+
+		// get db
+		$db = BackendModel::getDB(true);
+
+		// get used meta ids
+		$metaIds = (array) $db->getColumn(
+			'SELECT meta_id
+			 FROM products_sets_images_content AS p
+			 WHERE set_image_id IN (' . implode(', ', $idPlaceHolders) . ') AND language = ?',
+			array_merge($ids, array(BL::getWorkingLanguage()))
+		);
+
+		$setIds = self::getSetIdsForImage($ids);
+		$emptySetIds  = array();
+
+		// delete records
+		$db->delete('products_sets_images', 'id IN (' . implode(', ', $idPlaceHolders) . ')', array_merge($ids));
+		$db->delete('products_sets_images_content', 'set_image_id IN (' . implode(', ', $idPlaceHolders) . ') AND language = ?', array_merge($ids, array(BL::getWorkingLanguage())));
+
+		// delete meta
+		if(!empty($metaIds)) $db->delete('meta', 'id IN (' . implode(',', $metaIds) . ')');
+
+		// Update stats based on the setIds
+		if(!empty($setIds)) self::updateSetStatistics($setIds);
+
+		if(!empty($setIds)) $emptySetIds = self::getSetIdsNoImages($setIds);
+
+		if(!empty($emptySetIds)) $db->delete('products_sets_images_content', 'set_id IN (' . implode(', ', $emptySetIds) . ')');
+		if(!empty($emptySetIds)) $db->delete('products_sets', 'id IN (' . implode(', ', $emptySetIds) . ')');
+		if(!empty($emptySetIds)) BackendModel::getDB(true)->update('products_products', array('set_id' => null), 'set_id IN(' . implode(',', $emptySetIds) . ')');
+
+		// invalidate the cache for blog
+		BackendModel::invalidateFrontendCache('products', BL::getWorkingLanguage());
+
+		return array('ids' => $ids, 'empty_set_ids' => $emptySetIds);
+	}
+
+	/**
+	 * Get the ids to for an image
+	 *
+	 * @param mixed $ids The ids.
+	 * @return array
+	 */
+	public static function getSetIdsForImage($ids)
+	{
+		// make sure $ids is an array
+		$ids = (array) $ids;
+
+		// loop and cast to integers
+		foreach($ids as &$id) $id = (int) $id;
+
+		// create an array with an equal amount of questionmarks as ids provided
+		$idPlaceHolders = array_fill(0, count($ids), '?');
+
+		// get db
+		$db = BackendModel::getDB(true);
+
+		// get used set ids
+		return (array) $db->getColumn(
+			'SELECT set_id
+			 FROM products_sets_images AS p
+			 WHERE id IN (' . implode(', ', $idPlaceHolders) . ')',
+			$ids
+		);
+	}
+
+	/**
+	 * Get the ids to for an image
+	 *
+	 * @param mixed $ids The ids.
+	 * @return array
+	 */
+	public static function getProductIdsForSet($ids)
+	{
+		// make sure $ids is an array
+		$ids = (array) $ids;
+
+		// loop and cast to integers
+		foreach($ids as &$id) $id = (int) $id;
+
+		// create an array with an equal amount of questionmarks as ids provided
+		$idPlaceHolders = array_fill(0, count($ids), '?');
+
+		// get db
+		$db = BackendModel::getDB(true);
+
+		// get used set ids
+		return (array) $db->getColumn(
+			'SELECT id
+			 FROM products_products AS p
+			 WHERE id IN (' . implode(', ', $idPlaceHolders) . ')',
+			$ids
+		);
+	}
+
+	/**
+	 * Get the ids to for a set that has no images
+	 *
+	 * @param mixed $ids The ids.
+	 * @return array
+	 */
+	public static function getSetIdsNoImages($ids)
+	{
+		// make sure $ids is an array
+		$ids = (array) $ids;
+
+		// loop and cast to integers
+		foreach($ids as &$id) $id = (int) $id;
+
+		// create an array with an equal amount of questionmarks as ids provided
+		$idPlaceHolders = array_fill(0, count($ids), '?');
+
+		// get db
+		$db = BackendModel::getDB(true);
+
+		// get used meta ids
+		return (array) $db->getColumn(
+			'SELECT id
+			 FROM products_sets
+			 WHERE id IN (' . implode(', ', $idPlaceHolders) . ') AND num_images = ? ',
+			array_merge($ids, array(0))
+		);
+	}
+
+	/**
+	 * Deletes a category
+	 *
+	 * @param int $id The id of the category to delete.
+	 */
+	public static function deleteCategory($id)
+	{
+		// redefine
+		$id = (int) $id;
+
+		// get db
+		$db = BackendModel::getDB(true);
+
+		// get item
+		$item = self::getCategory($id);
+
+		// any items?
+		if(!empty($item))
+		{
+			// delete meta
+			$db->delete('meta', 'id = ?', array($item['meta_id']));
+
+			// delete category
+			$db->delete('products_categories', 'id = ?', array($id));
+
+			// update category for the posts that might be in this category
+			$db->delete('products_categories_products', 'category_id = ?', array($id));
+
+			// invalidate the cache for blog
+			BackendModel::invalidateFrontendCache('products', BL::getWorkingLanguage());
+		}
+	}
+
+	/**
+	 * Checks if an product exists
+	 *
+	 * @param int $id The id of the product to check for existence.
+	 * @return bool
+	 */
+	public static function existsProduct($id)
+	{
+		return (bool) BackendModel::getDB()->getVar(
+					'SELECT i.id
+					 FROM products_products AS i
+					 WHERE i.id = ? AND i.language = ?',
+					array((int) $id, BL::getWorkingLanguage())
+				);
+	}
+
+	/**
+	 * Checks if a images exists
+	 *
+	 * @param int $id The id of the image to check for existence.
+	 * @return bool
+	 */
+	public static function existsImage($id)
+	{
+		return (bool) BackendModel::getDB()->getVar(
+					'SELECT i.id
+					 FROM products_sets_images AS i
+					 WHERE i.id = ?',
+					array((int) $id)
+				);
+	}
+
+	/**
+	 * Checks if a resolution exists
+	 *
+	 * @param int $width The width
+	 * @param int $height The height
+	 * @param string $method The method of the resolution
+	 * @return bool
+	 */
+	public static function existsResolution($width, $height, $method)
+	{
+		return (bool) BackendModel::getDB()->getVar(
+					'SELECT i.id
+					 FROM products_extras_resolutions AS i
+					 WHERE i.width = ? AND i.height = ? AND i.method = ?',
+					array((int) $width, (int) $height, (string) $method)
+				);
+	}
+
+	/**
+	 * Checks if an extra exists
+	 *
+	 * @param int $id The id of the extra to check for existence.
+	 * @return bool
+	 */
+	public static function existsExtra($id)
+	{
+		return (bool) BackendModel::getDB()->getVar(
+					'SELECT i.id
+					 FROM products_extras AS i
+					 WHERE i.id = ?',
+					array((int) $id)
+				);
+	}
+
+	/*public static function existsCronjobByImageId($module, $id)
+	{
+		return (bool) BackendModel::getDB()->getVar(
+					'SELECT i.id
+					 FROM amazon_s3_cronjobs AS i
+					 WHERE i.module = ? AND i.data LIKE ?',
+					array((string) $module, '%s:8:"image_id";i:' . (int) $id . ';%')
+				);
+	}*/
+
+	/**
+	 * Checks if an set exists
+	 *
+	 * @param int $id The id of the set to check for existence.
+	 * @return bool
+	 */
+	public static function existsSet($id)
+	{
+		return (bool) BackendModel::getDB()->getVar(
+					'SELECT i.id
+					 FROM products_sets AS i
+					 WHERE i.id = ?',
+					array((int) $id)
+				);
+	}
+
+	/**
+	 * Checks if a category exists
+	 *
+	 * @param int $id The id of the category to check for existence.
+	 * @return int
+	 */
+	public static function existsCategory($id)
+	{
+		return (bool) BackendModel::getDB()->getVar(
+			'SELECT COUNT(id)
+			 FROM products_categories AS i
+			 WHERE i.id = ? AND i.language = ?',
+			array((int) $id, BL::getWorkingLanguage())
+		);
+	}
+
+	/**
+	 * Get all data for a given id and product
+	 *
+	 * @param int $id The id of the image to fetch
+	 * @param int $product_id The product_id of the content
+	 * @return array
+	 */
+	public static function getImageWithContent($id, $product_id)
+	{
+		$return =  (array) BackendModel::getDB()->getRecord(
+			'SELECT i.id, i.set_id, i.hidden, c.title, c.text, c.meta_id, i.filename, c.id as image_content_id, c.data, c.product_id
+			FROM products_sets_images AS i
+			INNER JOIN products_sets_images_content AS c ON c.set_image_id = i.id
+			WHERE i.id = ? AND c.language = ? AND c.product_id = ?
+			LIMIT 1',
+			array((int) $id, BL::getWorkingLanguage(), $product_id));
+
+		// unserialize data
+		if($return['data'] !== null) $return['data'] = unserialize($return['data']);
+
+		return $return;
+	}
+
+	/**
+	 * Get all data for a given id
+	 *
+	 * @param int $id The id of the image to fetch
+	 * @return array
+	 */
+	public static function getImage($id)
+	{
+		$return =  (array) BackendModel::getDB()->getRecord(
+			'SELECT i.*
+			FROM products_sets_images AS i
+			WHERE i.id = ?
+			LIMIT 1',
+			array((int) $id));
+
+		return $return;
+	}
+
+	/**
+	 * Get all data for a given id and kind
+	 *
+	 * @param int $extra_id The id of the extra to fetch
+	 * @param string $kind The kind of the extra to fetch
+	 * @return array
+	 */
+	public static function getExtraResolutionForKind($extra_id, $kind)
+	{
+		$return =  (array) BackendModel::getDB()->getRecord(
+			'SELECT i.*
+			FROM products_extras_resolutions AS i
+			WHERE i.extra_id = ? AND i.kind = ?
+			LIMIT 1',
+			array((int) $extra_id, (string) $kind));
+
+		return $return;
+	}
+
+	/**
+	 * Get all data for a given id
+	 *
+	 * @param int $id The Id of the resolution
+	 * @return array
+	 */
+	public static function getExtraResolutions($id)
+	{
+		$return =  (array) BackendModel::getDB()->getRecords(
+			'SELECT i.*
+			FROM products_extras_resolutions AS i
+			WHERE i.extra_id = ?',
+			array((int) $id));
+
+		return $return;
+	}
+
+	/**
+	 * Get all data for a given id
+	 *
+	 * @param int $id The id of an extra id
+	 * @return array
+	 */
+	public static function getAllModuleExtraIds($id)
+	{
+		$return =  (array) BackendModel::getDB()->getRecords(
+			'SELECT i.*
+			FROM products_extras_ids AS i
+			WHERE i.extra_id = ?',
+			array((int) $id));
+
+		return $return;
+	}
+
+	/**
+	 * Get all data for a given id
+	 *
+	 * @param int $id The id of the product to fetch
+	 * @return array
+	 */
+	public static function getProduct($id)
+	{
+		return (array) BackendModel::getDB()->getRecord(
+			'SELECT i.*, UNIX_TIMESTAMP(i.publish_on) AS publish_on,  UNIX_TIMESTAMP(i.new_from) AS new_from,  UNIX_TIMESTAMP(i.new_until) AS new_until , m.url,
+			GROUP_CONCAT(c.category_id) AS category_ids
+			FROM products_products AS i
+			INNER JOIN meta AS m ON m.id = i.meta_id
+			LEFT OUTER JOIN products_categories_products AS c ON i.id = c.product_id
+			WHERE i.id = ?
+			LIMIT 1',
+			array((int) $id));
+	}
+
+	/**
+	 * Get all the images
+	 *
+	 * @return array
+	 */
+	public static function getAllImages()
+	{
+		return (array) BackendModel::getDB()->getRecords(
+			'SELECT i.set_id, i.filename, i.id
+			FROM products_sets_images AS i');
+	}
+
+	/**
+	 * Get all the products
+	 *
+	 * @return array
+	 */
+	public static function getAllProducts()
+	{
+		return (array) BackendModel::getDB()->getRecords(
+			'SELECT i.*
+			FROM products_products AS i');
+	}
+
+	/**
+	 * Get all the sets
+	 *
+	 * @return array
+	 */
+	public static function getAllSets()
+	{
+		return (array) BackendModel::getDB()->getRecords(
+			'SELECT i.*
+			FROM products_sets AS i');
+	}
+
+	/**
+	 * Get all the extra widgets
+	 *
+	 * @return array
+	 */
+	public static function getAllExtrasWidgets()
+	{
+		return (array) BackendModel::getDB()->getRecords(
+			'SELECT i.*
+			FROM products_extras AS i
+			WHERE i.kind = ?', array('widget'));
+	}
+
+	/**
+	 * Get all the resolutions for an extra
+	 *
+	 * @param int $id The id of an extra id
+	 * @return array
+	 */
+	public static function getResolutionsForExtra($id)
+	{
+		return (array) BackendModel::getDB()->getRecords('SELECT width, height, method, kind FROM products_extras_resolutions WHERE extra_id = ?',array((int) $id));
+	}
+
+	/**
+	 * Get all the products linked to a set
+	 *
+	 * @param int $id The id of the set
+	 * @return array
+	 */
+	public static function getProductsLinkedToSet($id)
+	{
+		return (array) BackendModel::getDB()->getRecords(
+			'SELECT a.language, a.id
+			FROM  products_products AS a
+			WHERE a.set_id = ?',
+			array((int) $id));
+	}
+
+	/**
+	 * Get all data for a given id
+	 *
+	 * @param int $id The id of the category to fetch.
+	 * @return array
+	 */
+	public static function getCategory($id)
+	{
+		return (array) BackendModel::getDB()->getRecord(
+			'SELECT i.*
+			 FROM products_categories AS i
+			 WHERE i.id = ? AND i.language = ?',
+			array((int) $id, BL::getWorkingLanguage())
+		);
+	}
+
+	/**
+	 * Get all data for a given id
+	 *
+	 * @param int $id The id of the extra to fetch.
+	 * @return array
+	 */
+	public static function getExtra($id)
+	{
+		$return =  (array) BackendModel::getDB()->getRecord(
+			'SELECT i.*
+			 FROM products_extras AS i
+			 WHERE i.id = ? LIMIT 1',
+			array((int) $id)
+		);
+
+		if($return['data'] !== null) $return['data'] = unserialize($return['data']);
+
+		return $return;
+	}
+
+	/**
+	 * Get all categories
+	 *
+	 * @param bool[optional] $includeCount Include the count?
+	 * @return array
+	 */
+	public static function getCategoriesForDropdown($includeCount = false)
+	{
+		$db = BackendModel::getDB();
+
+		if($includeCount)
+		{
+			return (array) $db->getPairs(
+				'SELECT i.id, CONCAT(i.title, " (", COUNT(p.product_id) ,")") AS title
+				 FROM products_categories AS i
+				 LEFT OUTER JOIN products_categories_products AS p ON i.id = p.category_id 
+				 WHERE i.language = ? 
+				 GROUP BY i.id ORDER BY i.sequence ASC',
+				array(BL::getWorkingLanguage())
+			);
+		}
+
+		return (array) $db->getPairs(
+			'SELECT i.id, i.title
+			 FROM products_categories AS i
+			 WHERE i.language = ? ORDER BY i.sequence ASC',
+			array(BL::getWorkingLanguage())
+		);
+	}
+
+	/**
+	 * Get the maximum id
+	 *
+	 * @return int
+	 */
+	public static function getSequenceProduct()
+	{
+		// return
+		return (int) BackendModel::getDB()->getVar('SELECT MAX(sequence) FROM products_products');
+	}
+	
+	
+	/**
+	 * Get the maximum id
+	 *
+	 * @return int
+	 */
+	public static function getSequenceCategory()
+	{
+		// return
+		return (int) BackendModel::getDB()->getVar('SELECT MAX(sequence) FROM products_categories');
+	}
+	
+
+	/**
+	 * Get the ids for an product
+	 *
+	 * @param  mixed $ids The ids.
+	 * @return array
+	 */
+	public static function getSetIdsForProduct($ids)
+	{
+		// make sure $ids is an array
+		$ids = (array) $ids;
+
+		// loop and cast to integers
+		foreach($ids as &$id) $id = (int) $id;
+
+		// create an array with an equal amount of questionmarks as ids provided
+		$idPlaceHolders = array_fill(0, count($ids), '?');
+
+		// get db
+		$db = BackendModel::getDB(true);
+
+		// get used set ids
+		return (array) $db->getColumn(
+			'SELECT set_id
+			 FROM products_products AS p
+			 WHERE id IN (' . implode(', ', $idPlaceHolders) . ')',
+			$ids
+		);
+	}
+
+	/**
+	 * Get the ids for an product
+	 *
+	 * @param  mixed $ids The ids.
+	 * @return array
+	 */
+	public static function getModuleExtraIdsForProduct($ids)
+	{
+		// make sure $ids is an array
+		$ids = (array) $ids;
+
+		// loop and cast to integers
+		foreach($ids as &$id) $id = (int) $id;
+
+		// create an array with an equal amount of questionmarks as ids provided
+		$idPlaceHolders = array_fill(0, count($ids), '?');
+
+		// get db
+		$db = BackendModel::getDB(true);
+
+		// get used set ids
+		return (array) $db->getColumn(
+			'SELECT modules_extra_id
+			 FROM  products_extras_ids AS p
+			 WHERE product_id IN (' . implode(', ', $idPlaceHolders) . ')',
+			$ids
+		);
+	}
+
+	/**
+	 * Get the ids for an an product
+	 *
+	 * @param  mixed $ids The ids.
+	 * @return array
+	 */
+	public static function getExtraIdsForProduct($ids)
+	{
+		// make sure $ids is an array
+		$ids = (array) $ids;
+
+		// loop and cast to integers
+		foreach($ids as &$id) $id = (int) $id;
+
+		// create an array with an equal amount of questionmarks as ids provided
+		$idPlaceHolders = array_fill(0, count($ids), '?');
+
+		// get db
+		$db = BackendModel::getDB(true);
+
+		// get used set ids
+		return (array) $db->getRecords(
+			'SELECT p.*, a.action
+			 FROM  products_extras_ids AS p
+			INNER JOIN products_extras AS a ON a.id = p.extra_id
+			 WHERE product_id IN (' . implode(', ', $idPlaceHolders) . ')',
+			$ids
+		);
+	}
+
+	/**
+	 * Get the ids for an extra
+	 *
+	 * @param  mixed $ids The ids.
+	 * @return array
+	 */
+	public static function getModuleExtraIdsForExtra($ids)
+	{
+		// make sure $ids is an array
+		$ids = (array) $ids;
+
+		// loop and cast to integers
+		foreach($ids as &$id) $id = (int) $id;
+
+		// create an array with an equal amount of questionmarks as ids provided
+		$idPlaceHolders = array_fill(0, count($ids), '?');
+
+		// get db
+		$db = BackendModel::getDB(true);
+
+		// get used set ids
+		return (array) $db->getColumn(
+			'SELECT modules_extra_id
+			 FROM  products_extras_ids AS p
+			 WHERE extra_id IN (' . implode(', ', $idPlaceHolders) . ')',
+			$ids
+		);
+	}
+
+	/**
+	 * Get all the images of a set
+	 *
+	 * @param int $id The id
+	 * @return array
+	 */
+	public static function getSetImages($id)
+	{
+		return (array) BackendModel::getDB()->getRecords(
+			'SELECT a.filename, a.original_filename, a.id
+			FROM  products_sets_images  as a
+			WHERE a.set_id  = ?',
+			array((int) $id));
+	}
+
+	/**
+	 * Get the sets for a dropdown
+	 *
+	 * @return array
+	 */
+	public static function getSetsForDropdown()
+	{
+		// get db
+		$db = BackendModel::getDB();
+
+		// get records and return them
+		return $results =  (array) $db->getPairs(
+									'SELECT s.id, CONCAT(s.language, ": ", a.title, " (", s.num_images ,")") AS title
+									FROM products_sets AS s
+									LEFT JOIN products_products AS a ON (a.set_id = s.id)
+									WHERE (a.set_id IS NULL) OR (a.set_id IS NOT NULL AND s.language != ?)
+									GROUP BY s.id
+									ORDER BY s.title ASC',
+									array(BL::getWorkingLanguage()));
+
+	}
+
+	/**
+	 * Get unique extra resolutions
+	 *
+	 * @return array
+	 */
+	public static function getUniqueExtrasResolutions()
+	{
+		// get db
+		$db = BackendModel::getDB();
+
+		// get records and return them
+		return (array) $db->getRecords(
+									'SELECT DISTINCT r.width, r.height, r.method
+									FROM products_extras_resolutions AS r');
+
+	}
+
+	/**
+	 * Get the maximum id
+	 *
+	 * @param int The of of the set
+	 * @return int
+	 */
+	public static function getSetImageSequence($set_id)
+	{
+		// return
+		return (int) BackendModel::getDB()->getVar('SELECT MAX(sequence) FROM products_sets_images WHERE set_id = ? LIMIT 1',array($set_id));
+	}
+
+	/**
+	 * Retrieve the unique URL for an item
+	 *
+	 * @param string $URL The string wheron the URL will be based.
+	 * @param int[optional] $itemId The id of the productspost to ignore.
+	 * @return string The URL to base on.
+	 */
+	public static function getURLForProduct($URL, $itemId = null)
+	{
+		// redefine URL
+		$URL = SpoonFilter::urlise((string) $URL);
+
+		// get db
+		$db = BackendModel::getDB();
+
+		// new item
+		if($itemId === null)
+		{
+			// get number of categories with this URL
+			$number = (int) $db->getVar('SELECT COUNT(i.id)
+										FROM products_products AS i
+										INNER JOIN meta AS m ON i.meta_id = m.id
+										WHERE i.language = ? AND m.url = ?',
+										array(BL::getWorkingLanguage(), $URL));
+
+			// already exists
+			if($number != 0)
+			{
+				// add number
+				$URL = BackendModel::addNumber($URL);
+
+				// try again
+				return self::getURLForProduct($URL);
+			}
+		}
+
+		// current category should be excluded
+		else
+		{
+			// get number of items with this URL
+			$number = (int) $db->getVar('SELECT COUNT(i.id)
+										FROM products_products AS i
+										INNER JOIN meta AS m ON i.meta_id = m.id
+										WHERE i.language = ? AND m.url = ? AND i.id != ?',
+										array(BL::getWorkingLanguage(), $URL, $itemId));
+
+			// already exists
+			if($number != 0)
+			{
+				// add number
+				$URL = BackendModel::addNumber($URL);
+
+				// try again
+				return self::getURLForProduct($URL, $itemId);
+			}
+		}
+		return $URL;
+	}
+
+	/**
+	 * Retrieve the unique URL for a category
+	 *
+	 * @param string $URL The string wheron the URL will be based.
+	 * @param int[optional] $categoryId The id of the category to ignore.
+	 * @return string
+	 */
+	public static function getURLForCategory($URL, $id = null)
+	{
+		// redefine URL
+		$URL = SpoonFilter::urlise((string) $URL);
+
+		// get db
+		$db = BackendModel::getDB();
+
+		// new category
+		if($id === null)
+		{
+			// get number of categories with this URL
+			$number = (int) $db->getVar('SELECT COUNT(i.id)
+											FROM products_categories AS i
+											INNER JOIN meta AS m ON i.meta_id = m.id
+											WHERE i.language = ? AND m.url = ?',
+											array(BL::getWorkingLanguage(), $URL));
+
+			// already exists
+			if($number != 0)
+			{
+				// add number
+				$URL = BackendModel::addNumber($URL);
+
+				// try again
+				return self::getURLForCategory($URL);
+			}
+		}
+
+		// current category should be excluded
+		else
+		{
+			// get number of items with this URL
+			$number = (int) $db->getVar('SELECT COUNT(i.id)
+											FROM products_categories AS i
+											INNER JOIN meta AS m ON i.meta_id = m.id
+											WHERE i.language = ? AND m.url = ? AND i.id != ?',
+											array(BL::getWorkingLanguage(), $URL, $id));
+
+			// already exists
+			if($number != 0)
+			{
+				// add number
+				$URL = BackendModel::addNumber($URL);
+
+				// try again
+				return self::getURLForCategory($URL, $id);
+			}
+		}
+
+		// return the unique URL!
+		return $URL;
+	}
+
+	/**
+	 * Retrieve the unique URL for an image
+	 *
+	 * @param string $URL The string wheron the URL will be based.
+	 * @param string $language The language
+	 * @param int[optional] $id The id of the image to ignore.
+	 * @return string
+	 */
+	public static function getURLForImage($URL, $language, $id = null)
+	{
+		// redefine URL
+		$URL = SpoonFilter::urlise((string) $URL);
+
+		// get db
+		$db = BackendModel::getDB();
+
+		// new category
+		if($id === null)
+		{
+			// get number of categories with this URL
+			$number = (int) $db->getVar('SELECT COUNT(i.id)
+											FROM products_sets_images_content AS i
+											INNER JOIN meta AS m ON i.meta_id = m.id
+											WHERE i.language = ? AND m.url = ?',
+											array($language, $URL));
+
+			// already exists
+			if($number != 0)
+			{
+				// add number
+				$URL = BackendModel::addNumber($URL);
+
+				// try again
+				return self::getURLForImage($URL, $language);
+			}
+		}
+
+		// current category should be excluded
+		else
+		{
+			// get number of items with this URL
+			$number = (int) $db->getVar('SELECT COUNT(i.id)
+											FROM products_sets_images_content AS i
+											INNER JOIN meta AS m ON i.meta_id = m.id
+											WHERE i.language = ? AND m.url = ? AND i.id != ?',
+											array($language, $URL, $id));
+
+			// already exists
+			if($number != 0)
+			{
+				// add number
+				$URL = BackendModel::addNumber($URL);
+
+				// try again
+				return self::getURLForImage($URL, $language, $id);
+			}
+		}
+
+		// return the unique URL!
+		return $URL;
+	}
+
+	/**
+	 * Retrieve the unique filename for a file
+	 *
+	 * @param string $filename The string wheron the filename will be based.
+	 * @param string $extension The extension of the file.
+	 * @param int[optional] $id The id of the category to ignore.
+	 * @return string
+	 */
+	public static function getFilenameForImage($filename, $extension, $id = null)
+	{
+		// redefine
+		$filename = SpoonFilter::urlise((string) $filename);
+
+		// get db
+		$db = BackendModel::getDB();
+
+		// new category
+		if($id === null)
+		{
+			// get number of categories with this URL
+			$number = (int) $db->getVar('SELECT COUNT(i.id)
+											FROM  products_sets_images AS i
+											WHERE i.filename = ?',
+											array($filename . '.' . $extension));
+
+			// already exists
+			if($number != 0)
+			{
+				// add number
+				$filename = BackendModel::addNumber($filename);
+
+				// try again
+				return self::getFilenameForImage($filename, $extension);
+			}
+		}
+
+		// current category should be excluded
+		else
+		{
+			// get number of items with this URL
+			$number = (int) $db->getVar('SELECT COUNT(i.id)
+											FROM products_sets_images AS i
+											WHERE i.filename = ? AND i.id != ?',
+											array($filename . '.' . $extension, $id));
+
+			// already exists
+			if($number != 0)
+			{
+				// add number
+				$filename = BackendModel::addNumber($filename);
+
+				// try again
+				return self::getFilenameForImage($filename, $extension, $id);
+			}
+		}
+
+		// return the unique URL!
+		return $filename;
+	}
+
+	/**
+	 * Inserts to the database
+	 *
+	 * @param array $item The data to insert.
+	 * @return array
+	 */
+	public static function insertProduct(array $item)
+	{
+		$db = BackendModel::getDB(true);
+
+		// insert and return the new id
+		$item['id'] = $db->insert('products_products', $item);
+
+		return $item['id'] ;
+	}
+
+	/**
+	 * Inserts to the database
+	 *
+	 * @param array $item The data to insert.
+	 * @return array
+	 */
+	public static function insertExtraId(array $item)
+	{
+		$db = BackendModel::getDB(true);
+
+		// insert and return the new id
+		$item['id'] = $db->insert('products_extras_ids', $item);
+
+		return $item['id'] ;
+	}
+
+	/**
+	 * Inserts to the database
+	 *
+	 * @param array $extra The extra data.
+	 * @return int The id
+	 */
+	public static function insertModulesExtraWidget($extra)
+	{
+		$db = BackendModel::getDB(true);
+
+		$extra['hidden'] = 'N';
+		$extra['type'] = 'widget';
+		$extra['sequence'] =  $db->getVar('SELECT MAX(i.sequence) + 1 FROM modules_extras AS i WHERE i.module = ?', array($extra['module']));
+		if(is_null($extra['sequence'])) $extra['sequence'] = $db->getVar('SELECT CEILING(MAX(i.sequence) / 1000) * 1000 FROM modules_extras AS i');
+
+		// Save widget
+		return $db->insert('modules_extras', $extra);
+	}
+
+	/**
+	 * Inserts to the database
+	 *
+	 * @param array $item The data to insert.
+	 * @return array
+	 */
+	public static function insertExtra(array $item)
+	{
+		$db = BackendModel::getDB(true);
+
+		// insert and return the new id
+		$item['id'] = $db->insert('products_extras', $item);
+
+		return $item['id'] ;
+	}
+
+	/**
+	 * Inserts to the database
+	 *
+	 * @param array $item The data to insert.
+	 * @return array
+	 */
+	public static function insertExtraResolution(array $item)
+	{
+		$db = BackendModel::getDB(true);
+
+		// insert and return the new id
+		$item['id'] = $db->insert('products_extras_resolutions', $item);
+
+		return $item['id'] ;
+	}
+
+	/**
+	 * Inserts to the database
+	 *
+	 * @param array $item The data to insert.
+	 * @return array
+	 */
+	public static function insertSet(array $item)
+	{
+		$db = BackendModel::getDB(true);
+
+		// insert and return the new id
+		$item['id'] = $db->insert('products_sets', $item);
+
+		return $item['id'] ;
+	}
+
+	/**
+	 * Inserts to the database
+	 *
+	 * @param array $item The data to insert.
+	 * @return array
+	 */
+	public static function insertSetImage(array $item)
+	{
+		$db = BackendModel::getDB(true);
+
+		// insert and return the new id
+		$item['id'] = $db->insert('products_sets_images', $item);
+
+		return $item['id'] ;
+	}
+
+	/**
+	 * Inserts to the database
+	 *
+	 * @param array $item The data to insert.
+	 * @param int[optional] $meta The meta data?
+	 * @return array
+	 */
+	public static function insertCategory(array $item, $meta = null)
+	{
+		// get db
+		$db = BackendModel::getDB(true);
+
+		// meta given?
+		if($meta !== null) $item['meta_id'] = $db->insert('meta', $meta);
+
+		// create category
+		$item['id'] = $db->insert('products_categories', $item);
+
+		// invalidate the cache for products
+		BackendModel::invalidateFrontendCache('products', BL::getWorkingLanguage());
+
+		// return the id
+		return $item['id'];
+	}
+
+	/**
+	 * Inserts to the database
+	 *
+	 * @param array $item The data to insert.
+	 * @param array $content The data to insert.
+	 * @param array $meta The data to insert.
+	 * @return array
+	 */
+	public static function insertImage(array $item, array $content, array $meta)
+	{
+		// get db
+		$db = BackendModel::getDB(true);
+
+		// insert the category
+		$id = $db->insert('products_sets_images', $item);
+
+		// loop
+		foreach($meta as $key => $row)
+		{
+			// set id
+			$content[$key]['set_image_id'] = $id;
+
+			// insert meta
+			$content[$key]['meta_id'] = $db->insert('meta', $row);
+
+			// insert content
+			$db->insert('products_sets_images_content', $content[$key]);
+		}
+
+		// return id
+		return $id;
+	}
+
+	/**
+	 * Inserts to the database
+	 *
+	 * @param array $content The data to insert.
+	 * @param array $meta The data to insert.
+	 * @return array
+	 */
+	public static function insertImagesContentForExisting(array $content, array $meta)
+	{
+		// get db
+		$db = BackendModel::getDB(true);
+
+		// loop
+		foreach($meta as $key => $row)
+		{
+			// insert meta
+			$content[$key]['meta_id'] = $db->insert('meta', $row);
+
+			// insert content
+			$db->insert('products_sets_images_content', $content[$key]);
+		}
+
+		return true;
+	}
+
+	/**
+	 * Update an existing record
+	 *
+	 * @param array $item The new data.
+	 * @return int
+	 */
+	public static function updateProduct(array $item)
+	{
+		$db = BackendModel::getDB(true);
+
+		// update category
+		$db->update('products_products', $item, 'id = ?', array($item['id']));
+		
+		return $item['id'];
+	}
+
+	/**
+	 * Update an existing record
+	 *
+	 * @param array $item The new data.
+	 * @return int
+	 */
+	public static function updateExtra(array $item)
+	{
+		$db = BackendModel::getDB(true);
+
+		// update category
+		$db->update('products_extras', $item, 'id = ?', array($item['id']));
+		
+		return $item['id'];
+	}
+
+	/**
+	 * Update an existing record
+	 *
+	 * @param array $item The new data.
+	 * @return int
+	 */
+	public static function updateExtraResolution(array $item)
+	{
+		$db = BackendModel::getDB(true);
+
+		// update category
+		$db->update('products_extras_resolutions', $item, 'id = ?', array($item['id']));
+		
+		return $item['id'];
+	}
+
+	/**
+	 * Update an existing record
+	 *
+	 * @param array $item The new data.
+	 * @return int
+	 */
+	public static function updateModulesExtraWidget(array $item)
+	{
+		$db = BackendModel::getDB(true);
+
+		// update category
+		$db->update('modules_extras', $item, 'id = ?', array($item['id']));
+		
+		return $item['id'];
+	}
+
+	/**
+	 * Update an existing record
+	 *
+	 * @param array $item The new data.
+	 * @return int
+	 */
+	public static function updateModulesExtraBlockByModule(array $item)
+	{
+		$db = BackendModel::getDB(true);
+
+		// update category
+		$db->update('modules_extras', $item, 'module = ? AND type = ?', array($item['module'], $item['type']));
+		
+		return $item;
+	}
+
+	/**
+	 * Update an existing record
+	 *
+	 * @param array $item The new data.
+	 * @param array $content The new data.
+	 * @return int
+	 */
+	public static function updateImage(array $item, array $content = null)
+	{
+		$db = BackendModel::getDB(true);
+
+		// update
+		if($content !== null) $db->update('products_sets_images_content', $content, 'set_image_id = ? AND product_id = ? AND language = ?', array($content['set_image_id'], $content['product_id'], BL::getWorkingLanguage()));
+		return $db->update('products_sets_images', $item, 'id = ?', array($item['id']));
+	}
+
+	/**
+	 * Update the set statistics
+	 *
+	 * @param  mixed $ids The ids to update
+	 */
+	public static function updateSetStatistics($ids)
+	{
+		$db = BackendModel::getDB(true);
+
+		// make sure $ids is an array
+		$ids = (array) $ids;
+
+		foreach($ids as $id)
+		{
+			$item['num_images'] = 				(int) $db->getVar('SELECT COUNT(id) FROM  products_sets_images WHERE set_id = ?', array((int) $id));
+			$item['num_images_hidden'] =		(int) $db->getVar('SELECT COUNT(id) FROM  products_sets_images WHERE set_id = ? AND hidden = ?', array((int) $id, 'Y'));
+			$item['num_images_not_hidden'] = 	(int) $db->getVar('SELECT COUNT(id) FROM  products_sets_images WHERE set_id = ? AND hidden = ?', array((int) $id, 'N'));
+			$item['num_products'] = 				(int) $db->getVar('SELECT COUNT(set_id) FROM  products_products WHERE set_id = ?', array((int) $id));
+
+			// update
+			$db->update('products_sets', $item, 'id = ?', array((int) $id));
+
+			// Update products based on set_id
+			$product_ids = $db->getColumn('SELECT id FROM products_products WHERE set_id  = ?', array((int) $id));
+
+			self::updateProductStatistics($product_ids);
+		}
+	}
+
+	/**
+	 * Update the product statistics
+	 *
+	 * @param  mixed $ids The ids to update
+	 */
+	public static function updateProductStatistics($ids)
+	{
+		$db = BackendModel::getDB(true);
+
+		// make sure $ids is an array
+		$ids = (array) $ids;
+
+		foreach($ids as $id)
+		{
+			// Get all the sets linked to the product and get count.
+			$set_ids = $db->getColumn('SELECT set_id FROM products_products WHERE id  = ?', array((int) $id));
+
+			$item['num_images'] = 				(int) $db->getVar('SELECT SUM(num_images) FROM  products_sets WHERE id IN(' . implode(', ', $set_ids) . ')');
+			$item['num_images_hidden'] =		(int) $db->getVar('SELECT SUM(num_images_hidden) FROM  products_sets WHERE id IN(' . implode(', ', $set_ids) . ')');
+			$item['num_images_not_hidden'] = 	(int) $db->getVar('SELECT SUM(num_images_not_hidden) FROM  products_sets WHERE id IN(' . implode(', ', $set_ids) . ')');
+
+			// update
+			$db->update('products_products', $item, 'id = ?', array((int) $id));
+		}
+	}
+
+	/**
+	 * Update an existing category
+	 *
+	 * @param array $item The new data.
+	 * @param array $meta The new meta data.
+	 * @return int
+	 */
+	public static function updateCategory(array $item, $meta = null)
+	{
+		// get db
+		$db = BackendModel::getDB(true);
+
+		// update category
+		$updated = $db->update('products_categories', $item, 'id = ?', array((int) $item['id']));
+
+		// meta passed?
+		if($meta !== null)
+		{
+			// get current category
+			$category = self::getCategory($item['id']);
+
+			// update the meta
+			$db->update('meta', $meta, 'id = ?', array((int) $category['meta_id']));
+		}
+
+		// invalidate the cache for products
+		BackendModel::invalidateFrontendCache('products', BL::getWorkingLanguage());
+
+		// return
+		return $item['id'];
+	}
+
+	/**
+	 * Update an existing record
+	 *
+	 * @param  mixed $ids The ids to update
+	 */
+	public static function updateProductsHidden($ids)
+	{
+		BackendModel::getDB(true)->update('products_products', array('hidden' => 'Y'), 'id IN(' . implode(',', $ids) . ')');
+		
+		return $ids;
+	}
+
+	/**
+	 * Update an existing record
+	 *
+	 * @param  mixed $ids The ids to update
+	 */
+	public static function updateProductsPublished($ids)
+	{
+		BackendModel::getDB(true)->update('products_products', array('hidden' => 'N'), 'id IN(' . implode(',', $ids) . ')');
+		return $ids;
+	}
+
+	/**
+	 * Update an existing record
+	 *
+	 * @param  mixed $ids The ids to update
+	 */
+	public static function updateImagesHidden($ids)
+	{
+		BackendModel::getDB(true)->update('products_sets_images', array('hidden' => 'Y'), 'id IN(' . implode(',', $ids) . ')');
+		return $ids;
+	}
+
+	/**
+	 * Update an existing record
+	 *
+	 * @param  mixed $ids The ids to update
+	 */
+	public static function updateImagesPublished($ids)
+	{
+		BackendModel::getDB(true)->update('products_sets_images', array('hidden' => 'N'), 'id IN(' . implode(',', $ids) . ')');
+		return $ids;
+	}
+	
+	/**
+	 * Update the linked categories for an item
+	 *
+	 * @return	void
+	 * @param	int $id							The id of the item.
+	 * @param	array[optional] $categories		The new categories.
+	 */
+	public static function updateProductCategories($id, array $categories = null)
+	{
+		// redefine
+		$id = (int) $id;
+
+		// get db
+		$db = BackendModel::getDB(true);
+
+		// delete old categories
+		$db->delete('products_categories_products', 'product_id = ?', $id);
+
+		// insert the new one(s)
+		if(!empty($categories)) $db->insert('products_categories_products', $categories);
+	}
+
+
+}
