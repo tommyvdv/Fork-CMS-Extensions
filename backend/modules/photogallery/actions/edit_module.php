@@ -56,7 +56,7 @@ class BackendPhotogalleryEditModule extends BackendBaseActionEdit
 		$this->record = (array) BackendPhotogalleryModel::getExtra($this->id);
 
 		// no item found, throw an exceptions, because somebody is fucking with our URL
-		if(empty($this->record)) $this->redirect(BackendModel::createURLForAction('albums') . '&error=non-existing');
+		if(empty($this->record)) $this->redirect(BackendModel::createURLForAction('index') . '&error=non-existing');
 
 		$this->album_detail_overview_thumbnail = BackendPhotogalleryModel::getExtraResolutionForKind($this->id, 'album_detail_overview_thumbnail');
 		$this->album_overview_thumbnail = BackendPhotogalleryModel::getExtraResolutionForKind($this->id, 'album_overview_thumbnail');
@@ -102,7 +102,7 @@ class BackendPhotogalleryEditModule extends BackendBaseActionEdit
 		$this->frm->addRadiobutton('action', $actionValues, $this->record['data']['action']);
 		
 		$actionValues = array(
-			array('value' => 'albums', 'label' => SpoonFilter::ucfirst(BL::lbl('Albums'))),
+			array('value' => 'index', 'label' => SpoonFilter::ucfirst(BL::lbl('index'))),
 			array('value' => 'categories', 'label' => SpoonFilter::ucfirst(BL::lbl('Categories'))),
 		);
 

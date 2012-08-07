@@ -12,7 +12,7 @@
  *
  * @author Frederik Heyninck <frederik@figure8.be>
  */
-class BackendPhotogalleryDeleteAlbum extends BackendBaseActionDelete
+class BackendPhotogalleryDelete extends BackendBaseActionDelete
 {
 	/**
 	 * Execute this action.
@@ -66,10 +66,10 @@ class BackendPhotogalleryDeleteAlbum extends BackendBaseActionDelete
 			if(is_callable(array('BackendSearchModel', 'removeIndex'))) BackendSearchModel::removeIndex($this->getModule(), (int) $this->id);
 			
 			// deleted, so redirect
-			$this->redirect(BackendModel::createURLForAction('albums') . '&report=deleted-album&var=' . urlencode($this->record['title']));
+			$this->redirect(BackendModel::createURLForAction('index') . '&report=deleted-album&var=' . urlencode($this->record['title']));
 		}
 
 		// something went wrong
-		else $this->redirect(BackendModel::createURLForAction('albums') . '&error=non-existing');
+		else $this->redirect(BackendModel::createURLForAction('index') . '&error=non-existing');
 	}
 }

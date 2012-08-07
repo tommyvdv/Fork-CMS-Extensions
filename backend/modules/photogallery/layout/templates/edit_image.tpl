@@ -5,7 +5,7 @@
 	<h2>{$lblPhotogallery|ucfirst}: {$msgEditImage}</h2>
 	
 	<div class="buttonHolderRight">
-		<a href="{$var|geturl:'edit_album'}&amp;id={$album_id}#tabImages" class="button icon iconBack"><span>{$lblOverview|ucfirst}</span></a>
+		<a href="{$var|geturl:'edit'}&amp;id={$album_id}#tabImages" class="button icon iconBack"><span>{$lblOverview|ucfirst}</span></a>
 	</div>
 	
 </div>

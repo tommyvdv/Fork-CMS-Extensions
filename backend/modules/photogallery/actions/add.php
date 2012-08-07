@@ -13,7 +13,7 @@
  * @author Frederik Heyninck <frederik@figure8.be>
  */
 
-class BackendPhotogalleryAddAlbum extends BackendBaseActionAdd
+class BackendPhotogalleryAdd extends BackendBaseActionAdd
 {
 	/**
 	 * Execute the action
@@ -190,7 +190,7 @@ class BackendPhotogalleryAddAlbum extends BackendBaseActionAdd
 											'extra_label' => $label,
 											'extra_id' => $widget['id'],
 											'language' => BL::getWorkingLanguage(),
-											'edit_url' => BackendModel::createURLForAction('edit_album') . '&id=' . $item['id']
+											'edit_url' => BackendModel::createURLForAction('edit') . '&id=' . $item['id']
 										)
 									);
 					

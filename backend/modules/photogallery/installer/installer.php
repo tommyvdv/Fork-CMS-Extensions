@@ -32,7 +32,7 @@ class PhotogalleryInstaller extends ModuleInstaller
 		$this->setModuleRights(1, 'photogallery');
 
 		// action rights
-		$this->setActionRights(1, 'photogallery', 'add_album');
+		$this->setActionRights(1, 'photogallery', 'add');
 		$this->setActionRights(1, 'photogallery', 'add_category');
 		$this->setActionRights(1, 'photogallery', 'add_images_choose');
 		$this->setActionRights(1, 'photogallery', 'add_images_existing');
@@ -45,14 +45,14 @@ class PhotogalleryInstaller extends ModuleInstaller
 		$this->setActionRights(1, 'photogallery', 'add_widget_related_by_categories');
 		$this->setActionRights(1, 'photogallery', 'add_widget_related_by_tags');
 		$this->setActionRights(1, 'photogallery', 'add_widget_slideshow');
-		$this->setActionRights(1, 'photogallery', 'albums');
+		$this->setActionRights(1, 'photogallery', 'index');
 		$this->setActionRights(1, 'photogallery', 'categories');
 		$this->setActionRights(1, 'photogallery', 'create_amazon_s3_cronjobs');
-		$this->setActionRights(1, 'photogallery', 'delete_album');
+		$this->setActionRights(1, 'photogallery', 'delete');
 		$this->setActionRights(1, 'photogallery', 'delete_category');
 		$this->setActionRights(1, 'photogallery', 'delete_extra');
 		$this->setActionRights(1, 'photogallery', 'delete_image');
-		$this->setActionRights(1, 'photogallery', 'edit_album');
+		$this->setActionRights(1, 'photogallery', 'edit');
 		$this->setActionRights(1, 'photogallery', 'edit_category');
 		$this->setActionRights(1, 'photogallery', 'edit_image');
 		$this->setActionRights(1, 'photogallery', 'edit_module');
@@ -64,7 +64,7 @@ class PhotogalleryInstaller extends ModuleInstaller
 		$this->setActionRights(1, 'photogallery', 'edit_widget_slideshow');
 		$this->setActionRights(1, 'photogallery', 'extras');
 		$this->setActionRights(1, 'photogallery', 'index');
-		$this->setActionRights(1, 'photogallery', 'mass_albums_action');
+		$this->setActionRights(1, 'photogallery', 'mass_action');
 		$this->setActionRights(1, 'photogallery', 'add_category');
 		$this->setActionRights(1, 'photogallery', 'album_images_sequence');
 		$this->setActionRights(1, 'photogallery', 'album_sequence');
@@ -85,7 +85,7 @@ class PhotogalleryInstaller extends ModuleInstaller
 			'photogallery/edit_album',
 		));
 
-		$this->setNavigation($navigationId, 'Albums', 'photogallery/albums', array(
+		$this->setNavigation($navigationId, 'index', 'photogallery/albums', array(
 			'photogallery/albums'
 		));
 
@@ -130,13 +130,13 @@ class PhotogalleryInstaller extends ModuleInstaller
 		$db = $this->getDB();
 
 		// Block
-		$extraId = $db->insert('photogallery_extras', array('data' => serialize(array('action' => 'lightbox', 'display' => 'albums')), 'action' => null, 'kind' => 'module', 'allow_delete' => 'N', 'edited_on' => gmdate('Y-m-d H:i:00'), 'created_on' => gmdate('Y-m-d H:i:00')));
+		$extraId = $db->insert('photogallery_extras', array('data' => serialize(array('action' => 'lightbox', 'display' => 'index')), 'action' => null, 'kind' => 'module', 'allow_delete' => 'N', 'edited_on' => gmdate('Y-m-d H:i:00'), 'created_on' => gmdate('Y-m-d H:i:00')));
 		$db->insert('photogallery_extras_resolutions', array('extra_id' => $extraId, 'width' => 1200, 'height' => 1200, 'method' => 'resize', 'kind' => 'large'));
 		$db->insert('photogallery_extras_resolutions', array('extra_id' => $extraId, 'width' => 125, 'height' => 125, 'method' => 'crop', 'kind' => 'album_detail_overview_thumbnail'));
 		$db->insert('photogallery_extras_resolutions', array('extra_id' => $extraId, 'width' => 200, 'height' => 200, 'method' => 'crop', 'kind' => 'album_overview_thumbnail'));
 		
 		// Module Extra
-		$extraBlockId = $this->insertExtra('photogallery', 'block', 'Photogallery', null, serialize(array('action' => 'lightbox', 'display' => 'albums', 'extra_id' => $extraId)));
+		$extraBlockId = $this->insertExtra('photogallery', 'block', 'Photogallery', null, serialize(array('action' => 'lightbox', 'display' => 'index', 'extra_id' => $extraId)));
 
 		// Slideshow
 		$extraId = $db->insert('photogallery_extras', array('action' => 'slideshow', 'kind' => 'widget', 'allow_delete' => 'Y', 'edited_on' => gmdate('Y-m-d H:i:00'), 'created_on' => gmdate('Y-m-d H:i:00')));

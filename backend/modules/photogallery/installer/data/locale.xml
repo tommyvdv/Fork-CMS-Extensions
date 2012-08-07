@@ -213,7 +213,7 @@
 				<translation language="en"><![CDATA[photogallery]]></translation>
 				<translation language="nl"><![CDATA[fotogalerij]]></translation>
 			</item>
-			<item type="label" name="AddAlbum">
+			<item type="label" name="Add">
 				<translation language="en"><![CDATA[add album]]></translation>
 				<translation language="nl"><![CDATA[voeg album toe]]></translation>
 			</item>

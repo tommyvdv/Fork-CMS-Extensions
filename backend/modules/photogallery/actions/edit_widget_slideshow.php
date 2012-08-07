@@ -57,7 +57,7 @@ class BackendPhotogalleryEditWidgetSlideshow extends BackendBaseActionEdit
 		$this->record = (array) BackendPhotogalleryModel::getExtra($this->id);
 
 		// no item found, throw an exceptions, because somebody is fucking with our URL
-		if(empty($this->record)) $this->redirect(BackendModel::createURLForAction('albums') . '&error=non-existing');
+		if(empty($this->record)) $this->redirect(BackendModel::createURLForAction('index') . '&error=non-existing');
 
 		$this->large = BackendPhotogalleryModel::getExtraResolutionForKind($this->id, 'large');
 	}
@@ -249,7 +249,7 @@ class BackendPhotogalleryEditWidgetSlideshow extends BackendBaseActionEdit
 															'extra_id' => $extra['extra_id'],
 															'extra_label' => $label,
 															'language' => $album['language'],
-															'edit_url' => BackendModel::createURLForAction('edit_album') . '&id=' . $extra['album_id']));
+															'edit_url' => BackendModel::createURLForAction('edit') . '&id=' . $extra['album_id']));
 					
 						BackendPhotogalleryModel::updateModulesExtraWidget($extraItem);
 					}

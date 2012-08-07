@@ -1,11 +1,11 @@
-{include:{$BACKEND_CORE_PATH}/layout/templates/head.tpl}
+A{include:{$BACKEND_CORE_PATH}/layout/templates/head.tpl}
 {include:{$BACKEND_CORE_PATH}/layout/templates/structure_start_module.tpl}
 
 <div class="pageTitle">
 	<h2>{$lblPhotogallery|ucfirst}: {$lblAlbums}</h2>
 	<div class="buttonHolderRight">
-		<a href="{$var|geturl:'add_album'}" class="button icon iconAdd" title="{$lblAddAlbum|ucfirst}">
-			<span>{$lblAddAlbum|ucfirst}</span>
+		<a href="{$var|geturl:'add'}" class="button icon iconAdd" title="{$lblAdd|ucfirst}">
+			<span>{$lblAdd|ucfirst}</span>
 		</a>
 	</div>
 </div>
@@ -52,7 +52,7 @@
 	{/form:filter}
 
 	{option:dataGrid}
-		<form action="{$var|geturl:'mass_albums_action'}" method="get" class="submitWithLink">
+		<form action="{$var|geturl:'mass_action'}" method="get" class="submitWithLink">
 			<div>
 				<input type="hidden" name="offset" value="{$offset}" />
 				<input type="hidden" name="order" value="{$order}" />
@@ -68,8 +68,8 @@
 
 {option:!dataGrid}
 	<h3>{$lblAlbums|ucfirst}</h3>
-	{option:filter}<p>{$msgNoItemsFilter|sprintf:{$var|geturl:'add_album'}}</p>{/option:filter}
-	{option:!filter}<p>{$msgNoAlbums|sprintf:{$var|geturl:'add_album'}}</p>{/option:!filter}
+	{option:filter}<p>{$msgNoItemsFilter|sprintf:{$var|geturl:'add'}}</p>{/option:filter}
+	{option:!filter}<p>{$msgNoAlbums|sprintf:{$var|geturl:'add'}}</p>{/option:!filter}
 {/option:!dataGrid}
 
 <div id="confirmDelete" title="{$lblDelete|ucfirst}?" style="display: none;">

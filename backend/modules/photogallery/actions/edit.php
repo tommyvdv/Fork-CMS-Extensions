@@ -12,7 +12,7 @@
  *
  * @author Frederik Heyninck <frederik@figure8.be>
  */
-class BackendPhotogalleryEditAlbum extends BackendBaseActionEdit
+class BackendPhotogalleryEdit extends BackendBaseActionEdit
 {
 	/**
 	 * Execute the action
@@ -48,7 +48,7 @@ class BackendPhotogalleryEditAlbum extends BackendBaseActionEdit
 		}
 
 		// no item found, throw an exception, because somebody is fucking with our URL
-		else $this->redirect(BackendModel::createURLForAction('albums') . '&error=non-existing');
+		else $this->redirect(BackendModel::createURLForAction('index') . '&error=non-existing');
 	}
 
 	/**
@@ -60,7 +60,7 @@ class BackendPhotogalleryEditAlbum extends BackendBaseActionEdit
 		$this->record = (array) BackendPhotogalleryModel::getAlbum($this->id);
 
 		// no item found, throw an exceptions, because somebody is fucking with our URL
-		if(empty($this->record)) $this->redirect(BackendModel::createURLForAction('albums') . '&error=non-existing');
+		if(empty($this->record)) $this->redirect(BackendModel::createURLForAction('index') . '&error=non-existing');
 	}
 
 	/**
@@ -265,7 +265,7 @@ class BackendPhotogalleryEditAlbum extends BackendBaseActionEdit
 														'extra_label' => $label,
 														'extra_id' => $extra['extra_id'],
 														'language' => BL::getWorkingLanguage(),
-														'edit_url' => BackendModel::createURLForAction('edit_album') . '&id=' . $this->id));
+														'edit_url' => BackendModel::createURLForAction('edit') . '&id=' . $this->id));
 				
 					BackendPhotogalleryModel::updateModulesExtraWidget($extraItem);
 				}
@@ -370,7 +370,7 @@ class BackendPhotogalleryEditAlbum extends BackendBaseActionEdit
 					BackendPhotogalleryModel::updateSetStatistics($this->record['set_id']);
 					
 					// everything is saved, so redirect to the overview
-				  	$this->redirect(BackendModel::createURLForAction('edit_album') . '&report=edited-album&var=' . urlencode($item['title']) . '&id=' . $this->id . '#tabImages');
+				  	$this->redirect(BackendModel::createURLForAction('edit') . '&report=edited-album&var=' . urlencode($item['title']) . '&id=' . $this->id . '#tabImages');
 					
 				} 
 				elseif($action == 'hide')
@@ -380,7 +380,7 @@ class BackendPhotogalleryEditAlbum extends BackendBaseActionEdit
 					
 					BackendPhotogalleryModel::updateSetStatistics($this->record['set_id']);
 					
-					$this->redirect(BackendModel::createURLForAction('edit_album') . '&report=edited-album&var=' . urlencode($item['title']) . '&id=' . $this->id . '#tabImages');
+					$this->redirect(BackendModel::createURLForAction('edit') . '&report=edited-album&var=' . urlencode($item['title']) . '&id=' . $this->id . '#tabImages');
 				}
 				elseif($action == 'publish')
 				{
@@ -389,11 +389,11 @@ class BackendPhotogalleryEditAlbum extends BackendBaseActionEdit
 					
 					BackendPhotogalleryModel::updateSetStatistics($this->record['set_id']);
 					
-					$this->redirect(BackendModel::createURLForAction('edit_album') . '&report=edited-album&var=' . urlencode($item['title']) . '&id=' . $this->id . '#tabImages');
+					$this->redirect(BackendModel::createURLForAction('edit') . '&report=edited-album&var=' . urlencode($item['title']) . '&id=' . $this->id . '#tabImages');
 				}
 
 			  	// everything is saved, so redirect to the overview
-			  	$this->redirect(BackendModel::createURLForAction('edit_album') . '&report=edited-album&var=' . urlencode($item['title']) . '&id=' . $this->id);
+			  	$this->redirect(BackendModel::createURLForAction('edit') . '&report=edited-album&var=' . urlencode($item['title']) . '&id=' . $this->id);
 			}
 		}
 	}

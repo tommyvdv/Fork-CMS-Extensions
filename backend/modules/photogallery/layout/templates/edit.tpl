@@ -2,33 +2,34 @@
 {include:{$BACKEND_CORE_PATH}/layout/templates/structure_start_module.tpl}
 
 <div class="pageTitle">
-	<h2>{$lblPhotogallery|ucfirst}: {$lblAddAlbum}</h2>
+	<h2>{$lblPhotogallery|ucfirst}: {$msgEditAlbum|sprintf:{$record.title}}</h2>
+	<div class="buttonHolderRight">
+		<a href="{$var|geturl:'add_images_choose'}&amp;album_id={$record.id}" class="button icon iconAdd" title="{$lblAddImages|ucfirst}">
+			<span>{$lblUploadImages|ucfirst}</span>
+		</a>
+	</div>
 </div>
 
-<div class="wizard">
-	<ul>
-		<li class="selected firstChild"><a href="{$var|geturl:'add_album'}"><b><span>1.</span> {$lblWizardInformation|ucfirst}</b></a></li>
-		<li><b><span>2.</span> {$lblWizardAddImages|ucfirst}</b></li>
-	</ul>
-</div>
 
-{form:add}
-
+{form:edit}
+	
+	
 	<label for="title">{$lblTitle|ucfirst}</label>
 	{$txtTitle} {$txtTitleError}
-
+	
+	
 	<div id="pageUrl">
 		<div class="oneLiner">
-			{option:detailURL}<p><span><a href="{$detailURL}">{$detailURL}/<span id="generatedUrl"></span></a></span></p>{/option:detailURL}
+			{option:detailURL}<p><span><a href="{$detailURL}/{$record.url}">{$detailURL}/<span id="generatedUrl">{$record.url}</span></a></span></p>{/option:detailURL}
 			{option:!detailURL}<p class="infoMessage">{$errNoModuleLinked}</p>{/option:!detailURL}
 		</div>
 	</div>
 
-
-
 	<div class="tabs">
+		
 		<ul>
 			<li><a href="#tabContent">{$lblContent|ucfirst}</a></li>
+			<li><a href="#tabImages">{$lblImages|ucfirst} ({$record.num_images_not_hidden}/{$record.num_images})</a></li>
 			<li><a href="#tabSEO">{$lblSEO|ucfirst}</a></li>
 		</ul>
 
@@ -36,8 +37,6 @@
 			<table border="0" cellspacing="0" cellpadding="0" width="100%">
 				<tr>
 					<td id="leftColumn">
-						
-				
 
 						{* Main content *}
 						<div class="box">
@@ -64,7 +63,7 @@
 								{$txtIntroduction} {$txtIntroductionError}
 							</div>
 						</div>
-					
+						
 						{* Categories *}
 						{option:categories}
 							<div class="box">
@@ -144,14 +143,40 @@
 				</tr>
 			</table>
 		</div>
+
+		<div id="tabImages">
+			
+			{option:dataGrid}
+				<div class="dataGridHolder">
+					{$dataGrid}
+				</div>
+			{/option:dataGrid}
+
+			{option:!dataGrid}
+				<p class="p0">{$msgNoImages|sprintf:{$add_images_choose_url}}</p>
+			{/option:!dataGrid}
+			
+		</div>
+		
 		<div id="tabSEO">
 			{include:{$BACKEND_CORE_PATH}/layout/templates/seo.tpl}
 		</div>
+		
 	</div>
+
 	<div class="fullwidthOptions">
+		<a href="{$var|geturl:'delete'}&amp;id={$record.id}" data-message-id="confirmDeleteAlbum" class="askConfirmation button linkButton icon iconDelete">
+			<span>{$lblDelete|ucfirst}</span>
+		</a>
 		<div class="buttonHolderRight">
-			<input id="addButton" class="inputButton button mainButton" type="submit" name="add" value="{$lblPublish|ucfirst}" />
+			<input id="editButton" class="inputButton button mainButton" type="submit" name="edit" value="{$lblSave|ucfirst}" />
 		</div>
+	</div>
+
+	<div id="confirmDeleteAlbum" title="{$lblDelete|ucfirst}?" style="display: none;">
+		<p>
+			{$msgConfirmDelete|sprintf:{$record.title}}
+		</p>
 	</div>
 	
 	
@@ -165,7 +190,7 @@
 		</div>
 	</div>
 	
-{/form:add}
+{/form:edit}
 
 {include:{$BACKEND_CORE_PATH}/layout/templates/structure_end_module.tpl}
 {include:{$BACKEND_CORE_PATH}/layout/templates/footer.tpl}

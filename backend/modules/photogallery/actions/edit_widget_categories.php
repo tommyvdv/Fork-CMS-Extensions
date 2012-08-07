@@ -56,7 +56,7 @@ class BackendPhotogalleryEditWidgetCategories extends BackendBaseActionEdit
 		$this->record = (array) BackendPhotogalleryModel::getExtra($this->id);
 
 		// no item found, throw an exceptions, because somebody is fucking with our URL
-		if(empty($this->record)) $this->redirect(BackendModel::createURLForAction('albums') . '&error=non-existing');
+		if(empty($this->record)) $this->redirect(BackendModel::createURLForAction('index') . '&error=non-existing');
 
 		$this->large = BackendPhotogalleryModel::getExtraResolutionForKind($this->id, 'large');
 	}

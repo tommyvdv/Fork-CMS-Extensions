@@ -47,7 +47,7 @@ class BackendPhotogalleryAddImagesUploadZip extends BackendBaseActionAdd
 			$this->display();
 		}
 		// no item found, throw an exception, because somebody is fucking with our URL
-		else $this->redirect(BackendModel::createURLForAction('albums') . '&error=non-existing');
+		else $this->redirect(BackendModel::createURLForAction('index') . '&error=non-existing');
 	}
 
 	/**
@@ -59,7 +59,7 @@ class BackendPhotogalleryAddImagesUploadZip extends BackendBaseActionAdd
 		$this->record = (array) BackendPhotogalleryModel::getAlbum($this->id);
 
 		// no item found, throw an exceptions, because somebody is fucking with our URL
-		if(empty($this->record)) $this->redirect(BackendModel::createURLForAction('albums') . '&error=non-existing');
+		if(empty($this->record)) $this->redirect(BackendModel::createURLForAction('index') . '&error=non-existing');
 
 		$this->set_id = $this->record['set_id'];
 
@@ -335,11 +335,11 @@ class BackendPhotogalleryAddImagesUploadZip extends BackendBaseActionAdd
 						BackendPhotogalleryModel::updateSetStatistics($this->set_id);
 						
 						// everything is saved, so redirect to the overview
-					  	$this->redirect(BackendModel::createURLForAction('edit_album') . '&report=added-images&id=' . $this->id . '#tabImages');
+					  	$this->redirect(BackendModel::createURLForAction('edit') . '&report=added-images&id=' . $this->id . '#tabImages');
 					}
 					else
 					{
-						$this->redirect(BackendModel::createURLForAction('edit_album') . '&report=no-images-selected&id=' . $this->id . '#tabImages');
+						$this->redirect(BackendModel::createURLForAction('edit') . '&report=no-images-selected&id=' . $this->id . '#tabImages');
 					}
 				}
 				
@@ -370,11 +370,11 @@ class BackendPhotogalleryAddImagesUploadZip extends BackendBaseActionAdd
 					BackendPhotogalleryModel::updateSetStatistics($this->set_id);
 
 					// everything is saved, so redirect to the overview
-				  	$this->redirect(BackendModel::createURLForAction('edit_album') . '&report=added-images&id=' . $this->id . '#tabImages');
+				  	$this->redirect(BackendModel::createURLForAction('edit') . '&report=added-images&id=' . $this->id . '#tabImages');
 				}
 				else
 				{
-					$this->redirect(BackendModel::createURLForAction('edit_album') . '&report=no-images-selected&id=' . $this->id . '#tabImages');
+					$this->redirect(BackendModel::createURLForAction('edit') . '&report=no-images-selected&id=' . $this->id . '#tabImages');
 				}
 				*/
 			}

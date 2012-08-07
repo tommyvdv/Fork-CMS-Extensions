@@ -19,7 +19,7 @@ final class BackendPhotogalleryConfig extends BackendBaseConfig
 	 *
 	 * @var string
 	 */
-	protected $defaultAction = 'albums';
+	protected $defaultAction = 'index';
 
 
 	/**

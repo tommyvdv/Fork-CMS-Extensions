@@ -93,11 +93,11 @@ class BackendPhotogalleryDeleteImage extends BackendBaseActionDelete
 			}
 
 			// deleted, so redirect
-			$this->redirect(BackendModel::createURLForAction('edit_album') . '&report=image-deleted&var=' . urlencode($this->record['title']) . '&id=' . $this->record['album_id'] . '#tabImages');
+			$this->redirect(BackendModel::createURLForAction('edit') . '&report=image-deleted&var=' . urlencode($this->record['title']) . '&id=' . $this->record['album_id'] . '#tabImages');
 		}
 
 		// something went wrong
-		else $this->redirect(BackendModel::createURLForAction('edit_album') . '&error=non-existing&id=' . $this->record['album_id'] . '#tabImages' );
+		else $this->redirect(BackendModel::createURLForAction('edit') . '&error=non-existing&id=' . $this->record['album_id'] . '#tabImages' );
 	}
 
 }

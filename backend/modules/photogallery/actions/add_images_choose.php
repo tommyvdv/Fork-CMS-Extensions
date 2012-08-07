@@ -45,7 +45,7 @@ class BackendPhotogalleryAddImagesChoose extends BackendBaseActionAdd
 			$this->display();
 		}
 		// no item found, throw an exception, because somebody is fucking with our URL
-		else $this->redirect(BackendModel::createURLForAction('albums') . '&error=non-existing');
+		else $this->redirect(BackendModel::createURLForAction('index') . '&error=non-existing');
 	}
 
 	/**
@@ -72,7 +72,7 @@ class BackendPhotogalleryAddImagesChoose extends BackendBaseActionAdd
 		$this->record = BackendPhotogalleryModel::getAlbum($this->id);
 
 		// no item found, throw an exceptions, because somebody is fucking with our URL
-		if(empty($this->record)) $this->redirect(BackendModel::createURLForAction('albums') . '&error=non-existing-album');
+		if(empty($this->record)) $this->redirect(BackendModel::createURLForAction('index') . '&error=non-existing-album');
 
 		$this->sets = BackendPhotogalleryModel::getSetsForDropdown();
 

@@ -12,7 +12,7 @@
  *
  * @author Frederik Heyninck <frederik@figure8.be>
  */
-class BackendPhotogalleryMassAlbumsAction extends BackendBaseAction
+class BackendPhotogalleryMassAction extends BackendBaseAction
 {
 	/**
 	 * Execute the action
@@ -101,7 +101,7 @@ class BackendPhotogalleryMassAlbumsAction extends BackendBaseAction
 			if($action == 'published') $report .= 'published';
 
 			// redirect
-			$this->redirect(BackendModel::createURLForAction('albums') . '&report=' . $report);
+			$this->redirect(BackendModel::createURLForAction('index') . '&report=' . $report);
 		}
 	}
 

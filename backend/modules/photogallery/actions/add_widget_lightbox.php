@@ -218,7 +218,7 @@ class BackendPhotogalleryAddWidgetLightbox extends BackendBaseActionAdd
 											'extra_label' => $label,
 											'extra_id' => $item['id'],
 											'language' => $album['language'],
-											'edit_url' => BackendModel::createURLForAction('edit_album') . '&id=' . $album['id']
+											'edit_url' => BackendModel::createURLForAction('edit') . '&id=' . $album['id']
 										)
 									);
 					

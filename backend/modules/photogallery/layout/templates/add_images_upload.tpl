@@ -17,7 +17,7 @@
 
 <div class="wizard">
 	<ul>
-		<li><a href="{$var|geturl:'edit_album'}&amp;id={$record.id}"><b><span>1.</span> {$lblWizardInformation|ucfirst}</b></a></li>
+		<li><a href="{$var|geturl:'edit'}&amp;id={$record.id}"><b><span>1.</span> {$lblWizardInformation|ucfirst}</b></a></li>
 		<li><b><span>2.</span> {$lblWizardAddImages|ucfirst}</b></li>
 	</ul>
 </div>
@@ -41,7 +41,7 @@
 		</div>
 	</div>
 	<div class="fullwidthOptions">
-			<a href="{$var|geturl:'edit_album'}&amp;id={$record.id}" class="button linkButton">
+			<a href="{$var|geturl:'edit'}&amp;id={$record.id}" class="button linkButton">
 				<span>{$lblCancel|ucfirst}</span>
 			</a>
 		<div class="buttonHolderRight">
