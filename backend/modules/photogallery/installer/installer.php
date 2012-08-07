@@ -66,8 +66,8 @@ class PhotogalleryInstaller extends ModuleInstaller
 		$this->setActionRights(1, 'photogallery', 'index');
 		$this->setActionRights(1, 'photogallery', 'mass_action');
 		$this->setActionRights(1, 'photogallery', 'add_category');
-		$this->setActionRights(1, 'photogallery', 'album_images_sequence');
-		$this->setActionRights(1, 'photogallery', 'album_sequence');
+		$this->setActionRights(1, 'photogallery', 'images_sequence');
+		$this->setActionRights(1, 'photogallery', 'sequence');
 		$this->setActionRights(1, 'photogallery', 'category_sequence');
 		
 		// make module searchable
