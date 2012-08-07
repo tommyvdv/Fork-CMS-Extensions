@@ -13,7 +13,7 @@
  * @author Frederik Heyninck <frederik@figure8.be>
  */
 
-class BackendPhotogalleryAjaxAlbumImagesSequence extends BackendBaseAJAXAction
+class BackendPhotogalleryAjaxImagesSequence extends BackendBaseAJAXAction
 {
 	/**
 	 * Execute the action

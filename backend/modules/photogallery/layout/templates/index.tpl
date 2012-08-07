@@ -65,7 +65,6 @@ A{include:{$BACKEND_CORE_PATH}/layout/templates/head.tpl}
 	{/option:dataGrid}
 </div>
 
-
 {option:!dataGrid}
 	<h3>{$lblAlbums|ucfirst}</h3>
 	{option:filter}<p>{$msgNoItemsFilter|sprintf:{$var|geturl:'add'}}</p>{/option:filter}

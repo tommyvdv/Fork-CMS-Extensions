@@ -75,18 +75,18 @@ class PhotogalleryInstaller extends ModuleInstaller
 
 		// set navigation
 		$navigationModulesId = $this->setNavigation(null, 'Modules');
-		$navigationId = $this->setNavigation($navigationModulesId, 'Photogallery', 'photogallery/albums',  array(
+		$navigationId = $this->setNavigation($navigationModulesId, 'Photogallery', 'photogallery/index',  array(
 			'photogallery/add_images_upload',
 			'photogallery/add_images_upload_zip',
 			'photogallery/add_images_choose',
 			'photogallery/add_images_existing',
 			'photogallery/edit_image',
-			'photogallery/add_album',
-			'photogallery/edit_album',
+			'photogallery/add',
+			'photogallery/edit',
 		));
 
-		$this->setNavigation($navigationId, 'index', 'photogallery/albums', array(
-			'photogallery/albums'
+		$this->setNavigation($navigationId, 'index', 'photogallery/index', array(
+			'photogallery/index'
 		));
 
 		$this->setNavigation($navigationId, 'Categories', 'photogallery/categories', array(
