@@ -127,7 +127,7 @@ class BackendPhotogalleryAddWidgetPaged extends BackendBaseActionAdd
 							// Put
 							$cronjob = array();
 							$cronjob['module'] = $this->URL->getModule();
-							$cronjob['path'] = $this->URL->getModule() . '/sets/frontend' . $image['set_id'] . '/' . $resolutionThumbnail['width'] . 'x' . $resolutionThumbnail['height'] . '_' . $resolutionThumbnail['method'];
+							$cronjob['path'] = $this->URL->getModule() . '/sets/frontend/' . $image['set_id'] . '/' . $resolutionThumbnail['width'] . 'x' . $resolutionThumbnail['height'] . '_' . $resolutionThumbnail['method'];
 							$cronjob['filename'] = $image['filename'];
 							$cronjob['full_path'] = $cronjob['path'] . '/' . $cronjob['filename'];
 							$cronjob['data'] = serialize(array('set_id' => $image['set_id'], 'image_id' => $image['id'], 'delete_local' => true, 'delete_local_in_time' => BackendPhotogalleryModel::DELETE_LOCAL_IN_TIME));

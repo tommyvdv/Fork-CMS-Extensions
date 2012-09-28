@@ -128,7 +128,7 @@ class BackendPhotogalleryAddWidgetLightbox extends BackendBaseActionAdd
 						$this->fromAmazonS3 = BackendPhotogalleryHelper::processOriginalImage($from);
 						$from = FRONTEND_FILES_PATH . '/' . $this->URL->getModule() . '/sets/original/' . $image['set_id'] . '/' . $image['filename'];
 						
-						$to = FRONTEND_FILES_PATH . '/' . $this->URL->getModule() . '/sets/frontend' . $image['set_id'] . '/' . $resolutionThumbnail['width'] . 'x' . $resolutionThumbnail['height'] . '_' . $resolutionThumbnail['method'] . '/' . $image['filename'];
+						$to = FRONTEND_FILES_PATH . '/' . $this->URL->getModule() . '/sets/frontend/' . $image['set_id'] . '/' . $resolutionThumbnail['width'] . 'x' . $resolutionThumbnail['height'] . '_' . $resolutionThumbnail['method'] . '/' . $image['filename'];
 
 						// Does the source file exists?
 						if(SpoonFile::exists($from))
