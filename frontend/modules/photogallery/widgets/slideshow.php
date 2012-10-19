@@ -89,7 +89,7 @@ class FrontendPhotogalleryWidgetSlideshow extends FrontendBaseWidget
 		$this->header->addCSS('/frontend/modules/' . $this->getModule() . '/layout/css/slideshow.css');
 		
 		$this->header->addJS(
-				FrontendPhotogalleryHelper::getPathJS('/cycle/2.995/jquery.cycle.all.js', $this->getModule()),
+				FrontendPhotogalleryHelper::getPathJS('/cycle/2.9995/jquery.cycle.all.js', $this->getModule()),
 				false
 		);
 

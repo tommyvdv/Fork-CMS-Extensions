@@ -102,7 +102,7 @@ class BackendPhotogalleryEditModule extends BackendBaseActionEdit
 		$this->frm->addRadiobutton('action', $actionValues, $this->record['data']['action']);
 		
 		$actionValues = array(
-			array('value' => 'index', 'label' => SpoonFilter::ucfirst(BL::lbl('index'))),
+			array('value' => 'albums', 'label' => SpoonFilter::ucfirst(BL::lbl('Albums'))),
 			array('value' => 'categories', 'label' => SpoonFilter::ucfirst(BL::lbl('Categories'))),
 		);
 

@@ -130,7 +130,7 @@ class PhotogalleryInstaller extends ModuleInstaller
 		$db = $this->getDB();
 
 		// Block
-		$extraId = $db->insert('photogallery_extras', array('data' => serialize(array('action' => 'lightbox', 'display' => 'index')), 'action' => null, 'kind' => 'module', 'allow_delete' => 'N', 'edited_on' => gmdate('Y-m-d H:i:00'), 'created_on' => gmdate('Y-m-d H:i:00')));
+		$extraId = $db->insert('photogallery_extras', array('data' => serialize(array('action' => 'lightbox', 'display' => 'albums')), 'action' => null, 'kind' => 'module', 'allow_delete' => 'N', 'edited_on' => gmdate('Y-m-d H:i:00'), 'created_on' => gmdate('Y-m-d H:i:00')));
 		$db->insert('photogallery_extras_resolutions', array('extra_id' => $extraId, 'width' => 1200, 'height' => 1200, 'method' => 'resize', 'kind' => 'large'));
 		$db->insert('photogallery_extras_resolutions', array('extra_id' => $extraId, 'width' => 125, 'height' => 125, 'method' => 'crop', 'kind' => 'album_detail_overview_thumbnail'));
 		$db->insert('photogallery_extras_resolutions', array('extra_id' => $extraId, 'width' => 200, 'height' => 200, 'method' => 'crop', 'kind' => 'album_overview_thumbnail'));
