@@ -14,17 +14,17 @@
 					'margin-top': '0',
 					'margin-left': '0'
 				},
-				class: 'linkOverlayContainer'
+				klasse: 'linkOverlayContainer'
 			},
 			background:{ 
 				css:{
 					'opacity': .65
 				},
-				class: 'linkOverlayBackground'
+				klasse: 'linkOverlayBackground'
 			},
 			icon:{ 
 				css:{},
-				class: 'linkOverlayIcon'
+				klasse: 'linkOverlayIcon'
 			}
 		}, options);
 		
@@ -38,9 +38,9 @@
 			var image = $('img:first', this);
 			
 			// Creating elements
-			var elContainer = $('<div>').addClass(opts.container.class);
-			var elBackground = $('<div>').addClass(opts.background.class);
-			var elIcon = $('<div>').addClass(opts.icon.class);
+			var elContainer = $('<div>').addClass(opts.container.klasse);
+			var elBackground = $('<div>').addClass(opts.background.klasse);
+			var elIcon = $('<div>').addClass(opts.icon.klasse);
 			
 			// Setting size
 			elContainer.width(image.width()).height(image.height());
@@ -59,7 +59,7 @@
 		function ()
 		{
 			// Remove container
-			$this.find('div.' + opts.container.class).remove();
+			$this.find('div.' + opts.container.klasse).remove();
 		}); 
 	};
 

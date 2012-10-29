@@ -13,7 +13,7 @@
 class FrontendPhotogalleryModel implements FrontendTagsInterface
 {
 
-	const FANCYBOX_VESRION = '2.0.6';
+	const FANCYBOX_VESRION = '2.1.3';
 	
 	public static function getCategoryNavigationHTML($tpl = 'navigation.tpl')
 	{

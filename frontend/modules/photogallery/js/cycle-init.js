@@ -2,7 +2,7 @@ $(document).ready(function()
 {
 	$('.photogallerySlideshowAlbum').each(function(index, value)
 	{
-		var elPager = $(this).parent().find('.photogallerySlideshowPager');
+		var elPager = $(this).parent().find('.photogallerySlideshowPager ul');
 		
 	    $($(this)).cycle(
 		{

@@ -6,9 +6,9 @@ $(document).ready(function() {
 		closeClick: false,
 		modal: false,
 		tpl: {
-			closeBtn: '<div title="Close" class="fancybox-item fancybox-close linkedImage"></div>',
-			next: '<a title="Next" class="fancybox-item fancybox-next linkedImage"><span></span></a>',
-			prev: '<a title="Previous" class="fancybox-item fancybox-prev linkedImage"><span></span></a>',
+			closeBtn : '<a title="Close" class="fancybox-item fancybox-close linkedImage" href="javascript:;"></a>',
+			next     : '<a title="Next" class="fancybox-nav fancybox-next linkedImage" href="javascript:;"><span></span></a>',
+			prev     : '<a title="Previous" class="fancybox-nav fancybox-prev linkedImage" href="javascript:;"><span></span></a>'
 		},
 		helpers:
 		{ 
@@ -27,7 +27,7 @@ $(document).ready(function() {
 				closeClick: true
 			},
 			buttons : {
-				tpl: '<div id="fancybox-buttons"><ul><li><a class="btnPrev linkedImage" title="Previous" href="javascript:$.fancybox.prev();">Previous</a></li><li><a class="btnPlay linkedImage" title="Slideshow" href="javascript:$.fancybox.play();">Play</a></li><li><a class="btnNext linkedImage" title="Next" href="javascript:$.fancybox.next();">Next</a></li><li><a class="btnToggle linkedImage" title="Toggle size" href="javascript:$.fancybox.toggle();">Toggle</a></li><li><a class="btnClose linkedImage" title="Close" href="javascript:$.fancybox.close();">Close</a></li></ul></div>'
+				tpl : '<div id="fancybox-buttons"><ul><li><a class="btnPrev linkedImage" title="Previous" href="javascript:;"></a></li><li><a class="btnPlay linkedImage" title="Start slideshow" href="javascript:;"></a></li><li><a class="btnNext linkedImage" title="Next" href="javascript:;"></a></li><li><a class="btnToggle linkedImage" title="Toggle size" href="javascript:;"></a></li><li><a class="btnClose linkedImage" title="Close" href="javascript:jQuery.fancybox.close();"></a></li></ul></div>'
 			},
 			thumbs	: {
 				width	: 50,
