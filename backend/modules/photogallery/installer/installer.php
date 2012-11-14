@@ -69,6 +69,9 @@ class PhotogalleryInstaller extends ModuleInstaller
 		$this->setActionRights(1, 'photogallery', 'images_sequence');
 		$this->setActionRights(1, 'photogallery', 'sequence');
 		$this->setActionRights(1, 'photogallery', 'category_sequence');
+		$this->setActionRights(1, 'photogallery', 'add_images_upload_multiple');
+		$this->setActionRights(1, 'photogallery', 'upload_image');
+		$this->setActionRights(1, 'photogallery', 'settings');
 		
 		// make module searchable
 		$this->makeSearchable('photogallery');
@@ -77,6 +80,7 @@ class PhotogalleryInstaller extends ModuleInstaller
 		$navigationModulesId = $this->setNavigation(null, 'Modules');
 		$navigationId = $this->setNavigation($navigationModulesId, 'Photogallery', 'photogallery/index',  array(
 			'photogallery/add_images_upload',
+			'photogallery/add_images_upload_multiple',
 			'photogallery/add_images_upload_zip',
 			'photogallery/add_images_choose',
 			'photogallery/add_images_existing',
@@ -213,7 +217,7 @@ class PhotogalleryInstaller extends ModuleInstaller
 				'ip' => isset($_SERVER['REMOTE_ADDR']) ? $_SERVER['REMOTE_ADDR'] : null,
 				'type' => 'module',
 				'name' => 'photogallery',
-				'version' => '2.1',
+				'version' => '2.2',
 				'email' => SpoonSession::get('email'),
 				'license_name' => '',
 				'license_key' => '',

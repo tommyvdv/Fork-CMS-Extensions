@@ -57,7 +57,7 @@ class BackendPhotogalleryAddImagesChoose extends BackendBaseActionAdd
 		$this->frm = new BackendForm('choose');
 
 		// set hidden values
-		$rbtOptionValues[] = array('label' => SpoonFilter::ucfirst(BL::getLabel('UploadImages')), 'value' => 'upload');
+		$rbtOptionValues[] = array('label' => SpoonFilter::ucfirst(BL::getLabel('UploadImages')), 'value' => 'uploade');
 		$rbtOptionValues[] = array('label' => SpoonFilter::ucfirst(BL::getLabel('UseExistingAlbum')), 'value' => 'existing');
 
 		$this->frm->addRadiobutton('options', $rbtOptionValues, 'upload');
@@ -76,7 +76,7 @@ class BackendPhotogalleryAddImagesChoose extends BackendBaseActionAdd
 
 		$this->sets = BackendPhotogalleryModel::getSetsForDropdown();
 
-		if(empty($this->sets)) $this->redirect(BackendModel::createURLForAction('add_images_upload') . '&album_id=' . $this->id);
+		if(empty($this->sets)) $this->redirect(BackendModel::createURLForAction('add_images_upload_multiple') . '&album_id=' . $this->id);
 
 		// If set_id is not null and set exists
 		if($this->record['set_id'] !== null && !BackendPhotogalleryModel::existsSet($this->record['set_id']))
@@ -89,7 +89,7 @@ class BackendPhotogalleryAddImagesChoose extends BackendBaseActionAdd
 		// If set_id is not null and set doesn't exists anymore
 		elseif($this->record['set_id'] !== null && BackendPhotogalleryModel::existsSet($this->record['set_id']))
 		{
-			$this->redirect(BackendModel::createURLForAction('add_images_upload') . '&album_id=' . $this->id);
+			$this->redirect(BackendModel::createURLForAction('add_images_upload_multiple') . '&album_id=' . $this->id);
 		}
 	}
 
@@ -123,7 +123,7 @@ class BackendPhotogalleryAddImagesChoose extends BackendBaseActionAdd
 				switch($option)
 				{
 					case 'upload':
-						$this->redirect(BackendModel::createURLForAction('add_images_upload') . '&album_id=' . $this->id);
+						$this->redirect(BackendModel::createURLForAction('add_images_upload_multiple') . '&album_id=' . $this->id);
 						break;
 					case 'existing':
 						$this->redirect(BackendModel::createURLForAction('add_images_existing') . '&album_id=' . $this->id);
