@@ -72,7 +72,7 @@ class PhotogalleryInstaller extends ModuleInstaller
 		$this->setActionRights(1, 'photogallery', 'add_images_upload_multiple');
 		$this->setActionRights(1, 'photogallery', 'upload_image');
 		$this->setActionRights(1, 'photogallery', 'settings');
-		
+
 		// make module searchable
 		$this->makeSearchable('photogallery');
 
@@ -89,7 +89,7 @@ class PhotogalleryInstaller extends ModuleInstaller
 			'photogallery/edit',
 		));
 
-		$this->setNavigation($navigationId, 'index', 'photogallery/index', array(
+		$this->setNavigation($navigationId, 'Albums', 'photogallery/index', array(
 			'photogallery/index'
 		));
 

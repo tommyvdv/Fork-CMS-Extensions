@@ -51,8 +51,7 @@ class BackendPhotogalleryCategories extends BackendBaseActionIndex
 		$this->dataGrid->setColumnsHidden(array('sequence'));
 
 		// disable paging
-		$this->dataGrid->setPaging(false);
-		
+		$this->dataGrid->setPaging(false);		
 		
 		$this->dataGrid->setAttributes(array('data-action' => "category_sequence"));
 	}

@@ -173,37 +173,40 @@ class BackendPhotogalleryAddImagesUpload extends BackendBaseActionAdd
 				);
 			}
 
-			// Do we need to resize the original image or not?
-			if(BackendPhotogalleryModel::RESIZE_ORIGINAL_IMAGE)
+			if(BackendPhotogalleryModel::KEEP_ORIGINAL_IMAGE)
 			{
-				// Original, but resize if larger then MAX_ORIGINAL_IMAGE_WIDTH OR MAX_ORIGINAL_IMAGE_HEIGHT
-				$this->frm->getField($field)->createThumbnail(
-					$setsFilesPath . '/original/' . $set_id . '/' . $filename,
-					BackendPhotogalleryModel::MAX_ORIGINAL_IMAGE_WIDTH, BackendPhotogalleryModel::MAX_ORIGINAL_IMAGE_HEIGHT,
-					false
-				);
-			}
-			else
-			{
-				// Move the original image
-				$this->frm->getField($field)->moveFile($setsFilesPath . '/original/' . $set_id . '/' . $filename);
+				// Do we need to resize the original image or not?
+				if(BackendPhotogalleryModel::RESIZE_ORIGINAL_IMAGE)
+				{
+					// Original, but resize if larger then MAX_ORIGINAL_IMAGE_WIDTH OR MAX_ORIGINAL_IMAGE_HEIGHT
+					$this->frm->getField($field)->createThumbnail(
+						$setsFilesPath . '/original/' . $set_id . '/' . $filename,
+						BackendPhotogalleryModel::MAX_ORIGINAL_IMAGE_WIDTH, BackendPhotogalleryModel::MAX_ORIGINAL_IMAGE_HEIGHT,
+						false
+					);
+				}
+				else
+				{
+					// Move the original image
+					$this->frm->getField($field)->moveFile($setsFilesPath . '/original/' . $set_id . '/' . $filename);
+				}
+
+				$image['id'] = BackendPhotogalleryModel::insertImage($image, $content, $metaData);
+				
+				// Put original
+				$cronjob = array();
+				$cronjob['module'] = $this->URL->getModule();
+				$cronjob['path'] = $this->URL->getModule() . '/sets/original/' . $set_id;
+				$cronjob['filename'] = $filename;
+				$cronjob['full_path'] = $cronjob['path'] . '/' . $cronjob['filename'];
+				$cronjob['data'] = serialize(array('set_id' => $set_id, 'image_id' => $image['id'], 'delete_local' => true, 'delete_local_in_time' => BackendPhotogalleryModel::DELETE_LOCAL_IN_TIME));
+				$cronjob['action'] = 'put';
+				$cronjob['location'] = 's3';
+				$cronjob['created_on'] =  BackendModel::getUTCDate();
+				$cronjob['execute_on'] = BackendModel::getUTCDate();
+				if(BackendPhotogalleryHelper::existsAmazonS3()) BackendAmazonS3Model::insertCronjob($cronjob);
 			}
 
-			$image['id'] = BackendPhotogalleryModel::insertImage($image, $content, $metaData);
-			
-			// Put original
-			$cronjob = array();
-			$cronjob['module'] = $this->URL->getModule();
-			$cronjob['path'] = $this->URL->getModule() . '/sets/original/' . $set_id;
-			$cronjob['filename'] = $filename;
-			$cronjob['full_path'] = $cronjob['path'] . '/' . $cronjob['filename'];
-			$cronjob['data'] = serialize(array('set_id' => $set_id, 'image_id' => $image['id'], 'delete_local' => true, 'delete_local_in_time' => BackendPhotogalleryModel::DELETE_LOCAL_IN_TIME));
-			$cronjob['action'] = 'put';
-			$cronjob['location'] = 's3';
-			$cronjob['created_on'] =  BackendModel::getUTCDate();
-			$cronjob['execute_on'] = BackendModel::getUTCDate();
-			if(BackendPhotogalleryHelper::existsAmazonS3()) BackendAmazonS3Model::insertCronjob($cronjob);
-			
 			$resolutions = BackendPhotogalleryModel::getUniqueExtrasResolutions();
 			
 			if(BackendPhotogalleryHelper::existsAmazonS3())
