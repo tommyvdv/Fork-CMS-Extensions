@@ -147,17 +147,23 @@ class PhotogalleryInstaller extends ModuleInstaller
 		$db->insert('photogallery_extras_resolutions', array('extra_id' => $extraId, 'width' => 600, 'height' => 350, 'method' => 'crop', 'kind' => 'large'));
 
 		// Lightbox
+		/*
 		$extraId = $db->insert('photogallery_extras', array('action' => 'lightbox', 'kind' => 'widget', 'allow_delete' => 'Y', 'edited_on' => gmdate('Y-m-d H:i:00'), 'created_on' => gmdate('Y-m-d H:i:00')));
 		$db->insert('photogallery_extras_resolutions', array('extra_id' => $extraId, 'width' => 800, 'height' => 600, 'method' => 'resize', 'kind' => 'large'));
 		$db->insert('photogallery_extras_resolutions', array('extra_id' => $extraId, 'width' => 75, 'height' => 75, 'method' => 'crop', 'kind' => 'thumbnail'));
+		*/
 
 		// Paged
+		/*
 		$extraId = $db->insert('photogallery_extras', array('action' => 'paged', 'kind' => 'widget', 'allow_delete' => 'Y', 'edited_on' => gmdate('Y-m-d H:i:00'), 'created_on' => gmdate('Y-m-d H:i:00')));
 		$db->insert('photogallery_extras_resolutions', array('extra_id' => $extraId, 'width' => 75, 'height' => 75, 'method' => 'crop', 'kind' => 'thumbnail'));
+		*/
 
 		// Category widget
+		/*
 		$extraId = $db->insert('photogallery_extras', array('action' => 'categories', 'kind' => 'widget', 'allow_delete' => 'Y', 'edited_on' => gmdate('Y-m-d H:i:00'), 'created_on' => gmdate('Y-m-d H:i:00')));
 		$db->insert('photogallery_extras_resolutions', array('extra_id' => $extraId, 'width' => 500, 'height' => 350, 'method' => 'crop', 'kind' => 'large'));
+		*/
 		
 		// Widgets
 		$this->insertExtra('photogallery', 'widget', 'CategoryNavigation', 'category_navigation');

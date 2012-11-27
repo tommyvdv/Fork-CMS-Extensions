@@ -57,7 +57,6 @@ class FrontendPhotogalleryIndex extends FrontendBaseBlock
 		// S3
 		$this->amazonS3Account = FrontendPhotogalleryHelper::existsAmazonS3();
 		$thumbnail_resolution = FrontendPhotogalleryModel::getExtraResolutionForKind($this->data['extra_id'], 'album_overview_thumbnail');
-
 		if($this->data['display'] == 'albums')
 		{
 			// requested page

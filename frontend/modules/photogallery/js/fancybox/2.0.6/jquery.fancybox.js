@@ -1,6 +1,6 @@
 /*!
  * fancyBox - jQuery Plugin
- * version: ' . FrontendPhotogalleryModel::FANCYBOX_VESRION . ' (16/04/2012)
+ * version: ' . FrontendPhotogalleryModel::FANCYBOX_VERSION . ' (16/04/2012)
  * @requires jQuery v1.6 or later
  *
  * Examples at http://fancyapps.com/fancybox/

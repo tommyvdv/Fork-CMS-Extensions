@@ -176,6 +176,9 @@ class BackendPhotogalleryAjaxUploadImage extends BackendBaseAJAXAction
 					$thumbnail->parseToFile($setsFilesPath . '/backend/' . $set_id . '/' . $resolution['width'] . 'x' . $resolution['height'] . '_' . $resolution['method'] . '/' . $filename, BackendPhotogalleryModel::IMAGE_QUALITY);
 				}
 
+				$image['id'] = BackendPhotogalleryModel::insertImage($image, $content, $metaData);
+
+
 				if(BackendPhotogalleryModel::KEEP_ORIGINAL_IMAGE)
 				{
 					// Do we need to resize the original image or not?
@@ -195,8 +198,7 @@ class BackendPhotogalleryAjaxUploadImage extends BackendBaseAJAXAction
 						move_uploaded_file($tempFile, $setsFilesPath . '/original/' . $set_id . '/' . $filename);
 					}
 
-					$image['id'] = BackendPhotogalleryModel::insertImage($image, $content, $metaData);
-					
+
 					// Put original
 					$cronjob = array();
 					$cronjob['module'] = 'photogallery';

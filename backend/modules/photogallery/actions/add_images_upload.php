@@ -173,6 +173,8 @@ class BackendPhotogalleryAddImagesUpload extends BackendBaseActionAdd
 				);
 			}
 
+			$image['id'] = BackendPhotogalleryModel::insertImage($image, $content, $metaData);
+
 			if(BackendPhotogalleryModel::KEEP_ORIGINAL_IMAGE)
 			{
 				// Do we need to resize the original image or not?
@@ -191,8 +193,6 @@ class BackendPhotogalleryAddImagesUpload extends BackendBaseActionAdd
 					$this->frm->getField($field)->moveFile($setsFilesPath . '/original/' . $set_id . '/' . $filename);
 				}
 
-				$image['id'] = BackendPhotogalleryModel::insertImage($image, $content, $metaData);
-				
 				// Put original
 				$cronjob = array();
 				$cronjob['module'] = $this->URL->getModule();
