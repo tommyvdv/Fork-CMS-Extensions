@@ -134,7 +134,7 @@ class BackendPhotogalleryIndex extends BackendBaseActionIndex
 		$ddmMassAction->setOptionAttributes('hidden', array('data-message-id' => 'confirmHidden'));
 		$ddmMassAction->setOptionAttributes('published', array('data-message-id' => 'confirmPublished'));
 		$this->dataGrid->setMassAction($ddmMassAction);
-		$this->dataGrid->setAttributes(array('data-action' => "album_sequence"));
+		$this->dataGrid->setAttributes(array('data-action' => "sequence"));
 	}
 
 	/**
