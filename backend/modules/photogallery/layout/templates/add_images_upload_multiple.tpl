@@ -56,7 +56,7 @@
 	var uploadToken = '{$token}';
 	var uploadScript = '/backend/ajax.php?module=photogallery&action=upload_image';
 	var uploadAlbumId = {$record.id};
-
+	var uploadFallbackURL = '{$var|geturl:'add_images_upload'}&album_id={$record.id}';
 </script>
 
 {include:{$BACKEND_CORE_PATH}/layout/templates/structure_end_module.tpl}

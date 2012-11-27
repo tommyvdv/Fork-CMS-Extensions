@@ -57,7 +57,7 @@ class BackendPhotogalleryAddImagesChoose extends BackendBaseActionAdd
 		$this->frm = new BackendForm('choose');
 
 		// set hidden values
-		$rbtOptionValues[] = array('label' => SpoonFilter::ucfirst(BL::getLabel('UploadImages')), 'value' => 'uploade');
+		$rbtOptionValues[] = array('label' => SpoonFilter::ucfirst(BL::getLabel('UploadImages')), 'value' => 'upload');
 		$rbtOptionValues[] = array('label' => SpoonFilter::ucfirst(BL::getLabel('UseExistingAlbum')), 'value' => 'existing');
 
 		$this->frm->addRadiobutton('options', $rbtOptionValues, 'upload');

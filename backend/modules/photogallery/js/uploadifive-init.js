@@ -22,8 +22,11 @@ jsBackend.uploadifive =
 
 				'onUploadComplete' : function(file, data)
 				{ 
-					//console.log(data); 
-				}
+					//console.log(data);
+				},
+				'onFallback'   : function() {
+					window.location = uploadFallbackURL
+       			 }
 			});
 
 
