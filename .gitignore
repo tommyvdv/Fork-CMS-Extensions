@@ -3,5 +3,9 @@
 .buildpath
 .settings
 .*.swp
+*
 backend/cache/navigation/
 frontend/files/photogallery/
+
+!/frontend/modules/photogallery
+!/backend/modules/photogallery
