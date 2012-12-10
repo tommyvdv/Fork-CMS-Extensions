@@ -8,7 +8,7 @@
  */
 /**
  *
- * @author Frederik Heyninck <frederik@figure8d.be>
+ * @author Frederik Heyninck <frederik@figure8.be>
  */
 class FrontendPhotogalleryCategory extends FrontendBaseBlock
 {
