@@ -8,6 +8,18 @@
 {form:settings}
 	<div class="box">
 		<div class="heading">
+			<h3>{$lblInterface|ucfirst}</h3>
+		</div>
+
+		<div class="options">
+			<label for="categoriesDepth">{$lblCategoriesDepth|ucfirst}</label>
+			{$ddmCategoriesDepth}
+			{$ddmCategoriesDepthError}
+		</div>
+	</div>
+	
+	<div class="box">
+		<div class="heading">
 			<h3>{$lblPagination|ucfirst}</h3>
 		</div>
 

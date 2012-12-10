@@ -2,11 +2,31 @@
 {include:{$BACKEND_CORE_PATH}/layout/templates/structure_start_module.tpl}
 
 <div class="pageTitle">
-	<h2>{$lblPhotogallery|ucfirst}: {$lblCategories}</h2>
+	{option:category}
+		<h2>{$lblPhotogallery|ucfirst}: {$lblCategoriesForParent|sprintf:{$category.title}}</h2>
+	{/option:category}
+	{option:!category}
+		<h2>{$lblPhotogallery|ucfirst}: {$lblCategories}</h2>
+	{/option:!category}
 	<div class="buttonHolderRight">
-		<a href="{$var|geturl:'add_category'}" class="button icon iconAdd"><span>{$lblAddCategory|ucfirst}</span></a>
+		{option:category}
+			<a href="{$var|geturl:'add_category'}&category_id={$category.id}" class="button icon iconAdd"><span>{$lblAddCategoryToParent|sprintf:{$category.title}|ucfirst}</span></a>
+		{/option:category}
+		{option:!category}
+			<a href="{$var|geturl:'add_category'}" class="button icon iconAdd"><span>{$lblAddCategory|ucfirst}</span></a>
+		{/option:!category}
 	</div>
 </div>
+
+{option:breadcrumbs}
+	<div class="wizard">
+		<ul>
+			{iteration:breadcrumbs}
+				<li class="{option:breadcrumbs.beforeSelected}beforeSelected {/option:breadcrumbs.beforeSelected}{option:breadcrumbs.selected}selected {/option:breadcrumbs.selected}"><a href="{$var|geturl:'categories'}{option:!breadcrumbs.root}&amp;category_id={$breadcrumbs.id}{/option:!breadcrumbs.root}"><b>{$breadcrumbs.title}</b></a></li>
+			{/iteration:breadcrumbs}
+		</ul>
+	</div>
+{/option:breadcrumbs}
 
 {option:dataGrid}
 	<div class="dataGridHolder">

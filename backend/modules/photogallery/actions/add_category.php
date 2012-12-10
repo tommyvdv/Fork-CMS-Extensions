@@ -22,6 +22,10 @@ class BackendPhotogalleryAddCategory extends BackendBaseActionAdd
 		// call parent, this will probably add some general CSS/JS or other required files
 		parent::execute();
 
+		// get id
+		$this->category_id = $this->getParameter('category_id', 'int', 0);
+		$this->category = BackendPhotogalleryModel::getCategory($this->category_id);
+
 		// load the form
 		$this->loadForm();
 
@@ -36,6 +40,19 @@ class BackendPhotogalleryAddCategory extends BackendBaseActionAdd
 	}
 
 	/**
+	 * Parse the form
+	 */
+	protected function parse()
+	{
+		// call parent
+		parent::parse();
+
+		// assign category (if there is one)
+		$this->tpl->assign('category', $this->category);
+		$this->tpl->assign('categories', $this->categories);
+	}
+
+	/**
 	 * Load the form
 	 */
 	private function loadForm()
@@ -43,8 +60,12 @@ class BackendPhotogalleryAddCategory extends BackendBaseActionAdd
 		// create form
 		$this->frm = new BackendForm('addCategory');
 
+		// get categories
+		$this->categories = BackendPhotogalleryModel::getCategoriesForDropdown(BackendModel::getModuleSetting('photogallery', 'categories_depth', 0));
+
 		// create elements
 		$this->frm->addText('title', null, 255);
+		$this->frm->addDropdown('parent_id', $this->categories, SpoonFilter::getGetValue('category_id', null, null, 'int'))->setDefaultElement('');
 
 		// meta
 		$this->meta = new BackendMeta($this->frm, null, 'title', true);
@@ -66,8 +87,6 @@ class BackendPhotogalleryAddCategory extends BackendBaseActionAdd
 			// validate fields
 			$this->frm->getField('title')->isFilled(BL::getError('TitleIsRequired'));
 
-
-
 			// validate meta
 			$this->meta->validate();
 
@@ -79,12 +98,14 @@ class BackendPhotogalleryAddCategory extends BackendBaseActionAdd
 				$item['language'] = BL::getWorkingLanguage();
 				$item['meta_id'] = $this->meta->save();
 				$item['sequence'] = (int) BackendPhotogalleryModel::getSequenceCategory() + 1;
+				$item['parent_id'] = (int) $this->frm->getField('parent_id')->getValue();
 
 				// insert the item
 				$item['id'] = BackendPhotogalleryModel::insertCategory($item);
 
 				// everything is saved, so redirect to the overview
-				$this->redirect(BackendModel::createURLForAction('categories') . '&report=added-category&var=' . urlencode($item['title']) . '&highlight=row-' . $item['id']);
+				//$this->redirect(BackendModel::createURLForAction('categories') . '&report=added-category&var=' . urlencode($item['title']) . '&highlight=row-' . $item['id']);
+				$this->redirect(BackendModel::createURLForAction('categories') . '&report=added-category&var=' . urlencode($item['title']) . '&highlight=row-' . $item['id'] . '&category_id=' . $item['parent_id']);
 			}
 		}
 	}
