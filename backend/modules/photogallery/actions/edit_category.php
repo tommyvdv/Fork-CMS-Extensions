@@ -22,6 +22,9 @@ class BackendPhotogalleryEditCategory extends BackendBaseActionEdit
 		// get parameters
 		$this->id = $this->getParameter('id', 'int');
 
+		// get id
+		$this->category_id = $this->getParameter('category_id', 'int', 0);
+
 		// does the item exists
 		if($this->id !== null && BackendPhotogalleryModel::existsCategory($this->id))
 		{
@@ -64,8 +67,13 @@ class BackendPhotogalleryEditCategory extends BackendBaseActionEdit
 		// create form
 		$this->frm = new BackendForm('editCategory');
 
+		// get categories
+		$this->categories = BackendPhotogalleryModel::getCategoriesForDropdown(BackendModel::getModuleSetting('photogallery', 'categories_depth', 0), false);
+
 		// create elements
 		$this->frm->addText('title', $this->record['title']);
+		$this->frm->addDropdown('parent_id', $this->categories, $this->record['parent_id'])->setDefaultElement('');
+		$this->tpl->assign('deleteAllowed', BackendPhotogalleryModel::deleteCategoryAllowed($this->id));
 
 		// meta object
 		$this->meta = new BackendMeta($this->frm, $this->record['meta_id'], 'title', true);
@@ -84,6 +92,8 @@ class BackendPhotogalleryEditCategory extends BackendBaseActionEdit
 
 		// assign
 		$this->tpl->assign('item', $this->record);
+		$this->tpl->assign('category', $this->record);
+		$this->tpl->assign('categories', $this->categories);
 
 		// delete allowed?
 		$this->tpl->assign('deleteAllowed', BackendPhotogalleryModel::deleteCategoryAllowed($this->id));
@@ -103,6 +113,12 @@ class BackendPhotogalleryEditCategory extends BackendBaseActionEdit
 			// validate fields
 			$this->frm->getField('title')->isFilled(BL::getError('TitleIsRequired'));
 
+			// parented to self?
+			if($this->frm->getField('parent_id')->getValue() == $this->record['id'])
+			{
+				$this->frm->getField('parent_id')->addError(BL::getError('CanNotParentToSelf'));
+			}
+
 			// no errors?
 			if($this->frm->isCorrect())
 			{
@@ -110,12 +126,14 @@ class BackendPhotogalleryEditCategory extends BackendBaseActionEdit
 				$item['id'] = $this->id;
 				$item['title'] = $this->frm->getField('title')->getValue();
 				$item['meta_id'] = $this->meta->save(true);
+				$item['parent_id'] = $this->frm->getField('parent_id')->getValue();
 
 				// upate the item
 				BackendPhotogalleryModel::updateCategory($item);
 
 				// everything is saved, so redirect to the overview
-				$this->redirect(BackendModel::createURLForAction('categories') . '&report=edited-category&var=' . urlencode($item['title']));
+				//$this->redirect(BackendModel::createURLForAction('categories') . '&report=edited-category&var=' . urlencode($item['title']));
+				$this->redirect(BackendModel::createURLForAction('categories') . ($this->category_id ? '&category_id=' . $this->category_id : '') . '&report=edited-category&var=' . urlencode($item['title']));
 			}
 		}
 	}

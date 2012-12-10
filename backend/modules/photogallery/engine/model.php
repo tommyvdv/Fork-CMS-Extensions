@@ -15,11 +15,20 @@
 class BackendPhotogalleryModel
 {
 	const QRY_DATAGRID_BROWSE_CATEGORIES =
+		'SELECT i.id, i.title, COUNT(a.album_id) AS num_albums, i.sequence,
+			(SELECT COUNT(*) FROM photogallery_categories WHERE parent_id = i.id) AS num_children
+		FROM photogallery_categories AS i
+		LEFT OUTER JOIN photogallery_categories_albums AS a ON i.id = a.category_id
+		WHERE i.language = ? AND i.parent_id = ?
+		GROUP BY i.id';
+	/*	
+	const QRY_DATAGRID_BROWSE_CATEGORIES =
 		'SELECT i.id, i.title, COUNT(a.album_id) AS num_albums, i.sequence
 		FROM photogallery_categories AS i
 		LEFT OUTER JOIN photogallery_categories_albums AS a ON i.id = a.category_id
 		WHERE i.language = ?
 		GROUP BY i.id';
+		*/
 
 	const QRY_DATAGRID_BROWSE_EXTRAS_BY_KIND =
 		'SELECT i.id, i.action
@@ -57,6 +66,34 @@ class BackendPhotogalleryModel
 		array('width' => 50, 'height' => 50, 'method' => 'crop'), // do not delete this one.
 		array('width' => 128, 'height' => 128, 'method' => 'crop') // do not delete this one.
 	);
+
+	/**
+	 * Returns breadcrumbs for certain category
+	 *
+	 * @param int $id The id of the category.
+	 * @param int $depth Depth.
+	 * @return array
+	 */
+	public static function getBreadcrumbsForCategory($id = 0, $depth = 0)
+	{
+		if(!$id) return array();
+
+		// get db
+		$db = BackendModel::getDB(true);
+
+		// get category
+		$category = self::getCategory((int) $id);
+		if($depth == 0) $category['selected'] = true;
+		else if($depth == 1) $category['beforeSelected'] = true;
+		else $category['selected'] = $category['selected'] = false;
+		if ((bool) $category['parent_id'] == "0") $category['firstChild'] = true;
+		$output[] = $category;
+		
+		if($category['parent_id']) $output = array_merge($output, self::getBreadcrumbsForCategory($category['parent_id'], $depth + 1));
+		else $output[] = array("root" => true, "title" => Spoonfilter::ucfirst(BL::lbl('Root')), "beforeSelected" => isset($category['selected']) && $category['selected'] ? true : false);
+		
+		return $output;
+	}
 	
 	
 	/**
@@ -745,6 +782,7 @@ class BackendPhotogalleryModel
 	 * @param bool[optional] $includeCount Include the count?
 	 * @return array
 	 */
+	/*
 	public static function getCategoriesForDropdown($includeCount = false)
 	{
 		$db = BackendModel::getDB();
@@ -767,6 +805,37 @@ class BackendPhotogalleryModel
 			 WHERE i.language = ? ORDER BY i.sequence ASC',
 			array(BL::getWorkingLanguage())
 		);
+	}
+	*/
+	public static function getCategoriesForDropdown($allowedDepth = null, $includeCount = false, $parent_id = 0, $depth = 0, $parent = null, $seperator = '&rsaquo;', $space = ' ')
+	{
+		$db = BackendModel::getDB();
+
+		$categories = (array) $db->getPairs(
+			'SELECT i.id, i.title
+			FROM photogallery_categories AS i
+			WHERE i.language = ? AND i.parent_id = ?
+			ORDER BY i.sequence ASC',
+			array(
+				BL::getWorkingLanguage(),
+				$parent_id
+			)
+		);
+
+		if($depth < $allowedDepth || $allowedDepth === null || $allowedDepth === 0)
+		{
+			foreach($categories as $key => $value)
+			{
+				$output[$key] =  $value;
+				$children = self::getCategoriesForDropdown($allowedDepth, $includeCount, $key, $depth + 1, $value);
+				foreach($children as $c_key => $c_value)
+				{
+					$output[$c_key] = $value . $space . $seperator . $space . $c_value;
+				}
+			}
+		}
+
+		return empty($output) ? array() : $output;
 	}
 
 	/**
