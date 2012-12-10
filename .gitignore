@@ -3,7 +3,8 @@
 .buildpath
 .settings
 .*.swp
-*
+backend/*
+frontend/*
 backend/cache/navigation/
 frontend/files/photogallery/
 !/library/external/aws
