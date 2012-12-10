@@ -4,61 +4,61 @@
 			
 			{* Images *}
 			<div class="flexslider">
-			<ul class="slides">
-				{iteration:widgetPhotogallerySlideshow.images}
-						
-						{* With internal link *}
-						{option:widgetPhotogallerySlideshow.images.data.internal_link}
-						<li>
-							<a href="{$var|geturl:{$widgetPhotogallerySlideshow.images.data.internal_link.page_id}}" class="linkedImage">
-								<img src="{$widgetPhotogallerySlideshow.images.large_url}" />
-							</a>
-
-							<div class="caption">
-								{option:widgetPhotogallerySlideshow.images.title}
-									<h3>{$widgetPhotogallerySlideshow.images.title}</h3>
-								{/option:widgetPhotogallerySlideshow.images.title}
-								{$widgetPhotogallerySlideshow.images.text}
-							</div>
-
-						</li>
-						{/option:widgetPhotogallerySlideshow.images.data.internal_link}
-		
-						{* With external link *}
-						{option:widgetPhotogallerySlideshow.images.data.external_link}
-						<li>
-							<a href="{$widgetPhotogallerySlideshow.images.data.external_link.url}" class="linkedImage targetBlank">
-								<img src="{$widgetPhotogallerySlideshow.images.large_url}" />
-							</a>
-
-							<div class="caption">
-								{option:widgetPhotogallerySlideshow.images.title}
-									<h3>{$widgetPhotogallerySlideshow.images.title}</h3>
-								{/option:widgetPhotogallerySlideshow.images.title}
-								{$widgetPhotogallerySlideshow.images.text}
-							</div>
-
-						</li>
-						{/option:widgetPhotogallerySlideshow.images.data.external_link}
-	
-						{* No link *}
-						{option:!widgetPhotogallerySlideshow.images.data.internal_link}
-							{option:!widgetPhotogallerySlideshow.images.data.external_link}
-								<li>
+				<ul class="slides">
+					{iteration:widgetPhotogallerySlideshow.images}
+							
+							{* With internal link *}
+							{option:widgetPhotogallerySlideshow.images.data.internal_link}
+							<li>
+								<a href="{$var|geturl:{$widgetPhotogallerySlideshow.images.data.internal_link.page_id}}" class="linkedImage">
 									<img src="{$widgetPhotogallerySlideshow.images.large_url}" />
+								</a>
 
-									<div class="caption">
-										{option:widgetPhotogallerySlideshow.images.title}
-											<h3>{$widgetPhotogallerySlideshow.images.title}</h3>
-										{/option:widgetPhotogallerySlideshow.images.title}
-										{$widgetPhotogallerySlideshow.images.text}
-									</div>
+								<div class="caption">
+									{option:widgetPhotogallerySlideshow.images.title}
+										<h3>{$widgetPhotogallerySlideshow.images.title}</h3>
+									{/option:widgetPhotogallerySlideshow.images.title}
+									{$widgetPhotogallerySlideshow.images.text}
+								</div>
 
-								</li>
-							{/option:!widgetPhotogallerySlideshow.images.data.external_link}
-						{/option:!widgetPhotogallerySlideshow.images.data.internal_link}
-				{/iteration:widgetPhotogallerySlideshow.images}
-			</ul>
+							</li>
+							{/option:widgetPhotogallerySlideshow.images.data.internal_link}
+			
+							{* With external link *}
+							{option:widgetPhotogallerySlideshow.images.data.external_link}
+							<li>
+								<a href="{$widgetPhotogallerySlideshow.images.data.external_link.url}" class="linkedImage targetBlank">
+									<img src="{$widgetPhotogallerySlideshow.images.large_url}" />
+								</a>
+
+								<div class="caption">
+									{option:widgetPhotogallerySlideshow.images.title}
+										<h3>{$widgetPhotogallerySlideshow.images.title}</h3>
+									{/option:widgetPhotogallerySlideshow.images.title}
+									{$widgetPhotogallerySlideshow.images.text}
+								</div>
+
+							</li>
+							{/option:widgetPhotogallerySlideshow.images.data.external_link}
+		
+							{* No link *}
+							{option:!widgetPhotogallerySlideshow.images.data.internal_link}
+								{option:!widgetPhotogallerySlideshow.images.data.external_link}
+									<li>
+										<img src="{$widgetPhotogallerySlideshow.images.large_url}" />
+
+										<div class="caption">
+											{option:widgetPhotogallerySlideshow.images.title}
+												<h3>{$widgetPhotogallerySlideshow.images.title}</h3>
+											{/option:widgetPhotogallerySlideshow.images.title}
+											{$widgetPhotogallerySlideshow.images.text}
+										</div>
+
+									</li>
+								{/option:!widgetPhotogallerySlideshow.images.data.external_link}
+							{/option:!widgetPhotogallerySlideshow.images.data.internal_link}
+					{/iteration:widgetPhotogallerySlideshow.images}
+				</ul>
 			</div>
 			
 			{* Pager

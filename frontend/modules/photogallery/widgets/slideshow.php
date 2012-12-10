@@ -86,6 +86,9 @@ class FrontendPhotogalleryWidgetSlideshow extends FrontendBaseWidget
 	 */
 	private function parse()
 	{
+
+		$this->header->addCSS('/frontend/modules/' . $this->getModule() . '/layout/css/photogallery.css');
+
 		$this->header->addCSS(
 			FrontendPhotogalleryHelper::getPathJS('/flexslider/' . FrontendPhotogalleryModel::FLEXSLIDER_VERSION . '/flexslider.css', $this->getModule())
 		);

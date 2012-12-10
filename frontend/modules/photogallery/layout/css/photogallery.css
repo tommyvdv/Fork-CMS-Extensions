@@ -13,3 +13,16 @@ ul.photogalleryRelatedByTags li
 {
 	display:none;
 }
+
+.flexslider a
+{
+	border: none;
+}
+
+.flexslider .caption
+{
+	position: absolute;
+	bottom: 1em;
+	left: 1.5em;
+	padding-right: 1.5em;	
+}
