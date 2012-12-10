@@ -7,7 +7,7 @@
 backend/cache/navigation/
 frontend/files/photogallery/
 !/library/external/aws
-!/frontend/modules/photogallery
-!/backend/modules/photogallery
-!/frontend/modules/amazon_s3
-!/backend/modules/amazon_s3
+!/frontend/modules/photogallery/*
+!/backend/modules/photogallery/*
+!/frontend/modules/amazon_s3/*
+!/backend/modules/amazon_s3/*
