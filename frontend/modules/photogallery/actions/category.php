@@ -44,6 +44,9 @@ class FrontendPhotogalleryCategory extends FrontendBaseBlock
 		// call the parent
 		parent::execute();
 
+		// hide contenTitle, in the template the title is wrapped with an inverse-option
+		$this->tpl->assign('hideContentTitle', true);
+
 		// load template
 		$this->loadTemplate();
 
@@ -75,52 +78,113 @@ class FrontendPhotogalleryCategory extends FrontendBaseBlock
 		// requested page
 		$requestedPage = $this->URL->getParameter('page', 'int', 1);
 
-		// validate category
-		if($requestedCategory == 'false') $this->redirect(FrontendNavigation::getURL(404));
-
-		// set category
-		$this->category = $categories[$possibleCategories[$requestedCategory]];
-
-		// set URL and limit
-		$this->pagination['url'] = FrontendNavigation::getURLForBlock('photogallery', 'category') . '/' . $requestedCategory;
-		$this->pagination['limit'] = FrontendModel::getModuleSetting('photogallery', 'overview_categories_number_of_items', 10);
-
-		// populate count fields in pagination
-		$this->pagination['num_items'] = FrontendPhotogalleryModel::getAllForCategoryCount($requestedCategory);
-		$this->pagination['num_pages'] = (int) ceil($this->pagination['num_items'] / $this->pagination['limit']);
-
-		// redirect if the request page doesn't exists
-		if($requestedPage > $this->pagination['num_pages'] || $requestedPage < 1) $this->redirect(FrontendNavigation::getURL(404));
-
-		// populate calculated fields in pagination
-		$this->pagination['requested_page'] = $requestedPage;
-		$this->pagination['offset'] = ($this->pagination['requested_page'] * $this->pagination['limit']) - $this->pagination['limit'];
-
-		// get articles
-		$this->items = FrontendPhotogalleryModel::getAllForCategory($requestedCategory, $this->pagination['limit'], $this->pagination['offset']);
-		
+		// get resolution
 		$thumbnail_resolution = FrontendPhotogalleryModel::getExtraResolutionForKind($this->data['extra_id'], 'album_overview_thumbnail');
-			
-		foreach($this->items as &$row)
+
+		// validate category
+		if($requestedCategory == 'false')
 		{
-			$row['tags'] = FrontendTagsModel::getForItem($this->getModule(), $row['id']);
-			if(!empty($row['image']))
+			//$this->redirect(FrontendNavigation::getURL(404));
+
+			// set URL and limit
+			$this->pagination['url'] = FrontendNavigation::getURLForBlock('photogallery', 'category') . '/' . $requestedCategory;
+			$this->pagination['limit'] = FrontendModel::getModuleSetting('photogallery', 'overview_categories_number_of_items', 10);
+
+			// populate count fields in pagination
+			$this->pagination['num_items'] = FrontendPhotogalleryModel::getAllForCategoryCount($requestedCategory);
+			$this->pagination['num_pages'] = (int) ceil($this->pagination['num_items'] / $this->pagination['limit']);
+
+			// redirect if the request page doesn't exists
+			if($requestedPage > $this->pagination['num_pages'] && $requestedPage < 1) $this->redirect(FrontendNavigation::getURL(404));
+
+			// populate calculated fields in pagination
+			$this->pagination['requested_page'] = $requestedPage;
+			$this->pagination['offset'] = ($this->pagination['requested_page'] * $this->pagination['limit']) - $this->pagination['limit'];
+
+			// set categories
+			$this->categories = $categories;
+			
+			// set items per category
+			foreach($this->categories as $cat_key => $category_row)
 			{
-				// No account has been linked
-				if(!$this->amazonS3Account)
+				// add albums
+				$this->categories[$cat_key]['albums'] = FrontendPhotogalleryModel::getAllForCategory(
+					$category_row['url'],
+					$this->pagination['limit'],
+					$this->pagination['offset']
+				);
+
+				// loop items
+				foreach($this->categories[$cat_key]['albums'] as $album_cat_key => $album_cat_row)
 				{
-					$row['image']['thumbnail_url'] =  FRONTEND_FILES_URL . '/' . $this->getModule() . '/sets/frontend/' . $row['image']['set_id'] . '/' . $thumbnail_resolution['width'] . 'x' . $thumbnail_resolution['height'] . '_' . $thumbnail_resolution['method'] . '/' . $row['image']['filename'];
+					$this->categories[$cat_key]['albums'][$album_cat_key]['tags'] = FrontendTagsModel::getForItem($this->getModule(), $album_cat_row['id']);
+					
+					if(!empty($album_cat_row['image']))
+					{
+						// No account has been linked
+						if(!$this->amazonS3Account)
+						{
+							$this->categories[$cat_key]['albums'][$album_cat_key]['image']['thumbnail_url'] =  FRONTEND_FILES_URL . '/' . $this->getModule() . '/sets/frontend/' . $album_cat_row['image']['set_id'] . '/' . $thumbnail_resolution['width'] . 'x' . $thumbnail_resolution['height'] . '_' . $thumbnail_resolution['method'] . '/' . $album_cat_row['image']['filename'];
+						}
+						elseif($this->amazonS3Account)
+						{
+							// Thumbnail res.
+							$this->categories[$cat_key]['albums'][$album_cat_key]['image']['thumbnail_url']  = FrontendPhotogalleryHelper::getImageURL(
+								$this->getModule() . '/sets/frontend/' . $album_cat_row['image']['set_id'] . '/' . $thumbnail_resolution['width'] . 'x' . $thumbnail_resolution['height'] . '_' . $thumbnail_resolution['method'] . '/' . $album_cat_row['image']['filename']
+							);
+						}
+						else
+						{
+							$this->categories[$cat_key]['albums'][$cat_key]['image']['thumbnail_url'] = array();
+						}
+					}
 				}
-				elseif($this->amazonS3Account)
+			}
+		}
+		else
+		{
+			// set category
+			$this->category = $categories[$possibleCategories[$requestedCategory]];
+
+			// set URL and limit
+			$this->pagination['url'] = FrontendNavigation::getURLForBlock('photogallery', 'category') . '/' . $requestedCategory;
+			$this->pagination['limit'] = FrontendModel::getModuleSetting('photogallery', 'overview_categories_number_of_items', 10);
+
+			// populate count fields in pagination
+			$this->pagination['num_items'] = (int) FrontendPhotogalleryModel::getAllForCategoryCount($requestedCategory);
+			$this->pagination['num_pages'] = (int) ceil($this->pagination['num_items'] / $this->pagination['limit']);
+
+			// redirect if the request page doesn't exists
+			if($requestedPage > $this->pagination['num_pages'] || $requestedPage < 1) $this->redirect(FrontendNavigation::getURL(404));
+
+			// populate calculated fields in pagination
+			$this->pagination['requested_page'] = $requestedPage;
+			$this->pagination['offset'] = ($this->pagination['requested_page'] * $this->pagination['limit']) - $this->pagination['limit'];
+
+			// get articles
+			$this->items = FrontendPhotogalleryModel::getAllForCategory($requestedCategory, $this->pagination['limit'], $this->pagination['offset']);
+				
+			foreach($this->items as &$row)
+			{
+				$row['tags'] = FrontendTagsModel::getForItem($this->getModule(), $row['id']);
+				if(!empty($row['image']))
 				{
-					// Thumbnail res.
-					$row['image']['thumbnail_url']  = FrontendPhotogalleryHelper::getImageURL(
-						$this->getModule() . '/sets/frontend/' . $row['image']['set_id'] . '/' . $thumbnail_resolution['width'] . 'x' . $thumbnail_resolution['height'] . '_' . $thumbnail_resolution['method'] . '/' . $row['image']['filename']
-					);
-				}
-				else
-				{
-					$row['image']['thumbnail_url'] = array();
+					// No account has been linked
+					if(!$this->amazonS3Account)
+					{
+						$row['image']['thumbnail_url'] =  FRONTEND_FILES_URL . '/' . $this->getModule() . '/sets/frontend/' . $row['image']['set_id'] . '/' . $thumbnail_resolution['width'] . 'x' . $thumbnail_resolution['height'] . '_' . $thumbnail_resolution['method'] . '/' . $row['image']['filename'];
+					}
+					elseif($this->amazonS3Account)
+					{
+						// Thumbnail res.
+						$row['image']['thumbnail_url']  = FrontendPhotogalleryHelper::getImageURL(
+							$this->getModule() . '/sets/frontend/' . $row['image']['set_id'] . '/' . $thumbnail_resolution['width'] . 'x' . $thumbnail_resolution['height'] . '_' . $thumbnail_resolution['method'] . '/' . $row['image']['filename']
+						);
+					}
+					else
+					{
+						$row['image']['thumbnail_url'] = array();
+					}
 				}
 			}
 		}
@@ -134,8 +198,25 @@ class FrontendPhotogalleryCategory extends FrontendBaseBlock
 	private function parse()
 	{
 		// add into breadcrumb
-		$this->breadcrumb->addElement(SpoonFilter::ucfirst(FL::getLabel('Category')));
-		$this->breadcrumb->addElement($this->category['label']);
+		//$this->breadcrumb->addElement(SpoonFilter::ucfirst(FL::getLabel('Category')), );
+		//$this->breadcrumb->addElement($this->category['label']);
+
+		// add into breadcrumb
+		if($this->category)
+		{
+			$this->breadcrumb->addElement(SpoonFilter::ucfirst(FL::getLabel('Category')), FrontendNavigation::getURLForBlock('photogallery', 'category'));
+			//$this->breadcrumb->addElement($this->category['label']);
+
+			// get parent, parents parent, etc…
+			$this->breadcrumbs = array_reverse(FrontendPhotogalleryModel::getBreadcrumbsForCategory($this->category['id']));
+			
+			// add breadcrumbs one by one
+			foreach($this->breadcrumbs as $breadcrumb) $this->breadcrumb->addElement($breadcrumb['title'], FrontendNavigation::getURLForBlock('photogallery', 'category') . '/' . $breadcrumb['url']);
+		}
+		else
+		{
+			$this->breadcrumb->addElement(SpoonFilter::ucfirst(FL::getLabel('Categories')));
+		}
 
 		// set meta
 		$this->header->setPageTitle($this->category['meta_title'], ($this->category['meta_title_overwrite'] == 'Y'));
@@ -155,10 +236,11 @@ class FrontendPhotogalleryCategory extends FrontendBaseBlock
 	
 
 		// assign category
-		$this->tpl->assign('blockPhotogalleryCategory', $this->category);
+		$this->tpl->assign('blockPhotogalleryCategory', !empty($this->category) ? $this->category : array());
+		$this->tpl->assign('blockPhotogalleryCategories', !empty($this->categories) ? $this->categories : array());
 
 		// assign articles
-		$this->tpl->assign('blockPhotogalleryCategoryAlbums', $this->items);
+		$this->tpl->assign('blockPhotogalleryCategoryAlbums', !empty($this->items) ? $this->items : array());
 
 		// parse the pagination
 		$this->parsePagination();

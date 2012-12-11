@@ -2,6 +2,14 @@
 <locale>
 	<frontend>
 		<core>
+			<item type="label" name="AllCategories">
+				<translation language="nl"><![CDATA[alle categorieën]]></translation>
+				<translation language="en"><![CDATA[all categories]]></translation>
+			</item>
+			<item type="label" name="OnCategory">
+				<translation language="nl"><![CDATA[category "%1$s"]]></translation>
+				<translation language="en"><![CDATA[categorie "%1$s"]]></translation>
+			</item>
 			<item type="label" name="Image">
 				<translation language="nl"><![CDATA[afbeelding]]></translation>
 				<translation language="en"><![CDATA[image]]></translation>
