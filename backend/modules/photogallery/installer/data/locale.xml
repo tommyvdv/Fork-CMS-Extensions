@@ -95,23 +95,57 @@
 				<translation language="nl"><![CDATA[Bevestig om te verbergen.]]></translation>
 			</item>
 
-			 <item type="message" name="HelpMeta">
-		        <translation language="nl"><![CDATA[Toon de meta informatie van deze album in de RSS feed (categorie)]]></translation>
-		        <translation language="en"><![CDATA[Show the meta information for this album in the RSS feed (category)]]></translation>
-		      </item>
-		
-		
-			 <item type="message" name="HelpPingServices">
-		        <translation language="nl"><![CDATA[Laat verschillende blogservices weten wanneer je een nieuw album plaatst.]]></translation>
-		        <translation language="en"><![CDATA[Let various blogservices know when you've posted a new album.]]></translation>
-		        <translation language="it"><![CDATA[Informa diversi blogservices quando pubblichi un nuovo articolo.]]></translation>
-		        <translation language="ru"><![CDATA[Разрешить другим блого-сервисам знать о дате новых записей.]]></translation>
-		        <translation language="cn"><![CDATA[让多个不同的博客服务提供商知道你发布了一篇新文章。]]></translation>
-		        <translation language="de"><![CDATA[Informiere verschiedene Blogging-Dienste sobald du einen neuen Artikel veröffentlicht hast.]]></translation>
-		        <translation language="hu"><![CDATA[Tudj meg több más blogszolgáltatást, mikor új cikket teszel közzé.]]></translation>
-		        <translation language="fr"><![CDATA[Informez plusieurs services de blog que vous avez posté un nouvel article.]]></translation>
-		        <translation language="es"><![CDATA[avisa a varios servicios de blog cuando publicas un nuevo artículo.]]></translation>
-		      </item>
+			<item type="message" name="HelpMeta">
+				<translation language="nl"><![CDATA[Toon de meta informatie van deze album in de RSS feed (categorie)]]></translation>
+				<translation language="en"><![CDATA[Show the meta information for this album in the RSS feed (category)]]></translation>
+			</item>
+
+			<item type="message" name="NoParents">
+				<translation language="nl"><![CDATA[No parents available. Add one <a href="%1$s">here</a>]]></translation>
+				<translation language="en"><![CDATA[Geen hoofdcategorieën beschikbaar. Voer er <a href="%1$s">hier</a> één toe. ]]></translation>
+			</item>
+
+			<item type="message" name="HelpPingServices">
+				<translation language="nl"><![CDATA[Laat verschillende blogservices weten wanneer je een nieuw album plaatst.]]></translation>
+				<translation language="en"><![CDATA[Let various blogservices know when you've posted a new album.]]></translation>
+				<translation language="it"><![CDATA[Informa diversi blogservices quando pubblichi un nuovo articolo.]]></translation>
+				<translation language="ru"><![CDATA[Разрешить другим блого-сервисам знать о дате новых записей.]]></translation>
+				<translation language="cn"><![CDATA[让多个不同的博客服务提供商知道你发布了一篇新文章。]]></translation>
+				<translation language="de"><![CDATA[Informiere verschiedene Blogging-Dienste sobald du einen neuen Artikel veröffentlicht hast.]]></translation>
+				<translation language="hu"><![CDATA[Tudj meg több más blogszolgáltatást, mikor új cikket teszel közzé.]]></translation>
+				<translation language="fr"><![CDATA[Informez plusieurs services de blog que vous avez posté un nouvel article.]]></translation>
+				<translation language="es"><![CDATA[avisa a varios servicios de blog cuando publicas un nuevo artículo.]]></translation>
+			</item>
+			
+			<item type="label" name="NumChildren">
+				<translation language="en"><![CDATA[subs]]></translation>
+				<translation language="nl"><![CDATA[subs]]></translation>
+			</item>
+			
+			<item type="label" name="ViewSubcategories">
+				<translation language="en"><![CDATA[view subcategories]]></translation>
+				<translation language="nl"><![CDATA[bekijk subcategorieën]]></translation>
+			</item>
+			
+			<item type="label" name="Root">
+				<translation language="en"><![CDATA[&bull;]]></translation>
+				<translation language="nl"><![CDATA[&bull;]]></translation>
+			</item>
+			
+			<item type="label" name="Parent">
+				<translation language="en"><![CDATA[parent]]></translation>
+				<translation language="nl"><![CDATA[hoofdcategorie]]></translation>
+			</item>
+			
+			<item type="label" name="CategoriesForParent">
+				<translation language="en"><![CDATA[subcategories for "%1$s"]]></translation>
+				<translation language="nl"><![CDATA[subcategorieën voor "%1$s"]]></translation>
+			</item>
+			
+			<item type="label" name="AddCategoryToParent">
+				<translation language="en"><![CDATA[add subcategory to "%1$s"]]></translation>
+				<translation language="nl"><![CDATA[voeg subcategorie toe aan "%1$s"]]></translation>
+			</item>
 			
 			<item type="label" name="ItemsPerPage">
 				<translation language="en"><![CDATA[items per page]]></translation>
