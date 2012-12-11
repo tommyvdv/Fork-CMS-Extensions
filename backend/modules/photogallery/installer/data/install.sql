@@ -43,6 +43,7 @@ CREATE TABLE `photogallery_categories` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `language` varchar(5) COLLATE utf8_unicode_ci NOT NULL,
   `title` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  `parent_id` int(11) NOT NULL,
   `meta_id` int(11) NOT NULL,
   `sequence` int(11) NOT NULL,
   PRIMARY KEY (`id`)

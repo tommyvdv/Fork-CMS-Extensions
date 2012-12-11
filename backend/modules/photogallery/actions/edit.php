@@ -76,7 +76,8 @@ class BackendPhotogalleryEdit extends BackendBaseActionEdit
 		
 		$today = mktime(00, 00, 00);
 		
-		$this->categories = BackendPhotogalleryModel::getCategoriesForDropdown(true);
+		//$this->categories = BackendPhotogalleryModel::getCategoriesForDropdown(true);
+		$this->categories = BackendPhotogalleryModel::getCategoriesForDropdown(BackendModel::getModuleSetting('photogallery', 'categories_depth', 0));
 		
 		// create elements
 		$this->frm->addText('title', $this->record['title'], null, 'inputText title', 'inputTextError title');

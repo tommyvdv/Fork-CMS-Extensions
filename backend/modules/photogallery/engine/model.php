@@ -134,6 +134,28 @@ class BackendPhotogalleryModel
 	 */
 	public static function deleteCategoryAllowed($id)
 	{
+		// check if has been assigned to album(s)
+		$hasAlbums = (bool) BackendModel::getDB()->getVar(
+			'SELECT COUNT(category_id)
+			 FROM photogallery_categories_albums AS i
+			 WHERE i.category_id = ?',
+			array((int) $id)
+		);
+
+		// check if category is parent of children
+		$hasChildren = (bool) BackendModel::getDB()->getVar(
+			'SELECT COUNT(parent_id)
+			FROM photogallery_categories AS i
+			WHERE i.parent_id = ?',
+			array((int) $id)
+		);
+
+		// if none of these apply return true
+		return !($hasAlbums || $hasChildren);
+	}
+	/*
+	public static function deleteCategoryAllowed($id)
+	{
 		return !(bool) BackendModel::getDB()->getVar(
 			'SELECT COUNT(category_id)
 			 FROM photogallery_categories_albums AS i
@@ -141,6 +163,7 @@ class BackendPhotogalleryModel
 			array((int) $id)
 		);
 	}
+	*/
 
 	/**
 	 * Deletes one or more items

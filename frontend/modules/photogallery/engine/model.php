@@ -721,19 +721,27 @@ class FrontendPhotogalleryModel implements FrontendTagsInterface
 	 *
 	 * @return array
 	 */
-	public static function getAllCategories()
+	public static function getAllCategories($parent_id = null)
 	{
-		$return =  (array) FrontendModel::getDB()->getRecords('SELECT c.id, c.title AS label, m.url, COUNT(c.id) AS total,
-															m.keywords AS meta_keywords, m.keywords_overwrite AS meta_keywords_overwrite,
-															m.description AS meta_description, m.description_overwrite AS meta_description_overwrite,
-															m.title AS meta_title, m.title_overwrite AS meta_title_overwrite, m.data AS meta_data
-															FROM photogallery_categories AS c
-															INNER JOIN photogallery_categories_albums AS a ON c.id = a.category_id
-															INNER JOIN photogallery_albums AS i ON a.album_id = i.id AND c.language = i.language
-															INNER JOIN meta AS m ON m.id = c.meta_id
-															WHERE c.language = ? AND i.hidden = ? AND i.publish_on <= ?  AND i.num_images > 0
-															GROUP BY c.id  ORDER BY c.sequence ASC',
-															array(FRONTEND_LANGUAGE, 'N', FrontendModel::getUTCDate('Y-m-d H:i') . ':00'), 'id');
+		$parameters[] = FRONTEND_LANGUAGE;
+		$parameters[] = 'N';
+		$parameters[] = FrontendModel::getUTCDate('Y-m-d H:i') . ':00';
+		if(!is_null($parent_id)) $parameters[] = $parent_id;
+		
+		$return =  (array) FrontendModel::getDB()->getRecords(
+			'SELECT c.id, c.title AS label, m.url, COUNT(c.id) AS total,
+				m.keywords AS meta_keywords, m.keywords_overwrite AS meta_keywords_overwrite,
+				m.description AS meta_description, m.description_overwrite AS meta_description_overwrite,
+				m.title AS meta_title, m.title_overwrite AS meta_title_overwrite, m.data AS meta_data
+			FROM photogallery_categories AS c
+				INNER JOIN photogallery_categories_albums AS a ON c.id = a.category_id
+				INNER JOIN photogallery_albums AS i ON a.album_id = i.id AND c.language = i.language
+				INNER JOIN meta AS m ON m.id = c.meta_id
+			WHERE c.language = ? AND i.hidden = ? AND i.publish_on <= ?  AND i.num_images > 0' . (is_null($parent_id) ? '' : ' AND c.parent_id = ?') . '
+			GROUP BY c.id  ORDER BY c.sequence ASC',
+			$parameters,
+			'id'
+		);
 	
 		$categoryLink = FrontendNavigation::getURLForBlock('photogallery', 'category');
 	
@@ -829,13 +837,24 @@ class FrontendPhotogalleryModel implements FrontendTagsInterface
 	 */
 	public static function getAllForCategoryCount($categoryURL)
 	{
-		return (int) FrontendModel::getDB()->getVar('SELECT COUNT(i.id) AS count
-														FROM photogallery_albums AS i
-														INNER JOIN photogallery_categories_albums AS a ON i.id = a.album_id
-														INNER JOIN photogallery_categories AS c ON a.category_id = c.id
-														INNER JOIN meta AS m ON m.id = c.meta_id
-														WHERE i.language = ? AND i.hidden = ? AND i.publish_on <= ? AND m.url = ?  AND i.num_images > 0 GROUP BY i.id',
-														array(FRONTEND_LANGUAGE, 'N', FrontendModel::getUTCDate('Y-m-d H:i') . ':00', (string) $categoryURL));
+		return (int) FrontendModel::getDB()->getVar(
+			'SELECT COUNT(DISTINCT i.id) AS count
+			FROM photogallery_albums AS i
+				INNER JOIN photogallery_categories_albums AS a ON i.id = a.album_id
+				INNER JOIN photogallery_categories AS c ON a.category_id = c.id
+				INNER JOIN meta AS m ON m.id = c.meta_id
+			WHERE i.language = ?
+				AND i.hidden = ?
+				AND i.publish_on <= ?
+				AND m.url = ?
+				AND i.num_images > 0',
+			array(
+				FRONTEND_LANGUAGE,
+				'N',
+				FrontendModel::getUTCDate('Y-m-d H:i') . ':00',
+				(string) $categoryURL
+			)
+		);
 	}
 
 	/**
@@ -912,6 +931,61 @@ class FrontendPhotogalleryModel implements FrontendTagsInterface
 	}
 
 	/**
+	 * Get all breadcrumbs for a specific category
+	 *
+	 * @return array
+	 */
+	public static function getBreadcrumbsForCategory($id = 0, $depth = 0)
+	{
+		if(!$id) return array();
+
+		// get db
+		$db = FrontendModel::getDB(true);
+
+		// get category
+		$category = self::getCategoryById((int) $id);
+		if($depth == 0) $category['selected'] = true;
+		else if($depth == 1) $category['beforeSelected'] = true;
+		else $category['selected'] = $category['selected'] = false;
+		if ((bool) $category['parent_id'] == "0") $category['firstChild'] = true;
+		$output[] = $category;
+		
+		if($category['parent_id']) $output = array_merge($output, self::getBreadcrumbsForCategory($category['parent_id'], $depth + 1));
+		//else $output[] = array("root" => true, "title" => Spoonfilter::ucfirst(FL::lbl('CategoryRoot')), "beforeSelected" => isset($category['selected']) && $category['selected'] ? true : false);
+		
+		return $output;
+	}
+
+	/**
+	 * Get all data for a given id
+	 *
+	 * @param int $id The id of the category to fetch.
+	 * @return array
+	 */
+	public static function getCategoryById($id)
+	{
+		// get db
+		$db = FrontendModel::getDB();
+
+		$category = (array) $db->getRecord(
+			'SELECT i.*,
+				m.keywords AS meta_keywords, m.keywords_overwrite AS meta_keywords_overwrite,
+				m.description AS meta_description, m.description_overwrite AS meta_description_overwrite,
+				m.title AS page_title, m.title_overwrite AS page_title_overwrite,
+				m.url, m.url_overwrite
+			FROM photogallery_categories AS i
+				INNER JOIN meta AS m ON m.id = i.meta_id
+			WHERE i.id = ?',
+			array(
+				(int) $id
+			)
+		);
+
+		return $category;
+		
+	}
+
+	/**
 	 * Get all items in a category (at least a chunk)
 	 *
 	 * @param string $categoryURL The URL of the category to retrieve the posts for.
@@ -923,20 +997,31 @@ class FrontendPhotogalleryModel implements FrontendTagsInterface
 		
 		// get the items
 		$return = (array) $db->getRecords(
-											'SELECT i.id, i.language, i.title, i.introduction, i.text, i.num_images, i.set_id, 
-											c.title AS category_title, cm.url AS category_url,
-											UNIX_TIMESTAMP(i.publish_on) AS publish_on,
-											m.url, GROUP_CONCAT(ab.category_id) AS category_ids
-											FROM photogallery_albums AS i
-											INNER JOIN photogallery_categories_albums AS a ON i.id = a.album_id
-											LEFT OUTER JOIN photogallery_categories_albums AS ab ON i.id = ab.album_id
-											INNER JOIN photogallery_categories AS c ON a.category_id = c.id
-											INNER JOIN meta AS m ON i.meta_id = m.id
-											INNER JOIN meta AS cm ON cm.id = c.meta_id
-											WHERE  i.language = ? AND i.hidden = ? AND i.publish_on <= ? AND cm.url = ?  AND i.num_images > 0
-											GROUP BY i.id
-											ORDER BY i.sequence ASC',
-											array(FRONTEND_LANGUAGE, 'N', FrontendModel::getUTCDate('Y-m-d H:i') . ':00', (string) $categoryURL, (int) $offset, (int) $limit), 'id');
+			'SELECT i.id, i.language, i.title, i.introduction, i.text, i.num_images, i.set_id, 
+				c.title AS category_title, cm.url AS category_url,
+				UNIX_TIMESTAMP(i.publish_on) AS publish_on,
+				m.url, GROUP_CONCAT(ab.category_id) AS category_ids
+			FROM photogallery_albums AS i
+				INNER JOIN photogallery_categories_albums AS a ON i.id = a.album_id
+				LEFT OUTER JOIN photogallery_categories_albums AS ab ON i.id = ab.album_id
+				INNER JOIN photogallery_categories AS c ON a.category_id = c.id
+				INNER JOIN meta AS m ON i.meta_id = m.id
+				INNER JOIN meta AS cm ON cm.id = c.meta_id
+			WHERE  i.language = ?
+				AND i.hidden = ?
+				AND i.publish_on <= ?
+				AND cm.url = ?
+				AND i.num_images > 0
+			GROUP BY i.id
+			ORDER BY i.sequence ASC',
+			array(
+				FRONTEND_LANGUAGE,
+				'N',
+				FrontendModel::getUTCDate('Y-m-d H:i') . ':00',
+				(string) $categoryURL
+			),
+			'id'
+		);
 		
 		
 		// no results?

@@ -40,7 +40,7 @@ class FrontendPhotogalleryWidgetCategoryNavigation extends FrontendBaseWidget
 	private function getData()
 	{	
 		// Get categories and their projects
-		$this->categories =  FrontendPhotogalleryModel::getAllCategories();
+		$this->categories =  FrontendPhotogalleryModel::getAllCategories(isset($this->data['id']) ? $this->data['id'] : 0);
 	}
 
 	/**
@@ -50,6 +50,8 @@ class FrontendPhotogalleryWidgetCategoryNavigation extends FrontendBaseWidget
 	 */
 	private function parse()
 	{
+		$this->header->addCSS('/frontend/modules/' . $this->getModule() . '/layout/css/photogallery.css');
+		
 		$onDetailURL = $this->URL->getParameter(0) == FL::getAction('Detail');
 		$onCategoryURL = $this->URL->getParameter(0) == FL::getAction('Category');
 

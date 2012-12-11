@@ -26,8 +26,9 @@
 								{$ddmParentId} {$ddmParentIdError}
 							{/option:categories}
 							{option:!categories}
-								{$msgNoParents}
+								{$msgNoParents|sprintf:{$var|geturl:'add_category'}}
 							{/option:!categories}
+							
 						</div>
 					</td>
 				</tr>
