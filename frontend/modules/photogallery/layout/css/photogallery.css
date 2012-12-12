@@ -15,6 +15,16 @@ ul.photogalleryCategoryNavigation ul {
 			border: none;
 		}
 
+			ul.photogalleryCategoryNavigation li.product a {
+				color: #000;
+				border-bottom: none;
+			}
+
+				ul.photogalleryCategoryNavigation li.product.selected a {
+					color: darkred;
+					border-bottom: 1px solid orange;
+				}
+
 ul.photogalleryLightbox li,
 ul.photogalleryDetailLightbox li,
 ul.photogalleryPaged li,

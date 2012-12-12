@@ -64,6 +64,10 @@ class FrontendPhotogalleryCategory extends FrontendBaseBlock
 	 */
 	private function getData()
 	{
+		// init
+		$this->category_view = false;
+		$this->categories_view = false;
+
 		// S3
 		$this->amazonS3Account = FrontendPhotogalleryHelper::existsAmazonS3();
 		
@@ -84,6 +88,8 @@ class FrontendPhotogalleryCategory extends FrontendBaseBlock
 		// validate category
 		if($requestedCategory == 'false')
 		{
+			$this->categories_view = true;
+
 			//$this->redirect(FrontendNavigation::getURL(404));
 
 			// set URL and limit
@@ -143,6 +149,8 @@ class FrontendPhotogalleryCategory extends FrontendBaseBlock
 		}
 		else
 		{
+			$this->category_view = true;
+
 			// set category
 			$this->category = $categories[$possibleCategories[$requestedCategory]];
 
@@ -155,7 +163,7 @@ class FrontendPhotogalleryCategory extends FrontendBaseBlock
 			$this->pagination['num_pages'] = (int) ceil($this->pagination['num_items'] / $this->pagination['limit']);
 
 			// redirect if the request page doesn't exists
-			if($requestedPage > $this->pagination['num_pages'] || $requestedPage < 1) $this->redirect(FrontendNavigation::getURL(404));
+			//if($requestedPage > $this->pagination['num_pages'] || $requestedPage < 1) $this->redirect(FrontendNavigation::getURL(404));
 
 			// populate calculated fields in pagination
 			$this->pagination['requested_page'] = $requestedPage;
@@ -163,7 +171,7 @@ class FrontendPhotogalleryCategory extends FrontendBaseBlock
 
 			// get articles
 			$this->items = FrontendPhotogalleryModel::getAllForCategory($requestedCategory, $this->pagination['limit'], $this->pagination['offset']);
-				
+			
 			foreach($this->items as &$row)
 			{
 				$row['tags'] = FrontendTagsModel::getForItem($this->getModule(), $row['id']);
@@ -235,8 +243,11 @@ class FrontendPhotogalleryCategory extends FrontendBaseBlock
 		$this->header->addLink(array('rel' => 'alternate', 'type' => 'application/rss+xml', 'title' => FrontendModel::getModuleSetting('photogallery', 'rss_title_' . FRONTEND_LANGUAGE), 'href' => $rssLink), true);
 	
 
-		// assign category
+		// assign
+		$this->tpl->assign('blockPhotogalleryCategoryView', $this->category_view);
 		$this->tpl->assign('blockPhotogalleryCategory', !empty($this->category) ? $this->category : array());
+		
+		$this->tpl->assign('blockPhotogalleryCategoriesView', $this->categories_view);
 		$this->tpl->assign('blockPhotogalleryCategories', !empty($this->categories) ? $this->categories : array());
 
 		// assign articles

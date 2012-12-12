@@ -51,7 +51,7 @@ class FrontendPhotogalleryWidgetCategoryNavigation extends FrontendBaseWidget
 	private function parse()
 	{
 		$this->header->addCSS('/frontend/modules/' . $this->getModule() . '/layout/css/photogallery.css');
-		
+
 		$onDetailURL = $this->URL->getParameter(0) == FL::getAction('Detail');
 		$onCategoryURL = $this->URL->getParameter(0) == FL::getAction('Category');
 
@@ -63,7 +63,7 @@ class FrontendPhotogalleryWidgetCategoryNavigation extends FrontendBaseWidget
 				$this->record = FrontendPhotogalleryModel::get($this->URL->getParameter(1));
 				if(!empty($this->record))
 				{
-					$category['items'] = FrontendPhotogalleryModel::getAllForCategoryNavigation($category['url']);
+					$category['items'] = FrontendPhotogalleryModel::getAllForCategoryNavigation($category['url'], null, null, true);
 					$category['selected'] = false;
 					if(isset($this->record['category_id'])) $category['selected'] = (int) $category['id'] == (int) $this->record['category_id'] ? true : false;
 
@@ -90,5 +90,6 @@ class FrontendPhotogalleryWidgetCategoryNavigation extends FrontendBaseWidget
 		}
 		
 		$this->tpl->assign('widgetPhotogalleryCategoryNavigation', $this->categories);
+		$this->tpl->assign('widgetPhotogalleryCategoryNavigationParentId', (int) (isset($this->data['id']) ? $this->data['id'] : 0));
 	}
 }
