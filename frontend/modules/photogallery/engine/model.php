@@ -734,20 +734,27 @@ class FrontendPhotogalleryModel implements FrontendTagsInterface
 				m.description AS meta_description, m.description_overwrite AS meta_description_overwrite,
 				m.title AS meta_title, m.title_overwrite AS meta_title_overwrite, m.data AS meta_data
 			FROM photogallery_categories AS c
-				INNER JOIN photogallery_categories_albums AS a ON c.id = a.category_id
-				INNER JOIN photogallery_albums AS i ON a.album_id = i.id AND c.language = i.language
+				/*INNER JOIN photogallery_categories_albums AS a ON c.id = a.category_id*/
+				/*INNER JOIN photogallery_albums AS i ON a.album_id = i.id AND c.language = i.language*/
 				INNER JOIN meta AS m ON m.id = c.meta_id
-			WHERE c.language = ? AND i.hidden = ? AND i.publish_on <= ?  AND i.num_images > 0' . (is_null($parent_id) ? '' : ' AND c.parent_id = ?') . '
-			GROUP BY c.id  ORDER BY c.sequence ASC',
+			WHERE c.language = ?
+				/*AND i.hidden = ?*/
+				/*AND i.publish_on <= ?*/
+				/*AND i.num_images > 0*/' .
+				(is_null($parent_id) ? '' : ' AND c.parent_id = ?') . '
+			GROUP BY c.id
+			ORDER BY c.sequence ASC',
 			$parameters,
 			'id'
 		);
-	
+		
 		$categoryLink = FrontendNavigation::getURLForBlock('photogallery', 'category');
 	
 		foreach($return as &$row)
 		{
+			// set url
 			$row['full_url'] = $categoryLink . '/' . $row['url'];
+			
 			// unserialize
 			if(isset($row['meta_data'])) $row['meta_data'] = @unserialize($row['meta_data']);
 		}
@@ -865,27 +872,36 @@ class FrontendPhotogalleryModel implements FrontendTagsInterface
 	 * @param int[optional] $offset The offset.
 	 * @return array
 	 */
-	public static function getAllForCategory($categoryURL, $limit = 10, $offset = 0)
+	public static function getAllForCategory($categoryURL, $limit = 10, $offset = 0, $ignoreLimit = false)
 	{
 		$db = FrontendModel::getDB();
 		
 		// get the items
 		$return = (array) $db->getRecords(
-											'SELECT i.id, i.language, i.title, i.introduction, i.text, i.num_images, i.set_id, 
-											c.title AS category_title, cm.url AS category_url,
-											UNIX_TIMESTAMP(i.publish_on) AS publish_on,
-											m.url, GROUP_CONCAT(ab.category_id) AS category_ids
-											FROM photogallery_albums AS i
-											INNER JOIN photogallery_categories_albums AS a ON i.id = a.album_id
-											LEFT OUTER JOIN photogallery_categories_albums AS ab ON i.id = ab.album_id
-											INNER JOIN photogallery_categories AS c ON a.category_id = c.id
-											INNER JOIN meta AS m ON i.meta_id = m.id
-											INNER JOIN meta AS cm ON cm.id = c.meta_id
-											WHERE  i.language = ? AND i.hidden = ? AND i.publish_on <= ? AND cm.url = ?  AND i.num_images > 0
-											GROUP BY i.id
-											ORDER BY i.sequence ASC
-											LIMIT ?, ?',
-											array(FRONTEND_LANGUAGE, 'N', FrontendModel::getUTCDate('Y-m-d H:i') . ':00', (string) $categoryURL, (int) $offset, (int) $limit), 'id');
+			'SELECT i.id, i.language, i.title, i.introduction, i.text, i.num_images, i.set_id, 
+			c.title AS category_title, cm.url AS category_url,
+			UNIX_TIMESTAMP(i.publish_on) AS publish_on,
+			m.url, GROUP_CONCAT(ab.category_id) AS category_ids
+			FROM photogallery_albums AS i
+			INNER JOIN photogallery_categories_albums AS a ON i.id = a.album_id
+			LEFT OUTER JOIN photogallery_categories_albums AS ab ON i.id = ab.album_id
+			INNER JOIN photogallery_categories AS c ON a.category_id = c.id
+			INNER JOIN meta AS m ON i.meta_id = m.id
+			INNER JOIN meta AS cm ON cm.id = c.meta_id
+			WHERE  i.language = ? AND i.hidden = ? AND i.publish_on <= ? AND cm.url = ?  AND i.num_images > 0
+			GROUP BY i.id
+			ORDER BY i.sequence ASC' .
+			($ignoreLimit ? '/* LIMIT ?, ? */' : ' LIMIT ?, ?'),
+			array(
+				FRONTEND_LANGUAGE,
+				'N',
+				FrontendModel::getUTCDate('Y-m-d H:i') . ':00',
+				(string) $categoryURL,
+				(int) $offset,
+				(int) $limit
+			),
+			'id'
+		);
 		
 		
 		// no results?

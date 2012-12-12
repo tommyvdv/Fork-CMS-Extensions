@@ -1,4 +1,4 @@
-{option:!blockPhotogalleryCategory}
+{option:!blockPhotogalleryCategoryView}
 	{option:blockPhotogalleryCategories}
 
 		<h1>{$lblAllCategories|ucfirst}</h1>
@@ -59,12 +59,16 @@
 		{/iteration:blockPhotogalleryCategories}
 
 	{/option:blockPhotogalleryCategories}
-{/option:!blockPhotogalleryCategory}
+{/option:!blockPhotogalleryCategoryView}
 
-{option:!blockPhotogalleryCategories}
-	{option:blockPhotogalleryCategory}
+{option:!blockPhotogalleryCategoriesView}
+	{option:blockPhotogalleryCategoryView}
 	
 		<h1>{$lblOnCategory|sprintf:{$blockPhotogalleryCategory.label}|ucfirst}</h1>
+		
+		{* Subcategories *}
+			<h4>{$lblSubcategories}</h4>
+			{$var|parsewidget:'photogallery':'category_navigation':{$blockPhotogalleryCategory.id}}
 
 		{option:blockPhotogalleryCategoryAlbums}
 			{iteration:blockPhotogalleryCategoryAlbums}
@@ -111,5 +115,5 @@
 		{* Pagination *}
 			{include:core/layout/templates/pagination.tpl}
 
-	{/option:blockPhotogalleryCategory}
-{/option:!blockPhotogalleryCategories}
+	{/option:blockPhotogalleryCategoryView}
+{/option:!blockPhotogalleryCategoriesView}
