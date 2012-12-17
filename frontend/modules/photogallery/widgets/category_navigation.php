@@ -87,6 +87,11 @@ class FrontendPhotogalleryWidgetCategoryNavigation extends FrontendBaseWidget
 				$category['items'] = FrontendPhotogalleryModel::getAllForCategoryNavigation($category['url']);
 				$category['selected'] = (string) $category['url'] ==  (string) $this->URL->getParameter(1) ? true : false;
 			}
+		} else {
+			foreach($this->categories as &$category)
+			{
+				$category['items'] = FrontendPhotogalleryModel::getAllForCategoryNavigation($category['url']);
+			}
 		}
 		
 		$this->tpl->assign('widgetPhotogalleryCategoryNavigation', $this->categories);
