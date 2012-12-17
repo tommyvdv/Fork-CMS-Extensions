@@ -91,6 +91,18 @@ class FrontendPhotogalleryWidgetCategoryNavigation extends FrontendBaseWidget
 			foreach($this->categories as &$category)
 			{
 				$category['items'] = FrontendPhotogalleryModel::getAllForCategoryNavigation($category['url']);
+
+				if(isset($this->record))
+				{
+					foreach($category['items'] as &$item)
+					{
+						if((int) $item['id'] == (int) $this->record['id'])
+						{
+							$item['selected'] = true;
+							/*$category['selected'] = true;*/
+						}
+					}
+				}
 			}
 		}
 		
