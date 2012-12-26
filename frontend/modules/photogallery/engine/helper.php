@@ -66,7 +66,13 @@ class FrontendPhotogalleryHelper
 		
 		if( ! SpoonFile::exists(FRONTEND_FILES_PATH . '/' . $image) && SpoonFile::exists(FRONTEND_FILES_PATH . '/' . $original)   )
 		{
-			Spoon::dump('gen');
+			$forceOriginalAspectRatio = $resolution['method'] == 'crop' ? false : true;
+			$allowEnlargement = true;
+			
+			$thumb = new SpoonThumbnail(FRONTEND_FILES_PATH . '/' . $original, $resolution['height']);
+			$thumb->setAllowEnlargement($allowEnlargement);
+			$thumb->setForceOriginalAspectRatio($forceOriginalAspectRatio);
+			$thumb->parseToFile(FRONTEND_FILES_PATH . '/' . $image,	100);
 		}
 
 		return FRONTEND_FILES_URL . '/' . $image;
