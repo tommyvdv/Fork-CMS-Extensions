@@ -16,4 +16,4 @@
 		</li>
 		{/iteration:widgetPhotogalleryCategoryNavigation}
 	</ul>
-{/option:widgetPhotogalleryCategoryNavigation}
+{/option:widgetPhotogalleryCategoryNavigation} {* test *}
