@@ -192,31 +192,9 @@ class BackendPhotogalleryAddImagesUpload extends BackendBaseActionAdd
 					// Move the original image
 					$this->frm->getField($field)->moveFile($setsFilesPath . '/original/' . $set_id . '/' . $filename);
 				}
-
-				// Put original
-				$cronjob = array();
-				$cronjob['module'] = $this->URL->getModule();
-				$cronjob['path'] = $this->URL->getModule() . '/sets/original/' . $set_id;
-				$cronjob['filename'] = $filename;
-				$cronjob['full_path'] = $cronjob['path'] . '/' . $cronjob['filename'];
-				$cronjob['data'] = serialize(array('set_id' => $set_id, 'image_id' => $image['id'], 'delete_local' => true, 'delete_local_in_time' => BackendPhotogalleryModel::DELETE_LOCAL_IN_TIME));
-				$cronjob['action'] = 'put';
-				$cronjob['location'] = 's3';
-				$cronjob['created_on'] =  BackendModel::getUTCDate();
-				$cronjob['execute_on'] = BackendModel::getUTCDate();
-				if(BackendPhotogalleryHelper::existsAmazonS3()) BackendAmazonS3Model::insertCronjob($cronjob);
 			}
 
 			$resolutions = BackendPhotogalleryModel::getUniqueExtrasResolutions();
-			
-			if(BackendPhotogalleryHelper::existsAmazonS3())
-			{
-				foreach($resolutions as $resolution)
-				{
-					// Delete cronjobs with same path and filename
-					BackendAmazonS3Model::deleteCronjobByFullPath($this->URL->getModule(), $this->URL->getModule() . '/sets/frontend/' . $set_id . '/' . $resolution['width'] . 'x' . $resolution['height'] . '_' . $resolution['method'] . '/' . $filename);
-				}	
-			}
 			
 			
 			foreach($resolutions as $resolution)
@@ -229,19 +207,6 @@ class BackendPhotogalleryAddImagesUpload extends BackendBaseActionAdd
 					$resolution['width'], $resolution['height'],
 					$allowEnlargement, $forceOriginalAspectRatio, BackendPhotogalleryModel::IMAGE_QUALITY
 				);
-				
-				// Put
-				$cronjob = array();
-				$cronjob['module'] = $this->URL->getModule();
-				$cronjob['path'] = $this->URL->getModule() . '/sets/frontend/' . $set_id . '/' . $resolution['width'] . 'x' . $resolution['height'] . '_' . $resolution['method'];
-				$cronjob['filename'] = $filename;
-				$cronjob['full_path'] = $cronjob['path'] . '/' . $cronjob['filename'];
-				$cronjob['data'] = serialize(array('set_id' => $set_id, 'image_id' => $image['id'], 'delete_local' => true, 'delete_local_in_time' => BackendPhotogalleryModel::DELETE_LOCAL_IN_TIME));
-				$cronjob['action'] = 'put';
-				$cronjob['location'] = 's3';
-				$cronjob['created_on'] =  BackendModel::getUTCDate();
-				$cronjob['execute_on'] = BackendModel::getUTCDate();
-				if(BackendPhotogalleryHelper::existsAmazonS3()) BackendAmazonS3Model::insertCronjob($cronjob);
 			}
 		}
 	}

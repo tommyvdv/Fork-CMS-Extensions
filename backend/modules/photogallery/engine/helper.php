@@ -13,59 +13,12 @@
  */
 class BackendPhotogalleryHelper
 {
-	/**
-	 * Create cronjob for each image
-	 *
-	 * @return bool
-	 */
-	 public static function createAmazonS3Cronjobs($module)
-	{
-		if(self::existsAmazonS3())
-		{
-			// Get all resolutions
-			$resolutions = BackendPhotogalleryModel::getUniqueExtrasResolutions();
-
-			// Get all images
-			$images = BackendPhotogalleryModel::getAllImages();
-
-			// Loop
-			foreach($resolutions as $resolution)
-			{
-				foreach($images as $image)
-				{
-					// Resized image
-					$cronjob = array();
-					$cronjob['module'] = $module;
-					$cronjob['path'] = $module . '/sets/frontend/' . $image['set_id'] . '/' . $resolution['width'] . 'x' . $resolution['height'] . '_' . $resolution['method'];
-					$cronjob['filename'] =  $image['filename'];
-					$cronjob['full_path'] = $cronjob['path'] . '/' . $cronjob['filename'];
-					$cronjob['data'] = serialize(array('set_id' => $image['set_id'], 'image_id' => $image['id'], 'delete_local' => true, 'delete_local_in_time' => BackendPhotogalleryModel::DELETE_LOCAL_IN_TIME));
-					$cronjob['action'] = 'put';
-					$cronjob['location'] = 's3';
-					$cronjob['created_on'] =  BackendModel::getUTCDate();
-					$cronjob['execute_on'] = BackendModel::getUTCDate();
-
-					BackendAmazonS3Model::insertCronjob($cronjob);
-
-					// Original
-					$cronjob = array();
-					$cronjob['module'] = $module;
-					$cronjob['path'] = $module . '/sets/original/' . $image['set_id'];
-					$cronjob['filename'] =  $image['filename'];
-					$cronjob['full_path'] = $cronjob['path'] . '/' . $cronjob['filename'];
-					$cronjob['data'] = serialize(array('set_id' => $image['set_id'], 'image_id' => $image['id'], 'delete_local' => true, 'delete_local_in_time' => BackendPhotogalleryModel::DELETE_LOCAL_IN_TIME));
-					$cronjob['action'] = 'put';
-					$cronjob['location'] = 's3';
-					$cronjob['created_on'] =  BackendModel::getUTCDate();
-					$cronjob['execute_on'] = BackendModel::getUTCDate();
-
-					BackendAmazonS3Model::insertCronjob($cronjob);
-				}
-			}
-			return true;
-		}
-		return false;
-	}
+	/*
+		- Remove createAmazonS3Cronjobs
+		- Remove existsAmazonS3
+		- Remove processOriginalImage
+		- existsCronjobByFullPath
+	*/
 		
 	/**
 	 * Get the HTML for an image
@@ -132,49 +85,6 @@ class BackendPhotogalleryHelper
 		return $num_images_not_hidden . '/' . $num_images;
 	}
 
-	/**
-	 * Check if the amazon_s3 module exists
-	 *
-	 * @return void
-	 */
-	public static function existsAmazonS3()
-	{
-		if(BackendExtensionsModel::existsModule('amazon_s3') && BackendExtensionsModel::isModuleInstalled('amazon_s3')) BackendModel::getModuleSetting('amazon_s3', 'account');
-		return false;
-	}
-
-	/**
-	 * Get the original image
-	 *
-	 * @param string $path The path to the image
-	 * @return bool
-	 */
-	public static function processOriginalImage($path)
-	{
-		$fromAmazonS3 = false;
-		
-		if(!SpoonFile::exists(FRONTEND_FILES_PATH . '/' . $path))
-		{
-			// Linked?
-			if(self::existsAmazonS3())
-			{
-				
-				if(BackendAmazonS3Helper::checkAccount())
-				{
-					// Not on amazon
-					if(!BackendAmazonS3Model::existsCronjobByFullPath('photogallery', $path))
-					{
-						$from = BackendModel::getModuleSetting('amazon_s3', 'url') . $path;
-						SpoonFile::download($from, FRONTEND_FILES_PATH . '/' . $path);
-					}
-		
-					$fromAmazonS3 = true;
-				}
-			}
-		}
-		
-		return $fromAmazonS3;
-	}
 
 	/**
 	 * Get the resolution for the datagrid

@@ -47,7 +47,6 @@ class PhotogalleryInstaller extends ModuleInstaller
 		$this->setActionRights(1, 'photogallery', 'add_widget_slideshow');
 		$this->setActionRights(1, 'photogallery', 'index');
 		$this->setActionRights(1, 'photogallery', 'categories');
-		$this->setActionRights(1, 'photogallery', 'create_amazon_s3_cronjobs');
 		$this->setActionRights(1, 'photogallery', 'delete');
 		$this->setActionRights(1, 'photogallery', 'delete_category');
 		$this->setActionRights(1, 'photogallery', 'delete_extra');

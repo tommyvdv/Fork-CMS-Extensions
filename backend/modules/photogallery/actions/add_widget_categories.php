@@ -111,7 +111,6 @@ class BackendPhotogalleryAddWidgetCategories extends BackendBaseActionAdd
 						
 						SpoonDirectory::create(FRONTEND_FILES_PATH . '/' . $this->URL->getModule() . '/sets/original/' . $image['set_id']);
 						
-						$this->fromAmazonS3 = BackendPhotogalleryHelper::processOriginalImage($from);
 						$from = FRONTEND_FILES_PATH . '/' . $this->URL->getModule() . '/sets/original/' . $image['set_id'] . '/' . $image['filename'];
 						$to = FRONTEND_FILES_PATH . '/' . $this->URL->getModule() . '/sets/frontend/' . $image['set_id'] . '/' . $resolutionLarge['width'] . 'x' . $resolutionLarge['height'] . '_' . $resolutionLarge['method'] . '/' . $image['filename'];
 						
@@ -123,22 +122,6 @@ class BackendPhotogalleryAddWidgetCategories extends BackendBaseActionAdd
 							$thumb->setAllowEnlargement(true);
 							$thumb->setForceOriginalAspectRatio($resize);
 							$thumb->parseToFile($to);
-							
-							// Put
-							$cronjob = array();
-							$cronjob['module'] = $this->URL->getModule();
-							$cronjob['path'] = $this->URL->getModule() . '/sets/frontend/' . $image['set_id'] . '/' . $resolutionLarge['width'] . 'x' . $resolutionLarge['height'] . '_' . $resolutionLarge['method'];
-							$cronjob['filename'] = $image['filename'];
-							$cronjob['full_path'] = $cronjob['path'] . '/' . $cronjob['filename'];
-							$cronjob['data'] = serialize(array('set_id' => $image['set_id'], 'image_id' => $image['id'], 'delete_local' => true, 'delete_local_in_time' => BackendPhotogalleryModel::DELETE_LOCAL_IN_TIME));
-							$cronjob['action'] = 'put';
-							$cronjob['location'] = 's3';
-							
-							$cronjob['created_on'] =  BackendModel::getUTCDate();
-							$cronjob['execute_on'] = BackendModel::getUTCDate();
-							if(BackendPhotogalleryHelper::existsAmazonS3()) BackendAmazonS3Model::insertCronjob($cronjob);
-							
-							if($this->fromAmazonS3) SpoonFile::delete($from);
 						}
 					}
 				}
