@@ -45,7 +45,6 @@ class FrontendPhotogalleryWidgetRelatedListByCategories extends FrontendBaseWidg
 		if($this->URL->getParameter(0) == FL::getAction('Detail'))
 		{
 			// validate incoming parameters
-			
 			$limit = FrontendModel::getModuleSetting('photogallery', 'related_list_categories_number_of_items', 10);
 			
 			if($this->URL->getParameter(1) !== null) $this->records = FrontendPhotogalleryModel::getRelatedByCategories($this->URL->getParameter(1), $limit);

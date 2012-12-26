@@ -51,12 +51,10 @@ class FrontendPhotogalleryWidgetSlideshow extends FrontendBaseWidget
 
 			foreach($this->record['images'] as &$image)
 			{
-				$image['large_url'] = FRONTEND_FILES_URL . '/' . $this->getModule() . '/sets/frontend/' . $image['set_id'] . '/' . $this->large_resolution['width'] . 'x' . $this->large_resolution['height'] . '_' . $this->large_resolution['method'] . '/' . $image['filename'];
+				$image['large_url'] = FrontendPhotogalleryHelper::getImageURL($this->getModule(), $image, $this->large_resolution);
 			}
 			
-			$this->tpl->assign('widgetPhotogallerySlideshow', $this->record);
-			$this->tpl->assign('large_resolution', $this->large_resolution);
-		}
+			$this->tpl->assign('widgetPhotogallerySlideshow', $this->record);		}
 	}
 
 	/**
