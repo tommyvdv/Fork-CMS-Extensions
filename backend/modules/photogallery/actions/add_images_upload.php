@@ -175,39 +175,22 @@ class BackendPhotogalleryAddImagesUpload extends BackendBaseActionAdd
 
 			$image['id'] = BackendPhotogalleryModel::insertImage($image, $content, $metaData);
 
-			if(BackendPhotogalleryModel::KEEP_ORIGINAL_IMAGE)
+			// Do we need to resize the original image or not?
+			if(BackendPhotogalleryModel::RESIZE_ORIGINAL_IMAGE)
 			{
-				// Do we need to resize the original image or not?
-				if(BackendPhotogalleryModel::RESIZE_ORIGINAL_IMAGE)
-				{
-					// Original, but resize if larger then MAX_ORIGINAL_IMAGE_WIDTH OR MAX_ORIGINAL_IMAGE_HEIGHT
-					$this->frm->getField($field)->createThumbnail(
-						$setsFilesPath . '/original/' . $set_id . '/' . $filename,
-						BackendPhotogalleryModel::MAX_ORIGINAL_IMAGE_WIDTH, BackendPhotogalleryModel::MAX_ORIGINAL_IMAGE_HEIGHT,
-						false
-					);
-				}
-				else
-				{
-					// Move the original image
-					$this->frm->getField($field)->moveFile($setsFilesPath . '/original/' . $set_id . '/' . $filename);
-				}
-			}
-
-			$resolutions = BackendPhotogalleryModel::getUniqueExtrasResolutions();
-			
-			
-			foreach($resolutions as $resolution)
-			{
-				$forceOriginalAspectRatio = $resolution['method'] == 'crop' ? false : true;
-				$allowEnlargement = true;
-
+				// Original, but resize if larger then MAX_ORIGINAL_IMAGE_WIDTH OR MAX_ORIGINAL_IMAGE_HEIGHT
 				$this->frm->getField($field)->createThumbnail(
-					$setsFilesPath . '/frontend/' . $set_id  . '/' . $resolution['width'] . 'x' . $resolution['height'] . '_' . $resolution['method'] . '/' . $filename,
-					$resolution['width'], $resolution['height'],
-					$allowEnlargement, $forceOriginalAspectRatio, BackendPhotogalleryModel::IMAGE_QUALITY
+					$setsFilesPath . '/original/' . $set_id . '/' . $filename,
+					BackendPhotogalleryModel::MAX_ORIGINAL_IMAGE_WIDTH, BackendPhotogalleryModel::MAX_ORIGINAL_IMAGE_HEIGHT,
+					false
 				);
 			}
+			else
+			{
+				// Move the original image
+				$this->frm->getField($field)->moveFile($setsFilesPath . '/original/' . $set_id . '/' . $filename);
+			}
+			
 		}
 	}
 

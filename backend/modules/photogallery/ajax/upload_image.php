@@ -177,41 +177,22 @@ class BackendPhotogalleryAjaxUploadImage extends BackendBaseAJAXAction
 				}
 
 				$image['id'] = BackendPhotogalleryModel::insertImage($image, $content, $metaData);
-
-
-				if(BackendPhotogalleryModel::KEEP_ORIGINAL_IMAGE)
+				
+				// Do we need to resize the original image or not?
+				if(BackendPhotogalleryModel::RESIZE_ORIGINAL_IMAGE)
 				{
-					// Do we need to resize the original image or not?
-					if(BackendPhotogalleryModel::RESIZE_ORIGINAL_IMAGE)
-					{
 
-						// Original, but resize if larger then MAX_ORIGINAL_IMAGE_WIDTH OR MAX_ORIGINAL_IMAGE_HEIGHT
-						
-						$thumbnail = new SpoonThumbnail($tempFile , BackendPhotogalleryModel::MAX_ORIGINAL_IMAGE_WIDTH, BackendPhotogalleryModel::MAX_ORIGINAL_IMAGE_HEIGHT, true);
-						$thumbnail->setAllowEnlargement(false);
-						$thumbnail->setForceOriginalAspectRatio(true);
-						$thumbnail->parseToFile($setsFilesPath . '/original/' . $set_id . '/' . $filename, 100);
-					}
-					else
-					{
-						// Move the original image
-						move_uploaded_file($tempFile, $setsFilesPath . '/original/' . $set_id . '/' . $filename);
-					}
-				}
-				
-				$resolutions = BackendPhotogalleryModel::getUniqueExtrasResolutions();
-				
-				
-				foreach($resolutions as $resolution)
-				{
-					$forceOriginalAspectRatio = $resolution['method'] == 'crop' ? false : true;
-					$allowEnlargement = true;
-
-					$thumbnail = new SpoonThumbnail($tempFile , $resolution['width'], $resolution['height'], true);
-					$thumbnail->setAllowEnlargement($allowEnlargement);
-					$thumbnail->setForceOriginalAspectRatio($forceOriginalAspectRatio);
-					$thumbnail->parseToFile($setsFilesPath . '/frontend/' . $set_id  . '/' . $resolution['width'] . 'x' . $resolution['height'] . '_' . $resolution['method'] . '/' . $filename, BackendPhotogalleryModel::IMAGE_QUALITY);
+					// Original, but resize if larger then MAX_ORIGINAL_IMAGE_WIDTH OR MAX_ORIGINAL_IMAGE_HEIGHT
 					
+					$thumbnail = new SpoonThumbnail($tempFile , BackendPhotogalleryModel::MAX_ORIGINAL_IMAGE_WIDTH, BackendPhotogalleryModel::MAX_ORIGINAL_IMAGE_HEIGHT, true);
+					$thumbnail->setAllowEnlargement(false);
+					$thumbnail->setForceOriginalAspectRatio(true);
+					$thumbnail->parseToFile($setsFilesPath . '/original/' . $set_id . '/' . $filename, 100);
+				}
+				else
+				{
+					// Move the original image
+					move_uploaded_file($tempFile, $setsFilesPath . '/original/' . $set_id . '/' . $filename);
 				}
 			}
 			else

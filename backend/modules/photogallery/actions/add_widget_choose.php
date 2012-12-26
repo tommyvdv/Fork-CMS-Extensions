@@ -49,10 +49,13 @@ class BackendPhotogalleryAddWidgetChoose extends BackendBaseActionAdd
 		// set hidden values
 		$rbtOptionValues[] = array('label' => SpoonFilter::ucfirst(BL::getLabel('Slideshow')), 'value' => 'slideshow');
 		$rbtOptionValues[] = array('label' => SpoonFilter::ucfirst(BL::getLabel('Lightbox')), 'value' => 'lightbox');
+
+		/*
 		$rbtOptionValues[] = array('label' => SpoonFilter::ucfirst(BL::getLabel('Paged')), 'value' => 'paged');
 		$rbtOptionValues[] = array('label' => SpoonFilter::ucfirst(BL::getLabel('Categories')), 'value' => 'categories');
 		$rbtOptionValues[] = array('label' => SpoonFilter::ucfirst(BL::getLabel('RelatedByCategories')), 'value' => 'related_by_categories');
 		$rbtOptionValues[] = array('label' => SpoonFilter::ucfirst(BL::getLabel('RelatedByTags')), 'value' => 'related_by_tags');
+		*/
 		
 		$this->frm->addRadiobutton('options', $rbtOptionValues, 'slideshow');
 	}

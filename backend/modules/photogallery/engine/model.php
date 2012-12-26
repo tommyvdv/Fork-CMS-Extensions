@@ -52,7 +52,7 @@ class BackendPhotogalleryModel
 		GROUP BY i.id ORDER BY i.sequence ASC';
 
 	const RESIZE_ORIGINAL_IMAGE = true; // resize the original image?
-	const KEEP_ORIGINAL_IMAGE = false; // resize the original image?
+	const KEEP_ORIGINAL_IMAGE = true; // resize the original image?
 	const MAX_ORIGINAL_IMAGE_WIDTH = 2000; // if RESIZE_ORIGINAL_IMAGE resize to # in px
 	const MAX_ORIGINAL_IMAGE_HEIGHT = 2000; // if RESIZE_ORIGINAL_IMAGE resize to # in px
 	const MAX_ORIGINAL_FILE_SIZE = 10; // in mb
