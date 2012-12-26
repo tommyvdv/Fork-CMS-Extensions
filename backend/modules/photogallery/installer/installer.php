@@ -222,7 +222,7 @@ class PhotogalleryInstaller extends ModuleInstaller
 				'ip' => isset($_SERVER['REMOTE_ADDR']) ? $_SERVER['REMOTE_ADDR'] : null,
 				'type' => 'module',
 				'name' => 'photogallery',
-				'version' => '2.2',
+				'version' => '3.0',
 				'email' => SpoonSession::get('email'),
 				'license_name' => '',
 				'license_key' => '',

@@ -115,60 +115,7 @@ class BackendPhotogalleryAddWidgetLightbox extends BackendBaseActionAdd
 				$resolutionLarge['method'] = $this->frm->getField('large_method')->getValue();
 				$resolutionLarge['kind'] = 'large';
 
-				$exists = BackendPhotogalleryModel::existsResolution($resolutionThumbnail['width'], $resolutionThumbnail['height'], $resolutionThumbnail['kind']);
-
-				if(!$exists)
-				{
-					foreach(BackendPhotogalleryModel::getAllImages() as $image)
-					{
-						$from = $this->URL->getModule() . '/sets/original/' . $image['set_id'] . '/' . $image['filename'];
-						
-						SpoonDirectory::create(FRONTEND_FILES_PATH . '/' . $this->URL->getModule() . '/sets/original/' . $image['set_id']);
-						
-						$from = FRONTEND_FILES_PATH . '/' . $this->URL->getModule() . '/sets/original/' . $image['set_id'] . '/' . $image['filename'];
-						
-						$to = FRONTEND_FILES_PATH . '/' . $this->URL->getModule() . '/sets/frontend/' . $image['set_id'] . '/' . $resolutionThumbnail['width'] . 'x' . $resolutionThumbnail['height'] . '_' . $resolutionThumbnail['method'] . '/' . $image['filename'];
-
-						// Does the source file exists?
-						if(SpoonFile::exists($from))
-						{
-							$resize = $resolutionThumbnail['method'] == 'resize' ? true : false;
-							$thumb = new SpoonThumbnail($from, $resolutionThumbnail['width'] , $resolutionThumbnail['height']);
-							$thumb->setAllowEnlargement(true);
-							$thumb->setForceOriginalAspectRatio($resize);
-							$thumb->parseToFile($to);
-						}
-					}
-				}
-
 				BackendPhotogalleryModel::insertExtraResolution($resolutionThumbnail);
-
-				$exists = BackendPhotogalleryModel::existsResolution($resolutionLarge['width'], $resolutionLarge['height'], $resolutionLarge['kind']);
-
-				if(!$exists)
-				{
-					foreach(BackendPhotogalleryModel::getAllImages() as $image)
-					{
-						$from = $this->URL->getModule() . '/sets/original/' . $image['set_id'] . '/' . $image['filename'];
-						
-						SpoonDirectory::create(FRONTEND_FILES_PATH . '/' . $this->URL->getModule() . '/sets/original/' . $image['set_id']);
-						
-						$from = FRONTEND_FILES_PATH . '/' . $this->URL->getModule() . '/sets/original/' . $image['set_id'] . '/' . $image['filename'];
-						
-						// Is amazon linked
-						$to = FRONTEND_FILES_PATH . '/' . $this->URL->getModule() . '/sets/frontend/' . $image['set_id'] . '/' . $resolutionLarge['width'] . 'x' . $resolutionLarge['height'] . '_' . $resolutionLarge['method'] . '/' . $image['filename'];
-
-						// Does the source file exists?
-						if(SpoonFile::exists($from))
-						{
-							$resize = $resolutionLarge['method'] == 'resize' ? true : false;
-							$thumb = new SpoonThumbnail($from, $resolutionLarge['width'] , $resolutionLarge['height']);
-							$thumb->setAllowEnlargement(true);
-							$thumb->setForceOriginalAspectRatio($resize);
-							$thumb->parseToFile($to);
-						}
-					}
-				}
 
 				BackendPhotogalleryModel::insertExtraResolution($resolutionLarge);
 

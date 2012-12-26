@@ -56,7 +56,6 @@ class BackendPhotogallerySettings extends BackendBaseActionEdit
 		$this->frm->addText('license_name', BackendModel::getModuleSetting($this->URL->getModule(), 'license_name'));
 		$this->frm->addText('license_key', BackendModel::getModuleSetting($this->URL->getModule(), 'license_key'));
 		$this->frm->addText('license_domain', BackendModel::getModuleSetting($this->URL->getModule(), 'license_domain'));
-		
 	}
 
 	/**
