@@ -4,6 +4,7 @@ jsBackend.uploadifive =
 {
 	init: function()
 	{		
+		console.log( jsBackend.current.language);
 		$('#images').uploadifive({
 				'auto'             : false,
 				'formData'         : {
@@ -13,7 +14,7 @@ jsBackend.uploadifive =
 									   'album_id': uploadAlbumId,
 									   'fork[module]'     : 'photogallery',
 									   'fork[action]'	: 'upload_image',
-									   'fork[language]'	: 'en'
+									   'fork[language]'	: jsBackend.current.language
 				                     },
 				'queueID'          : 'queue',
 				'uploadScript'     : '/backend/ajax.php',
