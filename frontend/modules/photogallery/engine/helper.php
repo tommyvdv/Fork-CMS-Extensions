@@ -12,17 +12,6 @@
  */
 class FrontendPhotogalleryHelper
 {
-	/**
-	 * Check if Amazon S3 exists
-	 *
-	 * @return bool
-	 */
-	public static function existsAmazonS3()
-	{
-		if(is_callable(array('FrontendAmazonS3Helper', 'getSetting'))) return FrontendAmazonS3Helper::getSetting('account');
-		return false;
-	}
-
 
 	/**
 	 * Generate a correct path
