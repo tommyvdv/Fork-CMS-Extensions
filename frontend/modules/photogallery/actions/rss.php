@@ -76,7 +76,6 @@ class FrontendPhotogalleryRSS extends FrontendBaseBlock
 
 		foreach($this->items as &$row)
 		{
-			
 			foreach($row['images'] as &$image)
 			{
 				$image['thumbnail_url'] = FRONTEND_FILES_URL . '/' . $this->getModule() . '/sets/frontend/' . $image['set_id'] . '/' . $thumbnail_resolution['width'] . 'x' . $thumbnail_resolution['height'] . '_' . $thumbnail_resolution['method'] . '/' . $image['filename'];

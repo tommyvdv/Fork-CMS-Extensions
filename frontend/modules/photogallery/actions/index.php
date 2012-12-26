@@ -87,7 +87,7 @@ class FrontendPhotogalleryIndex extends FrontendBaseBlock
 				$item['tags'] = FrontendTagsModel::getForItem($this->getModule(), $item['id']);
 				if(!empty($item['image']))
 				{
-					$item['image']['thumbnail_url'] =  FRONTEND_FILES_URL . '/' . $this->getModule() . '/sets/frontend/' . $item['image']['set_id'] . '/' . $thumbnail_resolution['width'] . 'x' . $thumbnail_resolution['height'] . '_' . $thumbnail_resolution['method'] . '/' . $item['image']['filename'];
+					$item['image']['thumbnail_url']  = FrontendPhotogalleryHelper::getImageURL($this->getModule(), $item['image'], $thumbnail_resolution);
 				}
 			}
 			
@@ -102,11 +102,9 @@ class FrontendPhotogalleryIndex extends FrontendBaseBlock
 		{
 			$categories = FrontendPhotogalleryModel::getAllCategoriesWithImage();
 			
-			
 			foreach($categories as &$item)
 			{
-				
-				$item['filename_url'] =  FRONTEND_FILES_URL . '/' . $this->getModule() . '/sets/frontend/' . $item['set_id'] . '/' . $thumbnail_resolution['width'] . 'x' . $thumbnail_resolution['height'] . '_' .$thumbnail_resolution['method'] . '/' . $item['filename'];
+				$item['filename_url']   = FrontendPhotogalleryHelper::getImageURL($this->getModule(), $item, $thumbnail_resolution);
 			}
 			
 			$this->tpl->assign('modulePhotogalleryCategories', $categories);

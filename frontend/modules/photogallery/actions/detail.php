@@ -66,8 +66,8 @@ class FrontendPhotogalleryDetail extends FrontendBaseBlock
 		
 		foreach($this->record['images'] as &$image)
 		{
-			$image['thumbnail_url'] = FRONTEND_FILES_URL . '/' . $this->getModule() . '/sets/frontend/' . $image['set_id'] . '/' . $thumbnail_resolution['width'] . 'x' . $thumbnail_resolution['height'] . '_' . $thumbnail_resolution['method'] . '/' . $image['filename'];
-			$image['large_url'] = FRONTEND_FILES_URL . '/' . $this->getModule() . '/sets/frontend/' . $image['set_id'] . '/' . $large_resolution['width'] . 'x' . $large_resolution['height'] . '_' . $large_resolution['method'] . '/' . $image['filename'];
+			$image['thumbnail_url'] = FrontendPhotogalleryHelper::getImageURL($this->getModule(), $image, $thumbnail_resolution);
+			$image['large_url'] = FrontendPhotogalleryHelper::getImageURL($this->getModule(), $image, $large_resolution);
 		}
 	}
 

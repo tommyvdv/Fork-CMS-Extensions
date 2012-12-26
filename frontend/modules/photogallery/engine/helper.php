@@ -69,7 +69,7 @@ class FrontendPhotogalleryHelper
 			$forceOriginalAspectRatio = $resolution['method'] == 'crop' ? false : true;
 			$allowEnlargement = true;
 			
-			$thumb = new SpoonThumbnail(FRONTEND_FILES_PATH . '/' . $original, $resolution['height']);
+			$thumb = new SpoonThumbnail(FRONTEND_FILES_PATH . '/' . $original, $resolution['width'], $resolution['height']);
 			$thumb->setAllowEnlargement($allowEnlargement);
 			$thumb->setForceOriginalAspectRatio($forceOriginalAspectRatio);
 			$thumb->parseToFile(FRONTEND_FILES_PATH . '/' . $image,	100);

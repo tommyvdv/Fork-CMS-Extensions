@@ -62,8 +62,8 @@ class FrontendPhotogalleryImage extends FrontendBaseBlock
 		$this->record['tags'] = FrontendTagsModel::getForItem($this->getModule(), $this->record['album_id']);
 		
 		$large_resolution = FrontendPhotogalleryModel::getExtraResolutionForKind($this->data['extra_id'], 'large');
-	
-		$this->record['large_url'] =  FRONTEND_FILES_URL . '/' . $this->getModule() . '/sets/frontend/' . $this->record['set_id'] . '/' . $large_resolution['width'] . 'x' . $large_resolution['height'] . '_' . $large_resolution['method'] . '/' . $this->record['filename'];
+		
+		$this->record['large_url'] = FrontendPhotogalleryHelper::getImageURL($this->getModule(), $this->record, $large_resolution);
 	}
 
 	/**
