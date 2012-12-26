@@ -10,9 +10,9 @@ jsBackend.photogallery =
 		if($('select.categoriesBox').length > 0) 
 		{ 
 			$('select.categoriesBox').multipleSelectbox({ 
-				emptyMessage: '{$msgNoCategoriesSelected}', 
-				addLabel: '{$lblAdd|ucfirst}', 
-				removeLabel: '{$lblDelete|ucfirst}' 
+				emptyMessage: jsBackend.locale.msg('NoCategoriesSelected'), 
+				addLabel: utils.string.ucfirst(jsBackend.locale.lbl('AssignCategory')), 
+				removeLabel: utils.string.ucfirst(jsBackend.locale.lbl('Delete'))
 			}); 
 		}
 		
