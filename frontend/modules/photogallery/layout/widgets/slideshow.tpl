@@ -11,7 +11,7 @@
 							{option:widgetPhotogallerySlideshow.images.data.internal_link}
 							<li>
 								<a href="{$var|geturl:{$widgetPhotogallerySlideshow.images.data.internal_link.page_id}}" class="linkedImage">
-									<img src="{$widgetPhotogallerySlideshow.images.large_url}" />
+									<img src="{$var|createimage:{$widgetPhotogallerySlideshow.images.set_id}:{$widgetPhotogallerySlideshow.images.filename}:{$widgetPhotogallerySlideshowResolution}}" />
 								</a>
 
 								<div class="caption">
@@ -28,7 +28,7 @@
 							{option:widgetPhotogallerySlideshow.images.data.external_link}
 							<li>
 								<a href="{$widgetPhotogallerySlideshow.images.data.external_link.url}" class="linkedImage targetBlank">
-									<img src="{$widgetPhotogallerySlideshow.images.large_url}" />
+									<img src="{$var|createimage:{$widgetPhotogallerySlideshow.images.set_id}:{$widgetPhotogallerySlideshow.images.filename}:{$widgetPhotogallerySlideshowResolution}}" />
 								</a>
 
 								<div class="caption">
@@ -45,7 +45,8 @@
 							{option:!widgetPhotogallerySlideshow.images.data.internal_link}
 								{option:!widgetPhotogallerySlideshow.images.data.external_link}
 									<li>
-										<img src="{$widgetPhotogallerySlideshow.images.large_url}" />
+
+										<img src="{$var|createimage:{$widgetPhotogallerySlideshow.images.set_id}:{$widgetPhotogallerySlideshow.images.filename}:{$widgetPhotogallerySlideshowResolution}}" />
 
 										<div class="caption">
 											{option:widgetPhotogallerySlideshow.images.title}

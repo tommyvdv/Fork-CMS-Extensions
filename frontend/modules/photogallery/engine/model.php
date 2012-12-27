@@ -64,7 +64,6 @@ class FrontendPhotogalleryModel implements FrontendTagsInterface
 			$selected = $category['url'] == $categoryParam;
 			$categories[$categoryKey]['selected'] = $selected;
 			
-			
 			// Has children?
 			if(!empty($albums))
 			{
