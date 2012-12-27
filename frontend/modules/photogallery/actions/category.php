@@ -172,7 +172,6 @@ class FrontendPhotogalleryCategory extends FrontendBaseBlock
 	 */
 	private function parse()
 	{
-
 		// add into breadcrumb
 		if($this->category)
 		{
@@ -205,7 +204,6 @@ class FrontendPhotogalleryCategory extends FrontendBaseBlock
 
 		// add RSS-feed
 		$this->header->addLink(array('rel' => 'alternate', 'type' => 'application/rss+xml', 'title' => FrontendModel::getModuleSetting('photogallery', 'rss_title_' . FRONTEND_LANGUAGE), 'href' => $rssLink), true);
-	
 
 		// assign
 		$this->tpl->assign('blockPhotogalleryCategoryView', $this->category_view);
@@ -219,5 +217,7 @@ class FrontendPhotogalleryCategory extends FrontendBaseBlock
 
 		// parse the pagination
 		$this->parsePagination();
+
+		$this->tpl->mapModifier('createimage', array('FrontendPhotogalleryHelper', 'createImage'));
 	}
 }

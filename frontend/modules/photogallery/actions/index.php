@@ -56,6 +56,9 @@ class FrontendPhotogalleryIndex extends FrontendBaseBlock
 	{		
 		$thumbnail_resolution = FrontendPhotogalleryModel::getExtraResolutionForKind($this->data['extra_id'], 'album_overview_thumbnail');
 
+		$this->tpl->assign('modulePhotogalleryIndexResolution', $thumbnail_resolution);
+
+
 		if($this->data['display'] == 'albums')
 		{
 			// requested page
@@ -85,10 +88,6 @@ class FrontendPhotogalleryIndex extends FrontendBaseBlock
 			foreach($this->items as &$item)
 			{
 				$item['tags'] = FrontendTagsModel::getForItem($this->getModule(), $item['id']);
-				if(!empty($item['image']))
-				{
-					$item['image']['thumbnail_url']  = FrontendPhotogalleryHelper::getImageURL($this->getModule(), $item['image'], $thumbnail_resolution);
-				}
 			}
 			
 			// assign
@@ -126,5 +125,7 @@ class FrontendPhotogalleryIndex extends FrontendBaseBlock
 	
 		// add RSS-feed
 		$this->header->addLink(array('rel' => 'alternate', 'type' => 'application/rss+xml', 'title' => FrontendModel::getModuleSetting('photogallery', 'rss_title_' . FRONTEND_LANGUAGE), 'href' => $rssLink), true);
+		
+		$this->tpl->mapModifier('createimage', array('FrontendPhotogalleryHelper', 'createImage'));
 	}
 }

@@ -43,8 +43,9 @@
 			<ul class="photogalleryLightbox">
 				{iteration:widgetPhotogalleryLightbox.images}
 				<li>
-					<a href="{$widgetPhotogalleryLightbox.images.large_url}" rel="{$widgetPhotogalleryLightbox.id}" class="linkedImage linkOverlay">
-						<img src="{$widgetPhotogalleryLightbox.images.thumbnail_url}" />
+					<a href="{$var|createimage:{$widgetPhotogalleryLightbox.images.set_id}:{$widgetPhotogalleryLightbox.images.filename}:{$widgetPhotogalleryLightboxLargeResolution}}" rel="{$widgetPhotogalleryLightbox.id}" class="linkedImage linkOverlay">
+						<img src="{$var|createimage:{$widgetPhotogalleryLightbox.images.set_id}:{$widgetPhotogalleryLightbox.images.filename}:{$widgetPhotogalleryLightboxThumbnailResolution}}
+" />
 					</a>
 					
 					{* Caption *}

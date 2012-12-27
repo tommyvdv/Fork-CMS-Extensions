@@ -48,13 +48,9 @@ class FrontendPhotogalleryWidgetLightbox extends FrontendBaseWidget
 
 			$thumbnail_resolution = FrontendPhotogalleryModel::getExtraResolutionForKind($this->data['extra_id'], 'thumbnail');
 			$large_resolution = FrontendPhotogalleryModel::getExtraResolutionForKind($this->data['extra_id'], 'large');
-
-			foreach($this->record['images'] as &$image)
-			{
-				$image['thumbnail_url'] =  FrontendPhotogalleryHelper::getImageURL($this->getModule(), $image, $thumbnail_resolution);
-				$image['large_url'] = FrontendPhotogalleryHelper::getImageURL($this->getModule(), $image, $large_resolution);
-			}
 			
+			$this->tpl->assign('widgetPhotogalleryLightboxLargeResolution', $large_resolution);
+			$this->tpl->assign('widgetPhotogalleryLightboxThumbnailResolution', $thumbnail_resolution);
 		}
 	}
 
@@ -111,5 +107,6 @@ class FrontendPhotogalleryWidgetLightbox extends FrontendBaseWidget
 		);
 		
 		$this->tpl->assign('widgetPhotogalleryLightbox', $this->record);
+		$this->tpl->mapModifier('createimage', array('FrontendPhotogalleryHelper', 'createImage'));
 	}
 }

@@ -47,10 +47,10 @@ class FrontendPhotogalleryWidgetSlideshow extends FrontendBaseWidget
 			// get tags
 			$this->record['tags'] = FrontendTagsModel::getForItem($this->getModule(), $this->record['id']);
 
-			$this->large_resolution = FrontendPhotogalleryModel::getExtraResolutionForKind($this->data['extra_id'], 'large');
+			$large_resolution = FrontendPhotogalleryModel::getExtraResolutionForKind($this->data['extra_id'], 'large');
 			
 			$this->tpl->assign('widgetPhotogallerySlideshow', $this->record);
-			$this->tpl->assign('widgetPhotogallerySlideshowResolution', $this->large_resolution);
+			$this->tpl->assign('widgetPhotogallerySlideshowResolution', $large_resolution);
 		}
 	}
 

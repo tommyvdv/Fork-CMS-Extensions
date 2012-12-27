@@ -39,7 +39,7 @@
 
 				{* Image *}
 					<a href="{$modulePhotogalleryAlbums.full_url}"  class="linkedImage" title="{$modulePhotogalleryAlbums.image.title}">
-						<img src="{$modulePhotogalleryAlbums.image.thumbnail_url}" alt="{$modulePhotogalleryAlbums.image.title}" title="{$modulePhotogalleryAlbums.image.title}" />
+						<img src="{$var|createimage:{$modulePhotogalleryAlbums.image.set_id}:{$modulePhotogalleryAlbums.image.filename}:{$modulePhotogalleryIndexResolution}}" />
 					</a>
 
 			{/iteration:modulePhotogalleryAlbums}
@@ -62,7 +62,7 @@
 
 				{* Image *}
 					<a href="{$modulePhotogalleryCategories.full_url}"  class="linkedImage" title="{$modulePhotogalleryCategories.label}">
-						<img src="{$modulePhotogalleryCategories.filename_url}" alt="{$modulePhotogalleryCategories.image.title}" title="{$modulePhotogalleryCategories.label}" />
+						<img src="{$var|createimage:{$modulePhotogalleryCategories.image.set_id}:{$modulePhotogalleryCategories.image.filename}:{$modulePhotogalleryIndexResolution}}" />
 					</a>
 
 			{/iteration:modulePhotogalleryCategories}

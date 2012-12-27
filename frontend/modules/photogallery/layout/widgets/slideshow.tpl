@@ -7,57 +7,57 @@
 				<ul class="slides">
 					{iteration:widgetPhotogallerySlideshow.images}
 							
-							{* With internal link *}
-							{option:widgetPhotogallerySlideshow.images.data.internal_link}
-							<li>
-								<a href="{$var|geturl:{$widgetPhotogallerySlideshow.images.data.internal_link.page_id}}" class="linkedImage">
-									<img src="{$var|createimage:{$widgetPhotogallerySlideshow.images.set_id}:{$widgetPhotogallerySlideshow.images.filename}:{$widgetPhotogallerySlideshowResolution}}" />
-								</a>
+						{* With internal link *}
+						{option:widgetPhotogallerySlideshow.images.data.internal_link}
+						<li>
+							<a href="{$var|geturl:{$widgetPhotogallerySlideshow.images.data.internal_link.page_id}}" class="linkedImage">
+								<img src="{$var|createimage:{$widgetPhotogallerySlideshow.images.set_id}:{$widgetPhotogallerySlideshow.images.filename}:{$widgetPhotogallerySlideshowResolution}}" />
+							</a>
 
-								<div class="caption">
-									{option:widgetPhotogallerySlideshow.images.title}
-										<h3>{$widgetPhotogallerySlideshow.images.title}</h3>
-									{/option:widgetPhotogallerySlideshow.images.title}
-									{$widgetPhotogallerySlideshow.images.text}
-								</div>
+							<div class="caption">
+								{option:widgetPhotogallerySlideshow.images.title}
+									<h3>{$widgetPhotogallerySlideshow.images.title}</h3>
+								{/option:widgetPhotogallerySlideshow.images.title}
+								{$widgetPhotogallerySlideshow.images.text}
+							</div>
 
-							</li>
-							{/option:widgetPhotogallerySlideshow.images.data.internal_link}
-			
-							{* With external link *}
-							{option:widgetPhotogallerySlideshow.images.data.external_link}
-							<li>
-								<a href="{$widgetPhotogallerySlideshow.images.data.external_link.url}" class="linkedImage targetBlank">
-									<img src="{$var|createimage:{$widgetPhotogallerySlideshow.images.set_id}:{$widgetPhotogallerySlideshow.images.filename}:{$widgetPhotogallerySlideshowResolution}}" />
-								</a>
-
-								<div class="caption">
-									{option:widgetPhotogallerySlideshow.images.title}
-										<h3>{$widgetPhotogallerySlideshow.images.title}</h3>
-									{/option:widgetPhotogallerySlideshow.images.title}
-									{$widgetPhotogallerySlideshow.images.text}
-								</div>
-
-							</li>
-							{/option:widgetPhotogallerySlideshow.images.data.external_link}
+						</li>
+						{/option:widgetPhotogallerySlideshow.images.data.internal_link}
 		
-							{* No link *}
-							{option:!widgetPhotogallerySlideshow.images.data.internal_link}
-								{option:!widgetPhotogallerySlideshow.images.data.external_link}
-									<li>
+						{* With external link *}
+						{option:widgetPhotogallerySlideshow.images.data.external_link}
+						<li>
+							<a href="{$widgetPhotogallerySlideshow.images.data.external_link.url}" class="linkedImage targetBlank">
+								<img src="{$var|createimage:{$widgetPhotogallerySlideshow.images.set_id}:{$widgetPhotogallerySlideshow.images.filename}:{$widgetPhotogallerySlideshowResolution}}" />
+							</a>
 
-										<img src="{$var|createimage:{$widgetPhotogallerySlideshow.images.set_id}:{$widgetPhotogallerySlideshow.images.filename}:{$widgetPhotogallerySlideshowResolution}}" />
+							<div class="caption">
+								{option:widgetPhotogallerySlideshow.images.title}
+									<h3>{$widgetPhotogallerySlideshow.images.title}</h3>
+								{/option:widgetPhotogallerySlideshow.images.title}
+								{$widgetPhotogallerySlideshow.images.text}
+							</div>
 
-										<div class="caption">
-											{option:widgetPhotogallerySlideshow.images.title}
-												<h3>{$widgetPhotogallerySlideshow.images.title}</h3>
-											{/option:widgetPhotogallerySlideshow.images.title}
-											{$widgetPhotogallerySlideshow.images.text}
-										</div>
+						</li>
+						{/option:widgetPhotogallerySlideshow.images.data.external_link}
+	
+						{* No link *}
+						{option:!widgetPhotogallerySlideshow.images.data.internal_link}
+							{option:!widgetPhotogallerySlideshow.images.data.external_link}
+								<li>
 
-									</li>
-								{/option:!widgetPhotogallerySlideshow.images.data.external_link}
-							{/option:!widgetPhotogallerySlideshow.images.data.internal_link}
+									<img src="{$var|createimage:{$widgetPhotogallerySlideshow.images.set_id}:{$widgetPhotogallerySlideshow.images.filename}:{$widgetPhotogallerySlideshowResolution}}" />
+
+									<div class="caption">
+										{option:widgetPhotogallerySlideshow.images.title}
+											<h3>{$widgetPhotogallerySlideshow.images.title}</h3>
+										{/option:widgetPhotogallerySlideshow.images.title}
+										{$widgetPhotogallerySlideshow.images.text}
+									</div>
+
+								</li>
+							{/option:!widgetPhotogallerySlideshow.images.data.external_link}
+						{/option:!widgetPhotogallerySlideshow.images.data.internal_link}
 					{/iteration:widgetPhotogallerySlideshow.images}
 				</ul>
 			</div>

@@ -52,8 +52,10 @@
 			<ul class="photogalleryDetailLightbox">
 				{iteration:blockPhotogalleryAlbum.images}
 				<li>
-					<a data-image_id="{$blockPhotogalleryAlbum.images.id}" href="{$blockPhotogalleryAlbum.images.large_url}" rel="{$blockPhotogalleryAlbum.id}" class="linkedImage linkOverlay" title="{$blockPhotogalleryAlbum.images.title}">
-						<img src="{$blockPhotogalleryAlbum.images.thumbnail_url}" />
+					<a data-image_id="{$blockPhotogalleryAlbum.images.id}" href="{$var|createimage:{$blockPhotogalleryAlbum.images.set_id}:{$blockPhotogalleryAlbum.images.filename}:{$modulePhotogalleryDetailLargeResolution}}" rel="{$blockPhotogalleryAlbum.id}" class="linkedImage linkOverlay" title="{$blockPhotogalleryAlbum.images.title}">
+
+						<img src="{$var|createimage:{$blockPhotogalleryAlbum.images.set_id}:{$blockPhotogalleryAlbum.images.filename}:{$modulePhotogalleryDetailThumbnailResolution}}" />
+
 					</a>
 					<div class="caption">
 						{option:blockPhotogalleryAlbum.images.title}<h3>{$blockPhotogalleryAlbum.images.title}</h3>{/option:blockPhotogalleryAlbum.images.title}
@@ -73,7 +75,7 @@
 				{iteration:blockPhotogalleryAlbum.images}
 				<li>
 					<a href="{$blockPhotogalleryAlbum.images.full_url}" rel="{$blockPhotogalleryAlbum.id}" class="linkedImage" title="{$blockPhotogalleryAlbum.image.title}">
-						<img src="{$blockPhotogalleryAlbum.images.thumbnail_url}" />
+						<img src="{$var|createimage:{$blockPhotogalleryAlbum.images.set_id}:{$blockPhotogalleryAlbum.images.filename}:{$modulePhotogalleryDetailThumbnailResolution}}" />
 					</a>
 				</li>
 				{/iteration:blockPhotogalleryAlbum.images}
@@ -95,20 +97,3 @@
 			</li>
 		{/option:blockPhotogalleryAlbumNavigation.next}
 	</ul>
-	
-	
-{* Navigation in the same category *}
-{*
-	<ul class="photogalleryDetailAlbumsInCategoryNavigation">
-		{option:blockPhotogalleryAlbumNavigationInCategory.previous}
-			<li class="previousLink">
-				<a href="{$blockPhotogalleryAlbumNavigationInCategory.previous.url}" rel="prev">{$lblPreviousAlbum|ucfirst}: <em>{$blockPhotogalleryAlbumNavigationInCategory.previous.title}</em></a>
-			</li>
-		{/option:blockPhotogalleryAlbumNavigationInCategory.previous}
-		{option:blockPhotogalleryAlbumNavigationInCategory.next}
-			<li class="nextLink">
-				<a href="{$blockPhotogalleryAlbumNavigationInCategory.next.url}" rel="next">{$lblNextAlbum|ucfirst}: <em>{$blockPhotogalleryAlbumNavigationInCategory.next.title}</em></a>
-			</li>
-		{/option:blockPhotogalleryAlbumNavigationInCategory.next}
-	</ul>
-*}
