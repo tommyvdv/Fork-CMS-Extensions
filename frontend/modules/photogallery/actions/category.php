@@ -159,7 +159,7 @@ class FrontendPhotogalleryCategory extends FrontendBaseBlock
 				$row['tags'] = FrontendTagsModel::getForItem($this->getModule(), $row['id']);
 				if(!empty($row['image']))
 				{
-					$row['image']['thumbnail_url'] = FrontendPhotogalleryHelper::getImageURL($this->getModule(), $item['image'], $thumbnail_resolution);
+					$row['image']['thumbnail_url'] = FrontendPhotogalleryHelper::getImageURL($this->getModule(), $row['image'], $thumbnail_resolution);
 				}
 			}
 		}
