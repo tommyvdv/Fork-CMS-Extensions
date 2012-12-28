@@ -156,7 +156,7 @@ class BackendPhotogalleryEdit extends BackendBaseActionEdit
 		// our JS needs to know an id, so we can send the new order
 		$this->dataGrid->setRowAttributes(array('id' => '[id]'));
 		
-		$this->dataGrid->setAttributes(array('data-action' => "album_images_sequence"));
+		$this->dataGrid->setAttributes(array('data-action' => "images_sequence"));
 		
 		// add mass action dropdown
 		$ddmMassAction = new SpoonFormDropdown('action', array('delete' => BL::getLabel('Delete'), 'hide' => BL::getLabel('Hide'), 'publish' => BL::getLabel('Publish')), 'delete');
