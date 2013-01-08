@@ -33,8 +33,7 @@
 			<div class="content">
 				<div id="queue"></div>
 				<p>
-							<input id="images" name="images" type="file" multiple="true">
-
+					<input id="images" name="images" type="file" multiple="true">
 				</p>
 			</div>
 		</div>
@@ -57,6 +56,7 @@
 	var uploadScript = '/backend/ajax.php?module=photogallery&action=upload_image';
 	var uploadAlbumId = {$record.id};
 	var uploadFallbackURL = '{$var|geturl:'add_images_upload'}&album_id={$record.id}';
+	var uploadSuccessURL = '{$var|geturl:'edit'}&id={$record.id}&report=added-images#tabImages';
 </script>
 
 {include:{$BACKEND_CORE_PATH}/layout/templates/structure_end_module.tpl}

@@ -23,7 +23,7 @@ jsBackend.uploadifive =
 
 				'onUploadComplete' : function(file, data)
 				{ 
-					//console.log(data);
+					window.location = uploadSuccessURL
 				},
 				'onFallback'   : function() {
 					window.location = uploadFallbackURL
