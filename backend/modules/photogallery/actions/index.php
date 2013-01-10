@@ -83,7 +83,6 @@ class BackendPhotogalleryIndex extends BackendBaseActionIndex
 
 		$query .= ' AND l.language = ?';
 		$parameters[] = BL::getWorkingLanguage();
-
 		// query + parameters
 		return array($query, $parameters);
 	}
@@ -99,11 +98,12 @@ class BackendPhotogalleryIndex extends BackendBaseActionIndex
 		// create dataGrid
 		$this->dataGrid = new BackendDataGridDB($query, $parameters);
 		$this->dataGrid->setMassActionCheckboxes('checkbox', '[id]');
+		$this->dataGrid->setSortParameter('desc');
 
 		$this->dataGrid->enableSequenceByDragAndDrop();
 
 		// sorting columns
-		$this->dataGrid->setSortingColumns(array('title','publish_on'), 'sequence');
+		$this->dataGrid->setSortingColumns(array('title','publish_on', 'sequence'), 'sequence');
 
 		// set colum URLs
 		$this->dataGrid->setColumnURL('title', BackendModel::createURLForAction('edit') . '&amp;id=[id]');
@@ -135,6 +135,8 @@ class BackendPhotogalleryIndex extends BackendBaseActionIndex
 		$ddmMassAction->setOptionAttributes('published', array('data-message-id' => 'confirmPublished'));
 		$this->dataGrid->setMassAction($ddmMassAction);
 		$this->dataGrid->setAttributes(array('data-action' => "sequence"));
+
+
 	}
 
 	/**

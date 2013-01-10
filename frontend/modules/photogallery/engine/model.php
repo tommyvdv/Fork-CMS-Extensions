@@ -618,7 +618,7 @@ class FrontendPhotogalleryModel implements FrontendTagsInterface
 			LEFT OUTER JOIN photogallery_categories_albums AS c ON i.id = c.album_id
 			WHERE i.language = ? AND hidden = ? AND i.num_images_not_hidden > ? AND i.publish_on <= ?
 			GROUP BY i.id 
-			ORDER BY i.sequence ASC
+			ORDER BY i.sequence DESC
 			LIMIT ?, ? ',
 			array(FRONTEND_LANGUAGE, 'N', 0, FrontendModel::getUTCDate('Y-m-d H:i') . ':00', (int) $offset, (int) $limit), 'id');
 		
