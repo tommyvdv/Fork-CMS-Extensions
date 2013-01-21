@@ -112,7 +112,6 @@ class BackendPhotogalleryAjaxUploadImage extends BackendBaseAJAXAction
 
 			$fileTypes = array('jpg', 'jpeg', 'gif', 'png'); // Allowed file extensions
 
-
 			if (in_array(strtolower($fileParts['extension']), $fileTypes) && filesize($tempFile) > 0 && self::isImage($tempFile))
 			{
 

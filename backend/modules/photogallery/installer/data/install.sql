@@ -144,6 +144,7 @@ CREATE TABLE `photogallery_sets_images_content` (
   `album_id` int(11) NOT NULL,
   `language` varchar(5) COLLATE utf8_unicode_ci NOT NULL,
   `title` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  `title_hidden` enum('Y','N') COLLATE utf8_unicode_ci NOT NULL DEFAULT 'Y',
   `text` text COLLATE utf8_unicode_ci NOT NULL,
   `data` text COLLATE utf8_unicode_ci,
   `meta_id` int(11) NOT NULL,

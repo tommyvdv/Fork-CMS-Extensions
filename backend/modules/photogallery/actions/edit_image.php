@@ -98,7 +98,6 @@ class BackendPhotogalleryEditImage extends BackendBaseActionEdit
 		$this->frm->addText('iframe', ($linkValue == 'iframe') ? $this->record['data']['iframe']['url'] : null, null, null, null, true);
 		$this->frm->addText('embed', ($linkValue == 'embed') ? $this->record['data']['embed']['code'] : null, null, null, null, true);
 
-
 		$this->meta = new BackendMeta($this->frm, $this->record['meta_id'], 'title', true);
 
 		// set callback for generating an unique URL
@@ -123,6 +122,7 @@ class BackendPhotogalleryEditImage extends BackendBaseActionEdit
 		// fetch proper slug
 		$this->record['url'] = $this->meta->getURL();
 
+
 		$this->tpl->assign('record', $this->record);
 		$this->tpl->assign('album_id', $this->album_id);
 
@@ -141,11 +141,8 @@ class BackendPhotogalleryEditImage extends BackendBaseActionEdit
 			$this->frm->cleanupFields();
 
 			// validate meta
-			$this->meta->validate();
 
-
-			$this->frm->getField('title')->isFilled(BL::getError('TitleIsRequired'));
-
+			//$this->frm->getField('title')->isFilled(BL::getError('TitleIsRequired'));
 
 			// validate redirect
 			$linkValue = $this->frm->getField('link')->getValue();
@@ -166,7 +163,6 @@ class BackendPhotogalleryEditImage extends BackendBaseActionEdit
 				if($linkValue == 'external') $data['external_link'] = array('url' => $this->frm->getField('external_link')->getValue());
 				if($linkValue == 'iframe') $data['iframe'] = array('url' => $this->frm->getField('iframe')->getValue());
 				if($linkValue == 'embed') $data['embed'] = array('code' => $this->frm->getField('embed')->getValue());
-
 
 				// build item
 				$content['meta_id'] = $this->meta->save(true);
