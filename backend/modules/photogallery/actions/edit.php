@@ -128,7 +128,7 @@ class BackendPhotogalleryEdit extends BackendBaseActionEdit
 		$this->dataGrid->setPaging(false);
 
 		// set colum URLs
-		$this->dataGrid->setColumnURL('filename', BackendModel::createURLForAction('edit_image') . '&amp;id=[id]&amp;album_id=' . $this->id);
+		//$this->dataGrid->setColumnURL('preview', BackendModel::createURLForAction('edit_image') . '&amp;id=[id]&amp;album_id=' . $this->id);
 
 		// set colums hidden
 		// $this->dataGrid->setColumnsHidden(array('category_id', 'sequence'));
@@ -143,12 +143,13 @@ class BackendPhotogalleryEdit extends BackendBaseActionEdit
 		
 		
 		$this->dataGrid->setColumnFunction(create_function('$is_hidden','return $is_hidden = $is_hidden == "Y" ? SpoonFilter::ucfirst(Bl::getLabel("Yes")) : SpoonFilter::ucfirst(Bl::getLabel("No"));'),array('[is_hidden]'),'is_hidden',true);
-		
+		$this->dataGrid->setColumnFunction(create_function('$title_hidden, $title','return $title_hidden == "Y" ? "" : $title;'),array('[title_hidden]','[title]'),'title',true);
+
 		// make sure the column with the handler is the first one
 		$this->dataGrid->setColumnsSequence('dragAndDropHandle','checkbox','preview','is_hidden','title','text','edit');
 		
 		// Hidden
-		$this->dataGrid->setColumnHidden('filename');
+		$this->dataGrid->setColumnsHidden(array('filename', 'title_hidden'));
 
 		// add a class on the handler column, so JS knows this is just a handler
 		$this->dataGrid->setColumnAttributes('dragAndDropHandle', array('class' => 'dragAndDropHandle'));

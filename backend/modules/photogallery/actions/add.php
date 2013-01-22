@@ -121,7 +121,6 @@ class BackendPhotogalleryAdd extends BackendBaseActionAdd
 				$this->frm->getField('new_date_until')->isValid(BL::getError('DateIsInvalid'));
 			}
 
-
 			// validate meta
 			$this->meta->validate();
 

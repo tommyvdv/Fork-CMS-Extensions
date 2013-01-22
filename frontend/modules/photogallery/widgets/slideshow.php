@@ -46,11 +46,15 @@ class FrontendPhotogalleryWidgetSlideshow extends FrontendBaseWidget
 		{
 			// get tags
 			$this->record['tags'] = FrontendTagsModel::getForItem($this->getModule(), $this->record['id']);
+			$this->record['extra'] = FrontendPhotogalleryModel::getExtra($this->data['extra_id']);
 
 			$large_resolution = FrontendPhotogalleryModel::getExtraResolutionForKind($this->data['extra_id'], 'large');
-			
 			$this->tpl->assign('widgetPhotogallerySlideshow', $this->record);
 			$this->tpl->assign('widgetPhotogallerySlideshowResolution', $large_resolution);
+
+			$this->tpl->assign('widgetPhotogallerySlideshowShowCaption', $this->record['extra']['data']['settings']['show_caption'] == 'true');
+			
+			
 		}
 	}
 
@@ -68,8 +72,8 @@ class FrontendPhotogalleryWidgetSlideshow extends FrontendBaseWidget
 		);
 		
 		$this->header->addJS(
-				FrontendPhotogalleryHelper::getPathJS('/flexslider/' . FrontendPhotogalleryModel::FLEXSLIDER_VERSION . '/jquery.flexslider.js', $this->getModule()),
-				false
+			FrontendPhotogalleryHelper::getPathJS('/flexslider/' . FrontendPhotogalleryModel::FLEXSLIDER_VERSION . '/jquery.flexslider.js', $this->getModule()),
+			false
 		);
 
 		$this->header->addJS(
@@ -77,5 +81,7 @@ class FrontendPhotogalleryWidgetSlideshow extends FrontendBaseWidget
 		);
 
 		$this->tpl->mapModifier('createimage', array('FrontendPhotogalleryHelper', 'createImage'));
+
+		$this->addJSData('slideshow_settings_' . $this->record['id'], $this->record['extra']['data']['settings']);
 	}
 }

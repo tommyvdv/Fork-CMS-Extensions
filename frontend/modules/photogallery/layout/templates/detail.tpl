@@ -52,9 +52,9 @@
 			<ul class="photogalleryDetailLightbox">
 				{iteration:blockPhotogalleryAlbum.images}
 				<li>
-					<a data-image_id="{$blockPhotogalleryAlbum.images.id}" href="{$var|createimage:{$blockPhotogalleryAlbum.images.set_id}:{$blockPhotogalleryAlbum.images.filename}:{$modulePhotogalleryDetailLargeResolution}}" rel="{$blockPhotogalleryAlbum.id}" class="linkedImage linkOverlay" title="{$blockPhotogalleryAlbum.images.title}">
+					<a data-image-id="{$blockPhotogalleryAlbum.images.id}" href="{$var|createimage:{$blockPhotogalleryAlbum.images.set_id}:{$blockPhotogalleryAlbum.images.filename}:{$modulePhotogalleryDetailLargeResolution.width}:{$modulePhotogalleryDetailLargeResolution.height}:{$modulePhotogalleryDetailLargeResolution.method}}" rel="{$blockPhotogalleryAlbum.id}" class="linkedImage linkOverlay" title="{$blockPhotogalleryAlbum.images.title}">
 
-						<img src="{$var|createimage:{$blockPhotogalleryAlbum.images.set_id}:{$blockPhotogalleryAlbum.images.filename}:{$modulePhotogalleryDetailThumbnailResolution}}" />
+						<img src="{$var|createimage:{$blockPhotogalleryAlbum.images.set_id}:{$blockPhotogalleryAlbum.images.filename}:{$modulePhotogalleryDetailThumbnailResolution.width}:{$modulePhotogalleryDetailThumbnailResolution.height}:{$modulePhotogalleryDetailThumbnailResolution.method}}" />
 
 					</a>
 					<div class="caption">
@@ -75,7 +75,7 @@
 				{iteration:blockPhotogalleryAlbum.images}
 				<li>
 					<a href="{$blockPhotogalleryAlbum.images.full_url}" rel="{$blockPhotogalleryAlbum.id}" class="linkedImage" title="{$blockPhotogalleryAlbum.image.title}">
-						<img src="{$var|createimage:{$blockPhotogalleryAlbum.images.set_id}:{$blockPhotogalleryAlbum.images.filename}:{$modulePhotogalleryDetailThumbnailResolution}}" />
+						<img src="{$var|createimage:{$blockPhotogalleryAlbum.images.set_id}:{$blockPhotogalleryAlbum.images.filename}:{$modulePhotogalleryDetailThumbnailResolution.width}:{$modulePhotogalleryDetailThumbnailResolution.height}:{$modulePhotogalleryDetailThumbnailResolution.method}}" />
 					</a>
 				</li>
 				{/iteration:blockPhotogalleryAlbum.images}

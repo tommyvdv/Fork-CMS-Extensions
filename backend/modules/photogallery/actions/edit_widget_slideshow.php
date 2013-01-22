@@ -81,9 +81,22 @@ class BackendPhotogalleryEditWidgetSlideshow extends BackendBaseActionEdit
 		// create form
 		$this->frm = new BackendForm('editWidget');
 
+		$this->frm->addText('title', $this->record['data']['settings']['title'], null, 'inputText title', 'inputTextError title');
+
 		$this->frm->addText('large_width', $this->large['width']);
 		$this->frm->addText('large_height', $this->large['height']);
 		$this->frm->addDropdown('large_method', array('crop' => BL::getLabel('Crop'), 'resize' => BL::getLabel('Resize')), $this->large['method'])->setDefaultElement(SpoonFilter::ucfirst(BL::getLabel('ChooseAResizeMethod')));
+		
+		$this->frm->addDropdown('show_caption', array('false' => ucfirst(BL::getLabel('No')), 'true' => ucfirst(BL::getLabel('Yes'))), $this->record['data']['settings']['show_caption']);
+		$this->frm->addDropdown('show_pagination', array('false' => ucfirst(BL::getLabel('No')), 'true' => ucfirst(BL::getLabel('Yes'))), $this->record['data']['settings']['show_pagination']);
+		$this->frm->addDropdown('show_arrows', array('false' => ucfirst(BL::getLabel('No')), 'true' => ucfirst(BL::getLabel('Yes'))), $this->record['data']['settings']['show_arrows']);
+		$this->frm->addDropdown('pause_on_hover', array('false' => ucfirst(BL::getLabel('No')), 'true' => ucfirst(BL::getLabel('Yes'))), $this->record['data']['settings']['pause_on_hover']);
+		$this->frm->addDropdown('random', array('false' => ucfirst(BL::getLabel('No')), 'true' => ucfirst(BL::getLabel('Yes'))), $this->record['data']['settings']['random']);
+		$this->frm->addText('slideshow_speed', $this->record['data']['settings']['slideshow_speed']);
+		$this->frm->addText('animation_speed', $this->record['data']['settings']['animation_speed']);
+		$this->frm->addDropdown('pagination_type', array('none' =>  ucfirst(BL::getLabel('None')) ,'bullets' => ucfirst(BL::getLabel('Bullets')), 'numbers' => ucfirst(BL::getLabel('Numbers')) , 'thumbnails' => ucfirst(BL::getLabel('Thumbnails'))), $this->record['data']['settings']['pagination_type']);
+
+
 	}
 
 	/**
@@ -119,12 +132,33 @@ class BackendPhotogalleryEditWidgetSlideshow extends BackendBaseActionEdit
 
 			$this->frm->getField('large_method')->isFilled(BL::getError('FieldIsRequired'));
 
+			$this->frm->getField('title')->isFilled(BL::getError('TitleIsRequired'));
+			$this->frm->getField('slideshow_speed')->isFilled(BL::getError('FieldIsRequired'));
+			$this->frm->getField('animation_speed')->isFilled(BL::getError('FieldIsRequired'));
+
 			// no errors?
 			if($this->frm->isCorrect())
 			{
+				$title = $this->frm->getField('title')->getValue();
+
 				// build item
 				$item['id'] = $this->id;
 				$item['edited_on'] = BackendModel::getUTCDate();
+				$item['data'] = serialize(
+									array(
+										'settings' => array(
+												'title' => $title,
+												'show_caption' => $this->frm->getField('show_caption')->getValue(),
+												'show_pagination' => $this->frm->getField('show_pagination')->getValue(),
+												'show_arrows' => $this->frm->getField('show_arrows')->getValue(),
+												'pause_on_hover' => $this->frm->getField('pause_on_hover')->getValue(),
+												'random' => $this->frm->getField('random')->getValue(),
+												'slideshow_speed' => $this->frm->getField('slideshow_speed')->getValue(),
+												'animation_speed' => $this->frm->getField('animation_speed')->getValue(),
+												'pagination_type' => $this->frm->getField('pagination_type')->getValue(),
+										)
+									)
+								);
 
 				// insert the item
 				BackendPhotogalleryModel::updateExtra($item);
@@ -191,30 +225,28 @@ class BackendPhotogalleryEditWidgetSlideshow extends BackendBaseActionEdit
 					}
 				}
 
-				// A resolution has changed
-				if($extraHasChanged)
+				
+				// Get all module_extra_ids for the extra and loop them
+				foreach(BackendPhotogalleryModel::getAllModuleExtraIds($this->id) as $extra)
 				{
-					// Get all module_extra_ids for the extra and loop them
-					foreach(BackendPhotogalleryModel::getAllModuleExtraIds($this->id) as $extra)
-					{
-						$resolutionsLabel = BackendPhotogalleryHelper::getResolutionsForExtraLabel($extra['extra_id']);
+					$resolutionsLabel = BackendPhotogalleryHelper::getResolutionsForExtraLabel($extra['extra_id']);
 
-						$album = BackendPhotogalleryModel::getAlbum($extra['album_id']);
-						
-
-						$label = $album['title'] . ' | ' . BackendTemplateModifiers::toLabel($this->record['action']) . ' | ' . $resolutionsLabel;
-
-						$extraItem['label'] = $this->record['action'];
-						$extraItem['id'] = $extra['modules_extra_id'];
-						$extraItem['data'] = serialize(array('id' => $extra['album_id'],
-															'extra_id' => $extra['extra_id'],
-															'extra_label' => $label,
-															'language' => $album['language'],
-															'edit_url' => BackendModel::createURLForAction('edit') . '&id=' . $extra['album_id']));
+					$album = BackendPhotogalleryModel::getAlbum($extra['album_id']);
 					
-						BackendPhotogalleryModel::updateModulesExtraWidget($extraItem);
-					}
+
+					$label = $album['title'] . ' | ' . BackendTemplateModifiers::toLabel($this->record['action']) . ' | '  . $title . ' | ' . $resolutionsLabel;
+
+					$extraItem['label'] = $this->record['action'];
+					$extraItem['id'] = $extra['modules_extra_id'];
+					$extraItem['data'] = serialize(array('id' => $extra['album_id'],
+														'extra_id' => $extra['extra_id'],
+														'extra_label' => $label,
+														'language' => $album['language'],
+														'edit_url' => BackendModel::createURLForAction('edit') . '&id=' . $extra['album_id']));
+				
+					BackendPhotogalleryModel::updateModulesExtraWidget($extraItem);
 				}
+				
 
 				// everything is saved, so redirect to the overview
 				$this->redirect(BackendModel::createURLForAction('extras') . '&report=edited-widget&highlight=row-' . $this->record['id']);

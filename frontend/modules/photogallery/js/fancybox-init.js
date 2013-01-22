@@ -55,5 +55,5 @@ $(document).ready(function() {
 
 	// if actLightboxImage parameter is set, show image on page load
 	var imageId = utils.url.getGetValue('{$actLightboxImage}');
-	if(imageId) $(".photogalleryDetailLightbox li a[data-image_id=" + imageId + "]").trigger('click');
+	if(imageId) $(".photogalleryDetailLightbox li a[data-image-id=" + imageId + "]").trigger('click');
 });

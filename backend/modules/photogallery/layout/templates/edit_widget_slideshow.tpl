@@ -7,6 +7,11 @@
 
 {form:editWidget}
 
+	<p>
+		<label for="title">{$lblTitle|ucfirst}</label>
+		{$txtTitle} {$txtTitleError}
+	</p>
+	
 	<div class="box horizontal">
 		<div class="heading">
 			<h3>{$lblLarge|ucfirst}</h3>
@@ -25,6 +30,54 @@
 				<label for="largeMehod">{$lblResizeMethod|ucfirst}</label>
 				{$ddmLargeMethod} {$ddmLargeMethodError}
 			</p>
+		</div>
+	</div>
+
+	<div class="box horizontal">
+		<div class="heading">
+			<h3>{$lblSettings|ucfirst}</h3>
+		</div>
+		<div class="options labelWidthLong">
+			<p>
+				<label for="showCaption">{$lblShowCaption|ucfirst}</label>
+				{$ddmShowCaption} {$ddmShowCaptionError}
+			</p>
+
+			<p>
+				<label for="showPagination">{$lblShowPagination|ucfirst}</label>
+				{$ddmShowPagination} {$ddmShowPaginationError}
+			</p>
+
+			<p>
+				<label for="paginationType">{$lblPaginationType|ucfirst}</label>
+				{$ddmPaginationType} {$ddmPaginationTypeError}
+			</p>
+
+			<p>
+				<label for="showArrows">{$lblShowArrows|ucfirst}</label>
+				{$ddmShowArrows} {$ddmShowArrowsError}
+			</p>
+
+			<p>
+				<label for="pauseOnHover">{$lblPauseOnHover|ucfirst}</label>
+				{$ddmPauseOnHover} {$ddmPauseOnHoverError}
+			</p>
+
+			<p>
+				<label for="random">{$lblRandom|ucfirst}</label>
+				{$ddmRandom} {$ddmRandomError}
+			</p>
+
+			<p>
+				<label for="slideshowSpeed">{$lblSlideshowSpeed|ucfirst}</label>
+				{$txtSlideshowSpeed} {$txtSlideshowSpeedError}
+			</p>
+
+			<p>
+				<label for="anitmationSpeed">{$lblAnimationSpeed|ucfirst}</label>
+				{$txtAnimationSpeed} {$txtAnimationSpeedError}
+			</p>
+			
 		</div>
 	</div>
 	

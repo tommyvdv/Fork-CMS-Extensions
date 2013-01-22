@@ -62,7 +62,7 @@ class BackendPhotogalleryHelper
 				FROM photogallery_albums AS a
 				LEFT JOIN photogallery_sets_images as i ON i.set_id = a.set_id
 				WHERE a.id = ? AND i.hidden = ?	
-				ORDER BY i.sequence ASC
+				ORDER BY i.sequence DESC
 				LIMIT 1',
 				array((int) $album_id, 'N')
 		);

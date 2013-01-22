@@ -264,12 +264,12 @@ class FrontendPhotogalleryModel implements FrontendTagsInterface
 		// unserialize
 		if(isset($return['meta_data'])) $return['meta_data'] = @unserialize($return['meta_data']);
 		
-		$return['images'] =  (array) $db->getRecords('SELECT i.id, i.filename, m.url, c.title, c.text, i.set_id, c.data
+		$return['images'] =  (array) $db->getRecords('SELECT i.id, i.filename, m.url, c.title, c.title_hidden, c.text, i.set_id, c.data
 													FROM  photogallery_sets_images AS i
 													INNER JOIN photogallery_sets_images_content AS c ON i.id = c.set_image_id
 													INNER JOIN meta AS m ON m.id = c.meta_id
 													WHERE i.set_id = ? AND c.language = ? AND i.hidden = ?
-													ORDER BY sequence ASC',
+													ORDER BY sequence DESC',
 													array((int) $return['set_id'], FRONTEND_LANGUAGE, 'N'), 'id');
 		
 	
@@ -286,6 +286,7 @@ class FrontendPhotogalleryModel implements FrontendTagsInterface
 		{
 			// URLs
 			$image['full_url'] = $imageLink . '/' . $image['url'];
+			$image['title_hidden'] = ($image['title_hidden'] == 'Y');
 			$image['data'] = $image['data'] != null ? unserialize($image['data']) : null;
 			$image['index'] = $i++;
 		}
@@ -345,7 +346,7 @@ class FrontendPhotogalleryModel implements FrontendTagsInterface
 													INNER JOIN photogallery_sets_images_content AS c ON i.id = c.set_image_id
 													INNER JOIN meta AS m ON m.id = c.meta_id
 													WHERE i.set_id = ? AND c.language = ? AND i.hidden = ?
-													ORDER BY sequence ASC',
+													ORDER BY sequence DESC',
 													array((int) $return['set_id'], FRONTEND_LANGUAGE, 'N'));
 		
 	
@@ -472,9 +473,9 @@ class FrontendPhotogalleryModel implements FrontendTagsInterface
 											INNER JOIN photogallery_albums AS a ON c.album_id = a.id
 											INNER JOIN meta AS m ON m.id = c.meta_id
 											WHERE i.id != ? AND i.sequence = ? AND i.hidden = ? AND c.language = ? AND a.id = ?
-											ORDER BY i.sequence DESC
+											ORDER BY i.sequence ASC
 											LIMIT 1',
-											array((int) $id, $sequence-1, 'N', FRONTEND_LANGUAGE, (int) $album_id));
+											array((int) $id, $sequence+1, 'N', FRONTEND_LANGUAGE, (int) $album_id));
 
 		// get next post
 		$return['next'] = $db->getRecord(
@@ -484,9 +485,9 @@ class FrontendPhotogalleryModel implements FrontendTagsInterface
 											INNER JOIN photogallery_albums AS a ON c.album_id = a.id
 											INNER JOIN meta AS m ON m.id = c.meta_id
 											WHERE i.id != ? AND i.sequence = ? AND i.hidden = ? AND c.language = ? AND a.id = ?
-											ORDER BY i.sequence ASC
+											ORDER BY i.sequence DESC
 											LIMIT 1',
-											array((int) $id, $sequence+1, 'N', FRONTEND_LANGUAGE, (int) $album_id));
+											array((int) $id, $sequence-1, 'N', FRONTEND_LANGUAGE, (int) $album_id));
 
 		// return
 		return $return;
@@ -637,7 +638,7 @@ class FrontendPhotogalleryModel implements FrontendTagsInterface
 														INNER JOIN photogallery_sets_images_content AS c ON i.id = c.set_image_id
 														INNER JOIN meta AS m ON m.id = c.meta_id
 														WHERE i.set_id = ? AND c.language = ? AND i.hidden = ?
-														ORDER BY sequence ASC LIMIT 1',
+														ORDER BY sequence DESC LIMIT 1',
 														array((int) $row['set_id'], FRONTEND_LANGUAGE, 'N'));
 
 			$row['image']['data'] = $row['image']['data'] != null ? unserialize($row['image']['data']) : null;
@@ -823,6 +824,20 @@ class FrontendPhotogalleryModel implements FrontendTagsInterface
 			WHERE i.extra_id = ? AND i.kind = ?
 			LIMIT 1',
 			array((int) $extra_id, (string) $kind));
+			
+		return $return;
+	}
+
+	public static function getExtra($extra_id)
+	{
+		$return =  (array) FrontendModel::getDB()->getRecord(
+			'SELECT i.*
+			FROM photogallery_extras AS i
+			WHERE i.id = ? 
+			LIMIT 1',
+			array((int) $extra_id));
+
+		if(isset($return['data'])) $return['data'] = @unserialize($return['data']);
 			
 		return $return;
 	}
@@ -1185,7 +1200,7 @@ class FrontendPhotogalleryModel implements FrontendTagsInterface
 														INNER JOIN photogallery_sets_images_content AS c ON i.id = c.set_image_id
 														INNER JOIN meta AS m ON m.id = c.meta_id
 														WHERE i.set_id = ? AND c.language = ? AND i.hidden = ?
-														ORDER BY sequence ASC LIMIT 1',
+														ORDER BY sequence DESC LIMIT 1',
 														array((int) $row['set_id'], FRONTEND_LANGUAGE, 'N'));
 
 			$row['category_ids'] = ($row['category_ids'] != '') ? (array) explode(',', $row['category_ids']) : null;

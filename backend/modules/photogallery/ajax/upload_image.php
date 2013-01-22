@@ -149,6 +149,7 @@ class BackendPhotogalleryAjaxUploadImage extends BackendBaseAJAXAction
 					// build record
 					$temp = array();
 					$temp['title'] = $original_filename;
+					$temp['title_hidden'] = 'Y'; 
 					$temp['album_id'] = $linkedAlbum['id'];
 					$temp['language'] = $linkedAlbum['language'];
 					$temp['set_id'] = $set_id;
@@ -182,7 +183,6 @@ class BackendPhotogalleryAjaxUploadImage extends BackendBaseAJAXAction
 				{
 
 					// Original, but resize if larger then MAX_ORIGINAL_IMAGE_WIDTH OR MAX_ORIGINAL_IMAGE_HEIGHT
-					
 					$thumbnail = new SpoonThumbnail($tempFile , BackendPhotogalleryModel::MAX_ORIGINAL_IMAGE_WIDTH, BackendPhotogalleryModel::MAX_ORIGINAL_IMAGE_HEIGHT, true);
 					$thumbnail->setAllowEnlargement(false);
 					$thumbnail->setForceOriginalAspectRatio(true);

@@ -44,9 +44,19 @@ class BackendPhotogalleryAddWidgetSlideshow extends BackendBaseActionAdd
 		$this->frm = new BackendForm('addWidget');
 
 		// create elements
+		$this->frm->addText('title', null, null, 'inputText title', 'inputTextError title');
 		$this->frm->addText('large_width');
 		$this->frm->addText('large_height');
 		$this->frm->addDropdown('large_method', array('crop' => BL::getLabel('Crop'), 'resize' => BL::getLabel('Resize')))->setDefaultElement(SpoonFilter::ucfirst(BL::getLabel('ChooseAResizeMethod')));
+		
+		$this->frm->addDropdown('show_caption', array('false' => ucfirst(BL::getLabel('No')), 'true' => ucfirst(BL::getLabel('Yes'))), 'false');
+		$this->frm->addDropdown('show_pagination', array('false' => ucfirst(BL::getLabel('No')), 'true' => ucfirst(BL::getLabel('Yes'))), 'true');
+		$this->frm->addDropdown('show_arrows', array('false' => ucfirst(BL::getLabel('No')), 'true' => ucfirst(BL::getLabel('Yes'))), 'true');
+		$this->frm->addDropdown('pause_on_hover', array('false' => ucfirst(BL::getLabel('No')), 'true' => ucfirst(BL::getLabel('Yes'))), 'true');
+		$this->frm->addDropdown('random', array('false' => ucfirst(BL::getLabel('No')), 'true' => ucfirst(BL::getLabel('Yes'))), 'false');
+		$this->frm->addText('slideshow_speed', 7000);
+		$this->frm->addText('animation_speed', 600);
+		$this->frm->addDropdown('pagination_type', array('none' =>  ucfirst(BL::getLabel('None')) ,'bullets' => ucfirst(BL::getLabel('Bullets')), 'numbers' => ucfirst(BL::getLabel('Numbers')) , 'thumbnails' => ucfirst(BL::getLabel('Thumbnails'))), 'bullets');
 	}
 
 	/**
@@ -80,16 +90,37 @@ class BackendPhotogalleryAddWidgetSlideshow extends BackendBaseActionAdd
 			self::validateResolution('large_width');
 			self::validateResolution('large_height');
 			$this->frm->getField('large_method')->isFilled(BL::getError('FieldIsRequired'));
+		
+			$this->frm->getField('title')->isFilled(BL::getError('TitleIsRequired'));
+			$this->frm->getField('slideshow_speed')->isFilled(BL::getError('FieldIsRequired'));
+			$this->frm->getField('animation_speed')->isFilled(BL::getError('FieldIsRequired'));
 
 			// no errors?
 			if($this->frm->isCorrect())
 			{
+				$title = $this->frm->getField('title')->getValue();
+
 				// build item
 				$item['kind'] = 'widget';
 				$item['action'] = 'slideshow';
 				$item['allow_delete'] = 'Y';
 				$item['created_on'] = BackendModel::getUTCDate();
 				$item['edited_on'] = BackendModel::getUTCDate();
+				$item['data'] = serialize(
+									array(
+										'settings' => array(
+												'title' => $title,
+												'show_caption' => $this->frm->getField('show_caption')->getValue(),
+												'show_pagination' => $this->frm->getField('show_pagination')->getValue(),
+												'show_arrows' => $this->frm->getField('show_arrows')->getValue(),
+												'pause_on_hover' => $this->frm->getField('pause_on_hover')->getValue(),
+												'random' => $this->frm->getField('random')->getValue(),
+												'slideshow_speed' => $this->frm->getField('slideshow_speed')->getValue(),
+												'animation_speed' => $this->frm->getField('animation_speed')->getValue(),
+												'pagination_type' => $this->frm->getField('pagination_type')->getValue(),
+										)
+									)
+								);
 
 				// insert the item
 				$item['id'] = BackendPhotogalleryModel::insertExtra($item);
@@ -102,13 +133,14 @@ class BackendPhotogalleryAddWidgetSlideshow extends BackendBaseActionAdd
 
 				BackendPhotogalleryModel::insertExtraResolution($resolutionLarge);
 
+
 				// Create all widgets for each album
 				foreach(BackendPhotogalleryModel::getAllAlbums() as $album)
 				{
 					
 					$resolutionsLabel = BackendPhotogalleryHelper::getResolutionsForExtraLabel($item['id']);
 
-					$label = $album['title'] . ' | ' . BackendTemplateModifiers::toLabel($item['action']) . ' | ' . $resolutionsLabel;
+					$label = $album['title'] . ' | ' . BackendTemplateModifiers::toLabel($item['action']) . ' | '  . $title . ' | ' . $resolutionsLabel;
 
 					$extra['module'] = $this->getModule();
 					$extra['label'] = $item['action'];

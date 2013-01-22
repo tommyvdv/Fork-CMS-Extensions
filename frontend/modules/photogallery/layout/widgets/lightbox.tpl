@@ -43,14 +43,19 @@
 			<ul class="photogalleryLightbox">
 				{iteration:widgetPhotogalleryLightbox.images}
 				<li>
-					<a href="{$var|createimage:{$widgetPhotogalleryLightbox.images.set_id}:{$widgetPhotogalleryLightbox.images.filename}:{$widgetPhotogalleryLightboxLargeResolution}}" rel="{$widgetPhotogalleryLightbox.id}" class="linkedImage linkOverlay">
-						<img src="{$var|createimage:{$widgetPhotogalleryLightbox.images.set_id}:{$widgetPhotogalleryLightbox.images.filename}:{$widgetPhotogalleryLightboxThumbnailResolution}}
+					<a href="{$var|createimage:{$widgetPhotogalleryLightbox.images.set_id}:{$widgetPhotogalleryLightbox.images.filename}:{$widgetPhotogalleryLightboxLargeResolution.width}:{$widgetPhotogalleryLightboxLargeResolution.height}:{$widgetPhotogalleryLightboxLargeResolution.method}}" rel="{$widgetPhotogalleryLightbox.id}" class="linkedImage linkOverlay">
+						<img src="{$var|createimage:{$widgetPhotogalleryLightbox.images.set_id}:{$widgetPhotogalleryLightbox.images.filename}:{$widgetPhotogalleryLightboxThumbnailResolution.width}:{$widgetPhotogalleryLightboxThumbnailResolution.height}:{$widgetPhotogalleryLightboxThumbnailResolution.method}}
 " />
 					</a>
 					
 					{* Caption *}
 					<div class="caption">
-						{option:widgetPhotogalleryLightbox.images.title}<h3>{$widgetPhotogalleryLightbox.images.title}</h3>{/option:widgetPhotogalleryLightbox.images.title}
+						{option:!widgetPhotogalleryLightbox.images.title_hidden}
+							{option:widgetPhotogalleryLightbox.images.title}
+								<h3>{$widgetPhotogalleryLightbox.images.title}</h3>
+							{/option:widgetPhotogalleryLightbox.images.title}
+						{/option:!widgetPhotogalleryLightbox.images.title_hidden}
+
 						{$widgetPhotogalleryLightbox.images.text}
 					</div>
 				</li>
