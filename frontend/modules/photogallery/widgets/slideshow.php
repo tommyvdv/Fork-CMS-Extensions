@@ -51,10 +51,9 @@ class FrontendPhotogalleryWidgetSlideshow extends FrontendBaseWidget
 			$large_resolution = FrontendPhotogalleryModel::getExtraResolutionForKind($this->data['extra_id'], 'large');
 			$this->tpl->assign('widgetPhotogallerySlideshow', $this->record);
 			$this->tpl->assign('widgetPhotogallerySlideshowResolution', $large_resolution);
-
 			$this->tpl->assign('widgetPhotogallerySlideshowShowCaption', $this->record['extra']['data']['settings']['show_caption'] == 'true');
-			
-			
+			$this->tpl->assign('widgetPhotogallerySlideshowNavigation', $this->record['extra']['data']['settings']['pagination_type'] == 'thumbnails');
+
 		}
 	}
 

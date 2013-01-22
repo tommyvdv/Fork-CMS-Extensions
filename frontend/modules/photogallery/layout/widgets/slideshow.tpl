@@ -1,9 +1,10 @@
 {* Images *}
 	{option:widgetPhotogallerySlideshow.images}
-		<div class="photogallerySlideshowWrapper photogallerySlideshowWrapperId{$widgetPhotogallerySlideshow.id}">
+		<div class="photogallerySlideshowWrapper photogallerySlideshowWrapperId{$widgetPhotogallerySlideshow.id}" data-id="{$widgetPhotogallerySlideshow.id}">
 			
-			{* Images *}
-			<div class="flexslider" data-id="{$widgetPhotogallerySlideshow.id}">
+			{* Slides *}
+			<div id="flexslider{$widgetPhotogallerySlideshow.id}"  class="flexslider">
+
 				<ul class="slides">
 					{iteration:widgetPhotogallerySlideshow.images}
 							
@@ -31,7 +32,6 @@
 							{/option:widgetPhotogallerySlideshow.images.data.external_link}
 
 							<div class="caption">
-
 								{option:widgetPhotogallerySlideshowShowCaption}
 									{option:!widgetPhotogallerySlideshow.images.title_hidden}
 										{option:widgetPhotogallerySlideshow.images.title}
@@ -47,6 +47,18 @@
 					{/iteration:widgetPhotogallerySlideshow.images}
 				</ul>
 			</div>
-			
+
+
+			{* Slides thumbnail navigation *}
+			{option:widgetPhotogallerySlideshowNavigation}
+			<div  id="flexsliderNavigation{$widgetPhotogallerySlideshow.id}" class="flexslider">
+				<ul class="slides">
+					{iteration:widgetPhotogallerySlideshow.images}
+						<li><img src="{$var|createimage:{$widgetPhotogallerySlideshow.images.set_id}:{$widgetPhotogallerySlideshow.images.filename}:150:150:{$widgetPhotogallerySlideshowResolution.method}}" /></li>
+					{/iteration:widgetPhotogallerySlideshow.images}
+				</ul>
+			</div>
+			{/option:widgetPhotogallerySlideshowNavigation}
+
 		</div>
 	{/option:widgetPhotogallerySlideshow.images}

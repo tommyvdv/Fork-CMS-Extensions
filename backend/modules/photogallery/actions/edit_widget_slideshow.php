@@ -94,7 +94,7 @@ class BackendPhotogalleryEditWidgetSlideshow extends BackendBaseActionEdit
 		$this->frm->addDropdown('random', array('false' => ucfirst(BL::getLabel('No')), 'true' => ucfirst(BL::getLabel('Yes'))), $this->record['data']['settings']['random']);
 		$this->frm->addText('slideshow_speed', $this->record['data']['settings']['slideshow_speed']);
 		$this->frm->addText('animation_speed', $this->record['data']['settings']['animation_speed']);
-		$this->frm->addDropdown('pagination_type', array('none' =>  ucfirst(BL::getLabel('None')) ,'bullets' => ucfirst(BL::getLabel('Bullets')), 'numbers' => ucfirst(BL::getLabel('Numbers')) , 'thumbnails' => ucfirst(BL::getLabel('Thumbnails'))), $this->record['data']['settings']['pagination_type']);
+		$this->frm->addDropdown('pagination_type', array('bullets' => ucfirst(BL::getLabel('Bullets')), 'numbers' => ucfirst(BL::getLabel('Numbers')) , 'thumbnails' => ucfirst(BL::getLabel('Thumbnails'))), $this->record['data']['settings']['pagination_type']);
 
 
 	}

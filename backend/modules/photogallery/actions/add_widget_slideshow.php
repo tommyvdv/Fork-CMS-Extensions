@@ -56,7 +56,7 @@ class BackendPhotogalleryAddWidgetSlideshow extends BackendBaseActionAdd
 		$this->frm->addDropdown('random', array('false' => ucfirst(BL::getLabel('No')), 'true' => ucfirst(BL::getLabel('Yes'))), 'false');
 		$this->frm->addText('slideshow_speed', 7000);
 		$this->frm->addText('animation_speed', 600);
-		$this->frm->addDropdown('pagination_type', array('none' =>  ucfirst(BL::getLabel('None')) ,'bullets' => ucfirst(BL::getLabel('Bullets')), 'numbers' => ucfirst(BL::getLabel('Numbers')) , 'thumbnails' => ucfirst(BL::getLabel('Thumbnails'))), 'bullets');
+		$this->frm->addDropdown('pagination_type', array('bullets' => ucfirst(BL::getLabel('Bullets')), 'numbers' => ucfirst(BL::getLabel('Numbers')) , 'thumbnails' => ucfirst(BL::getLabel('Thumbnails'))), 'bullets');
 	}
 
 	/**
