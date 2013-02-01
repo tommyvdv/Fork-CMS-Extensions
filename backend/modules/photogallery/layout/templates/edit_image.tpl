@@ -10,7 +10,6 @@
 	
 </div>
 
-
 {form:edit}
 	<label for="title">{$lblTitle|ucfirst}</label>
 	{$txtTitle} {$txtTitleError}
@@ -44,7 +43,21 @@
 
 						<td id="sidebar">
 
-							<div id="publishOptions" class="box">
+
+							<div class="box">
+								<div class="heading">
+									<h3>{$lblSettings|ucfirst}</h3>
+								</div>
+
+								<div class="options">
+									<ul class="inputList pb0">
+										<li>{$chkTitleHidden} {$chkTitleHiddenError} <label for="titleHidden">{$lblHideTitle|ucfirst}</label></li>
+									</ul>
+								</div>
+							</div>
+
+
+							<div class="box">
 								<div class="heading">
 									<h3>{$lblStatus|ucfirst}</h3>
 								</div>

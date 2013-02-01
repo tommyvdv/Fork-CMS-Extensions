@@ -61,7 +61,7 @@ class FrontendPhotogalleryWidgetLightbox extends FrontendBaseWidget
 	 */
 	private function parse()
 	{
-		$this->header->addCSS('/frontend/modules/' . $this->getModule() . '/layout/css/photogallery.css');
+		
 		
 		// Lightbox
 		$this->header->addCSS(
@@ -105,6 +105,8 @@ class FrontendPhotogalleryWidgetLightbox extends FrontendBaseWidget
 		$this->header->addJS(
 			FrontendPhotogalleryHelper::getPathJS('/fancybox-init.js', $this->getModule())
 		);
+
+		$this->header->addCSS('/frontend/modules/' . $this->getModule() . '/layout/css/photogallery.css');
 		
 		$this->tpl->assign('widgetPhotogalleryLightbox', $this->record);
 		$this->tpl->mapModifier('createimage', array('FrontendPhotogalleryHelper', 'createImage'));

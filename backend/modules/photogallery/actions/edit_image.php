@@ -77,6 +77,8 @@ class BackendPhotogalleryEditImage extends BackendBaseActionEdit
 		$this->frm->addEditor('text', $this->record['text']);
 		$this->frm->addRadiobutton('hidden', $rbtHiddenValues, $this->record['hidden']);
 
+		$this->frm->addCheckbox('title_hidden', $this->record['title_hidden'] == 'Y');
+
 		// link
 		$linkValue = 'none';
 		if(isset($this->record['data']['internal_link']['page_id'])) $linkValue = 'internal';
@@ -168,6 +170,7 @@ class BackendPhotogalleryEditImage extends BackendBaseActionEdit
 				$content['meta_id'] = $this->meta->save(true);
 				$content['title'] = $this->frm->getField('title')->getValue();
 				$content['text'] = $this->frm->getField('text')->getValue();
+				$content['title_hidden'] = $this->frm->getField('title_hidden')->isChecked() ? 'Y' : 'N';
 				$content['edited_on'] = BackendModel::getUTCDate();
 				$content['set_image_id'] = $this->id;
 				$content['album_id'] = $this->album_id;

@@ -1,6 +1,6 @@
 {* Images *}
 	{option:widgetPhotogallerySlideshow.images}
-		<div class="photogallerySlideshowWrapper photogallerySlideshowWrapperId{$widgetPhotogallerySlideshow.id}" data-id="{$widgetPhotogallerySlideshow.id}">
+		<div class="photogallerySlideshowWrapper photogallerySlideshowWrapperId{$widgetPhotogallerySlideshow.id}{option:widgetPhotogallerySlideshowNavigationNumbers} photogallerySlideshowNavigationNumbers{/option:widgetPhotogallerySlideshowNavigationNumbers}" data-id="{$widgetPhotogallerySlideshow.id}">
 			
 			{* Slides *}
 			<div id="flexslider{$widgetPhotogallerySlideshow.id}"  class="flexslider">
@@ -50,15 +50,15 @@
 
 
 			{* Slides thumbnail navigation *}
-			{option:widgetPhotogallerySlideshowNavigation}
+			{option:widgetPhotogallerySlideshowNavigationThumnails}
 			<div  id="flexsliderNavigation{$widgetPhotogallerySlideshow.id}" class="flexslider">
 				<ul class="slides">
 					{iteration:widgetPhotogallerySlideshow.images}
-						<li><img src="{$var|createimage:{$widgetPhotogallerySlideshow.images.set_id}:{$widgetPhotogallerySlideshow.images.filename}:150:150:{$widgetPhotogallerySlideshowResolution.method}}" /></li>
+						<li><img src="{$var|createimage:{$widgetPhotogallerySlideshow.images.set_id}:{$widgetPhotogallerySlideshow.images.filename}:150:150:'crop'}" /></li>
 					{/iteration:widgetPhotogallerySlideshow.images}
 				</ul>
 			</div>
-			{/option:widgetPhotogallerySlideshowNavigation}
+			{/option:widgetPhotogallerySlideshowNavigationThumnails}
 
 		</div>
 	{/option:widgetPhotogallerySlideshow.images}

@@ -362,6 +362,7 @@ class FrontendPhotogalleryModel implements FrontendTagsInterface
 		{
 			$image['full_url'] = $imageLink . '/' . $image['url'];
 			$image['data'] = $image['data'] != null ? unserialize($image['data']) : null;
+			$image['title_hidden'] = ($image['title_hidden'] == 'Y');
 		}
 		
 		if($return['category_ids'] !== null)
@@ -433,6 +434,8 @@ class FrontendPhotogalleryModel implements FrontendTagsInterface
 		
 		$return['album_full_url'] = FrontendNavigation::getURLForBlock('photogallery', 'detail') . '/' . $return['album_url'];
 		$return['data'] = $return['data'] != null ? unserialize($return['data']) : null;
+
+		$return['title_hidden'] = ($return['title_hidden'] == 'Y');
 		
 		$return['categories'] = (array) $db->getRecords('SELECT i.title, i.id, m.url
 														FROM photogallery_categories as i

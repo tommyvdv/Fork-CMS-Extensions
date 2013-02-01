@@ -26,3 +26,10 @@ ul.photogalleryRelatedByTags li
 	left: 1.5em;
 	padding-right: 1.5em;	
 }
+
+.photogallerySlideshowNavigationNumbers .flex-control-paging li a
+{
+	background: none;
+	text-indent: 0;
+	box-shadow: none;
+}

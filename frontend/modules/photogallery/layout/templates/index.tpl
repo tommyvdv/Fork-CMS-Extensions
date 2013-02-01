@@ -38,8 +38,8 @@
 					{option:modulePhotogalleryAlbums.introduction}{$modulePhotogalleryAlbums.introduction}{/option:modulePhotogalleryAlbums.introduction}
 
 				{* Image *}
-					<a href="{$modulePhotogalleryAlbums.full_url}"  class="linkedImage" title="{$modulePhotogalleryAlbums.image.title}">
-						<img src="{$var|createimage:{$modulePhotogalleryAlbums.image.set_id}:{$modulePhotogalleryAlbums.image.filename}:{$modulePhotogalleryIndexResolution.width}:{$modulePhotogalleryIndexResolution.height}:{$modulePhotogalleryIndexResolution.method}}" />
+					<a href="{$modulePhotogalleryAlbums.full_url}"  class="linkedImage" title="{$modulePhotogalleryAlbums.title}">
+						<img src="{$var|createimage:{$modulePhotogalleryAlbums.image.set_id}:{$modulePhotogalleryAlbums.image.filename}:{$modulePhotogalleryIndexResolution.width}:{$modulePhotogalleryIndexResolution.height}:{$modulePhotogalleryIndexResolution.method}}" alt="{$modulePhotogalleryAlbums.title}" />
 					</a>
 
 			{/iteration:modulePhotogalleryAlbums}

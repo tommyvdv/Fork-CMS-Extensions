@@ -18,7 +18,7 @@ $(document).ready(function() {
 			},
 
 			overlay: {
-				 showEarly : false,
+				showEarly : false,
 				speedIn: 0,
 				speedOut: 0,
 				opacity: 1,
