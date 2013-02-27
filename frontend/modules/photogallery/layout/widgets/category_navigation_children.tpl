@@ -1,3 +1,4 @@
+{* navigation *}
 {option:navigation}
 	<ul>
 		{iteration:navigation}
