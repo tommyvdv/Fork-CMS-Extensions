@@ -63,12 +63,6 @@ class FrontendPhotogalleryDetail extends FrontendBaseBlock
 
 		$thumbnail_resolution = FrontendPhotogalleryModel::getExtraResolutionForKind($this->data['extra_id'], 'album_detail_overview_thumbnail');
 		$large_resolution = FrontendPhotogalleryModel::getExtraResolutionForKind($this->data['extra_id'], 'large');
-		
-		foreach($this->record['images'] as &$image)
-		{
-			$image['thumbnail_url'] = FrontendPhotogalleryHelper::getImageURL($this->getModule(), $image, $thumbnail_resolution);
-			$image['large_url'] = FrontendPhotogalleryHelper::getImageURL($this->getModule(), $image, $large_resolution);
-		}
 	}
 
 	/**
