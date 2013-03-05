@@ -341,7 +341,7 @@ class FrontendPhotogalleryModel implements FrontendTagsInterface
 		
 		$return['category_ids'] = ($return['category_ids'] != '') ? (array) explode(',', $return['category_ids']) : null;
 		
-		$return['images'] =  (array) $db->getRecords('SELECT i.id, i.filename, m.url, c.title, c.text, i.set_id, c.data
+		$return['images'] =  (array) $db->getRecords('SELECT i.id, i.filename, m.url, c.title, c.title_hidden, c.text, i.set_id, c.data
 													FROM  photogallery_sets_images AS i
 													INNER JOIN photogallery_sets_images_content AS c ON i.id = c.set_image_id
 													INNER JOIN meta AS m ON m.id = c.meta_id
