@@ -845,7 +845,12 @@ class BackendPhotogalleryModel
 			)
 		);
 
-		if($depth < $allowedDepth || $allowedDepth === null || $allowedDepth === 0)
+		if(
+			(
+				$depth < $allowedDepth ||
+				(int) $allowedDepth === 0
+			) && !is_null($allowedDepth)
+		)
 		{
 			foreach($categories as $key => $value)
 			{

@@ -10,7 +10,7 @@
 	{/option:!category}
 	<div class="buttonHolderRight">
 		{option:category}
-			<a href="{$var|geturl:'add_category'}&category_id={$category.id}" class="button icon iconAdd"><span>{$lblAddCategoryToParent|sprintf:{$category.title}|ucfirst}</span></a>
+			<a href="{$addToParentURL}" class="button icon iconAdd"><span>{$lblAddCategoryToParent|sprintf:{$category.title}|ucfirst}</span></a>
 		{/option:category}
 		{option:!category}
 			<a href="{$var|geturl:'add_category'}" class="button icon iconAdd"><span>{$lblAddCategory|ucfirst}</span></a>
@@ -33,7 +33,15 @@
 		{$dataGrid}
 	</div>
 {/option:dataGrid}
-{option:!dataGrid}{$msgNoCategories|sprintf:{$var|geturl:'add_category'}}{/option:!dataGrid}
+{option:!dataGrid}
+	{option:category}
+		{$msgNoCategories|sprintf:{$addToParentURL}}
+		
+	{/option:category}
+	{option:!category}
+		{$msgNoCategories|sprintf:{$var|geturl:'add_category'}}
+	{/option:!category}
+{/option:!dataGrid}
 
 {include:{$BACKEND_CORE_PATH}/layout/templates/structure_end_module.tpl}
 {include:{$BACKEND_CORE_PATH}/layout/templates/footer.tpl}

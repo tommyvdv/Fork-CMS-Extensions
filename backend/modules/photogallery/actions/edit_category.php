@@ -68,7 +68,10 @@ class BackendPhotogalleryEditCategory extends BackendBaseActionEdit
 		$this->frm = new BackendForm('editCategory');
 
 		// get categories
-		$this->categories = BackendPhotogalleryModel::getCategoriesForDropdown(BackendModel::getModuleSetting('photogallery', 'categories_depth', 0), false);
+		$this->categories = BackendPhotogalleryModel::getCategoriesForDropdown(
+			BackendModel::getModuleSetting('photogallery', 'categories_depth'),
+			false
+		);
 
 		// create elements
 		$this->frm->addText('title', $this->record['title']);
@@ -94,6 +97,7 @@ class BackendPhotogalleryEditCategory extends BackendBaseActionEdit
 		$this->tpl->assign('item', $this->record);
 		$this->tpl->assign('category', $this->record);
 		$this->tpl->assign('categories', $this->categories);
+		$this->tpl->assign('categories_depth', is_null(BackendModel::getModuleSetting('photogallery', 'categories_depth')) ? false : true);
 
 		// delete allowed?
 		$this->tpl->assign('deleteAllowed', BackendPhotogalleryModel::deleteCategoryAllowed($this->id));
