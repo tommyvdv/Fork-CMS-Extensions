@@ -451,6 +451,10 @@
 				<translation language="en"><![CDATA[information]]></translation>
 				<translation language="nl"><![CDATA[informatie]]></translation>
 			</item>
+			<item type="label" name="NotAllowed">
+				<translation language="en"><![CDATA[not allowed]]></translation>
+				<translation language="nl"><![CDATA[niet toegelaten]]></translation>
+			</item>
 			<item type="label" name="Infinity">
 				<translation language="en"><![CDATA[infinity]]></translation>
 				<translation language="nl"><![CDATA[oneindig]]></translation>

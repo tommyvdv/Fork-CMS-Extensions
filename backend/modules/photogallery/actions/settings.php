@@ -35,7 +35,7 @@ class BackendPhotogallerySettings extends BackendBaseActionEdit
 		$this->frm = new BackendForm('settings');
 
 		$depths = array_merge(
-			array(null => 'not allowed', 0 => BL::lbl('infinity')),
+			array(null => BL::lbl('NotAllowed'), 0 => BL::lbl('infinity')),
 			array_combine(range(1, 5), range(1, 5))
 		);
 //Spoon::dump(BackendModel::getModuleSetting($this->URL->getModule(), 'categories_depth'));
