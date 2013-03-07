@@ -21,7 +21,7 @@ jsBackend.uploadifive =
 				'removeCompleted' : true,
 				'fileType'     : 'image',
 
-				'onUploadComplete' : function(file, data)
+				'onQueueComplete' : function(file, data)
 				{ 
 					window.location = uploadSuccessURL
 				},

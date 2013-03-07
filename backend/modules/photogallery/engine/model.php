@@ -45,11 +45,11 @@ class BackendPhotogalleryModel
 		GROUP BY i.id';
 
 	const QRY_DATAGRID_BROWSE_IMAGES_FOR_SET =
-		'SELECT i.id, i.filename, c.title, c.title_hidden, c.text, i.hidden as is_hidden, i.sequence
+		'SELECT i.id, i.filename, c.title, c.text, i.hidden as is_hidden, i.sequence
 		FROM photogallery_sets_images AS i
 		INNER JOIN photogallery_sets_images_content AS c on c.set_image_id = i.id
 		WHERE i.set_id = ? AND c.album_id = ? AND c.language = ?
-		GROUP BY i.id ORDER BY i.sequence DESC';
+		GROUP BY i.id ORDER BY i.sequence ASC';
 
 	const RESIZE_ORIGINAL_IMAGE = true; // resize the original image?
 	const KEEP_ORIGINAL_IMAGE = true; // resize the original image?
@@ -585,7 +585,7 @@ class BackendPhotogalleryModel
 	public static function getImageWithContent($id, $album_id)
 	{
 		$return =  (array) BackendModel::getDB()->getRecord(
-			'SELECT i.id, i.set_id, i.hidden, c.title, c.title_hidden, c.text, c.meta_id, i.filename, c.id as image_content_id, c.data, c.album_id
+			'SELECT i.id, i.set_id, i.hidden, c.title, c.text, c.meta_id, i.filename, c.id as image_content_id, c.data, c.album_id
 			FROM photogallery_sets_images AS i
 			INNER JOIN photogallery_sets_images_content AS c ON c.set_image_id = i.id
 			WHERE i.id = ? AND c.language = ? AND c.album_id = ?
@@ -845,7 +845,12 @@ class BackendPhotogalleryModel
 			)
 		);
 
-		if($depth < $allowedDepth || $allowedDepth === null || $allowedDepth === 0)
+		if(
+			(
+				$depth < $allowedDepth ||
+				(int) $allowedDepth === 0
+			) && !is_null($allowedDepth)
+		)
 		{
 			foreach($categories as $key => $value)
 			{
