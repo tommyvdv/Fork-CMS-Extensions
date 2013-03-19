@@ -73,6 +73,63 @@
 			</item>
 		</core>
 		<photogallery>
+
+			<item type="label" name="Embed">
+				<translation language="nl"><![CDATA[embed code]]></translation>
+				<translation language="en"><![CDATA[embed code]]></translation>
+			</item>
+			<item type="label" name="Iframe">
+				<translation language="nl"><![CDATA[iframe]]></translation>
+				<translation language="en"><![CDATA[iframe]]></translation>
+			</item>
+
+			<item type="label" name="Bullets">
+				<translation language="nl"><![CDATA[bullets]]></translation>
+				<translation language="en"><![CDATA[bullets]]></translation>
+			</item>
+			<item type="label" name="Thumbnails">
+				<translation language="nl"><![CDATA[thumbnails]]></translation>
+				<translation language="en"><![CDATA[duimnagels]]></translation>
+			</item>
+
+
+			<item type="label" name="ShowCaption">
+				<translation language="en"><![CDATA[show caption]]></translation>
+				<translation language="nl"><![CDATA[toon onderschrift]]></translation>
+			</item>
+			<item type="label" name="ShowPagination">
+				<translation language="en"><![CDATA[show pagination]]></translation>
+				<translation language="nl"><![CDATA[toon paginatie]]></translation>
+			</item>
+			<item type="label" name="PaginationType">
+				<translation language="en"><![CDATA[pagination type]]></translation>
+				<translation language="nl"><![CDATA[paginatie type]]></translation>
+			</item>
+			<item type="label" name="ShowArrows">
+				<translation language="en"><![CDATA[show arrows]]></translation>
+				<translation language="nl"><![CDATA[toon pijlen]]></translation>
+			</item>
+			<item type="label" name="PauseOnHover">
+				<translation language="en"><![CDATA[pause on  hover]]></translation>
+				<translation language="nl"><![CDATA[pauzeer op hover]]></translation>
+			</item>
+			<item type="label" name="Random">
+				<translation language="en"><![CDATA[random]]></translation>
+				<translation language="nl"><![CDATA[willekeurig]]></translation>
+			</item>
+			<item type="label" name="SlideshowSpeed">
+				<translation language="en"><![CDATA[slideshow speed]]></translation>
+				<translation language="nl"><![CDATA[slideshow snelheid]]></translation>
+			</item>
+			<item type="label" name="AnimationSpeed">
+				<translation language="en"><![CDATA[animation speed]]></translation>
+				<translation language="nl"><![CDATA[animatie snelheid]]></translation>
+			</item>
+			<item type="message" name="NoCategoriesSelected">
+				<translation language="en"><![CDATA[No category has been selected.]]></translation>
+				<translation language="nl"><![CDATA[Er is nog geen categorie geselecteerd.]]></translation>
+			</item>
+			
 			<item type="error" name="RSSDescription">
 				<translation language="en"><![CDATA[Photogallery RSS description is not yet provided. <a href="%1$s">Configure</a>]]></translation>
 				<translation language="nl"><![CDATA[Fotogallerij RSS beschrijving is nog niet geconfigureerd. <a href="%1$s">Configureer</a>]]></translation>
