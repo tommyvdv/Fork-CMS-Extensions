@@ -126,8 +126,8 @@
 			</item>
 			
 			<item type="label" name="NumChildren">
-				<translation language="en"><![CDATA[subs]]></translation>
-				<translation language="nl"><![CDATA[subs]]></translation>
+				<translation language="en"><![CDATA[subcategories]]></translation>
+				<translation language="nl"><![CDATA[subcategorieën]]></translation>
 			</item>
 			
 			<item type="label" name="ViewSubcategories">
