@@ -57,7 +57,7 @@ class BackendPhotogalleryHelper
 	 */
 	public static function getPreviewHTMLForAlbums50x50_crop($album_id, $module)
 	{
-		$result = (array) BackendModel::getDB()->getRecord(
+		$result = (array) BackendModel::getContainer()->get('database')->getRecord(
 				'SELECT i.filename, a.set_id
 				FROM photogallery_albums AS a
 				LEFT JOIN photogallery_sets_images as i ON i.set_id = a.set_id
@@ -95,7 +95,7 @@ class BackendPhotogalleryHelper
 	 */
 	public static function getWidgetResolutionForDatagridByKind($id, $kind)
 	{
-		$record = BackendModel::getDB()->getRecord('SELECT width, height, method FROM photogallery_extras_resolutions WHERE extra_id = ? AND kind = ? LIMIT 1',array((int) $id, (string) $kind));
+		$record = BackendModel::getContainer()->get('database')->getRecord('SELECT width, height, method FROM photogallery_extras_resolutions WHERE extra_id = ? AND kind = ? LIMIT 1',array((int) $id, (string) $kind));
 		
 		return !empty($record) ?  $record['width'] . 'x' . $record['height'] . ' (' . BackendTemplateModifiers::toLabel($record['method']) . ')' : '';
 	}
@@ -123,7 +123,7 @@ class BackendPhotogalleryHelper
 	 */
 	public static function getResolutionsForDataGrid($id)
 	{
-		$resolutions = BackendModel::getDB()->getRecords('SELECT width, height, method, kind FROM photogallery_extras_resolutions WHERE extra_id = ? ORDER BY method ASC',array((int) $id));
+		$resolutions = BackendModel::getContainer()->get('database')->getRecords('SELECT width, height, method, kind FROM photogallery_extras_resolutions WHERE extra_id = ? ORDER BY method ASC',array((int) $id));
 		
 		if(empty($resolutions)) return '';
 		
@@ -149,7 +149,7 @@ class BackendPhotogalleryHelper
 	 */
 	public static function getResolutionsForExtraLabel($id)
 	{
-		$resolutions = BackendModel::getDB()->getRecords('SELECT width, height, method, kind FROM photogallery_extras_resolutions WHERE extra_id = ? ORDER BY method ASC',array((int) $id));
+		$resolutions = BackendModel::getContainer()->get('database')->getRecords('SELECT width, height, method, kind FROM photogallery_extras_resolutions WHERE extra_id = ? ORDER BY method ASC',array((int) $id));
 		
 		if(empty($resolutions)) return '';
 		

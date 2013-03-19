@@ -19,7 +19,7 @@ class FrontendPhotogalleryModel implements FrontendTagsInterface
 	public static function buildCategoriesNavigation($parent_id = 0, $selectedUrl = null)
 	{
 		// Get DB
-		$db = FrontendModel::getDB();
+		$db = FrontendModel::getContainer()->get('database');
 
 		// redefine
 		$tpl = (string) FRONTEND_MODULES_PATH . '/photogallery/layout/widgets/category_navigation_children.tpl';
@@ -79,7 +79,7 @@ class FrontendPhotogalleryModel implements FrontendTagsInterface
 
 	public static function getCategoryIdByUrl($url)
 	{
-		return (int) FrontendModel::getDB()->getVar(
+		return (int) FrontendModel::getContainer()->get('database')->getVar(
 			'SELECT category.id
 			FROM photogallery_categories AS category
 				INNER JOIN meta AS meta ON meta.id = category.meta_id
@@ -160,7 +160,7 @@ class FrontendPhotogalleryModel implements FrontendTagsInterface
 		*/
 		
 		// Get DB
-		$db = FrontendModel::getDB();
+		$db = FrontendModel::getContainer()->get('database');
 
 		// redefine
 		$tpl = (string) $tpl;
@@ -239,7 +239,7 @@ class FrontendPhotogalleryModel implements FrontendTagsInterface
 	 */
 	public static function getAlbum($data)
 	{
-		$db = FrontendModel::getDB();
+		$db = FrontendModel::getContainer()->get('database');
 		
 		$return =  (array) $db->getRecord(
 			'SELECT i.id, i.text, i.introduction, i.title, i.set_id, UNIX_TIMESTAMP(i.publish_on) AS publish_on, UNIX_TIMESTAMP(i.new_from) AS new_from,  UNIX_TIMESTAMP(i.new_until) AS new_until,
@@ -317,7 +317,7 @@ class FrontendPhotogalleryModel implements FrontendTagsInterface
 	 */
 	public static function get($URL)
 	{
-		$db = FrontendModel::getDB();
+		$db = FrontendModel::getContainer()->get('database');
 		
 		$return =  (array) $db->getRecord(
 			'SELECT i.id, i.text, i.introduction, i.title, i.set_id, UNIX_TIMESTAMP(i.publish_on) AS publish_on, UNIX_TIMESTAMP(i.new_from) AS new_from,  UNIX_TIMESTAMP(i.new_until) AS new_until ,
@@ -390,7 +390,7 @@ class FrontendPhotogalleryModel implements FrontendTagsInterface
 	 */
 	public static function getImage($URL)
 	{
-		$db = FrontendModel::getDB();
+		$db = FrontendModel::getContainer()->get('database');
 
 		$return =  (array) $db->getRecord('SELECT images.id, images.sequence, images.filename, 
 											content.album_id, content.title, content.text,  content.set_id, content.data,
@@ -464,7 +464,7 @@ class FrontendPhotogalleryModel implements FrontendTagsInterface
 	public static function getImageNavigation($id, $album_id, $sequence)
 	{
 		// get db
-		$db = FrontendModel::getDB();
+		$db = FrontendModel::getContainer()->get('database');
 		
 		$return = array();
 		
@@ -509,7 +509,7 @@ class FrontendPhotogalleryModel implements FrontendTagsInterface
 		$id = (int) $id;
 
 		// get db
-		$db = FrontendModel::getDB();
+		$db = FrontendModel::getContainer()->get('database');
 
 		// get date for current item
 		$sequence = (int) $db->getVar('SELECT i.sequence
@@ -561,7 +561,7 @@ class FrontendPhotogalleryModel implements FrontendTagsInterface
 		if(empty($category_ids)) return array();
 
 		// get db
-		$db = FrontendModel::getDB();
+		$db = FrontendModel::getContainer()->get('database');
 
 		// get date for current item
 		$sequence = (int) $db->getVar('SELECT i.sequence
@@ -612,7 +612,7 @@ class FrontendPhotogalleryModel implements FrontendTagsInterface
 	 */
 	public static function getAll($limit = 10, $offset = 0)
 	{
-		$db = FrontendModel::getDB();
+		$db = FrontendModel::getContainer()->get('database');
 		
 		$return =  (array) $db->getRecords(
 			'SELECT i.id, i.text, i.introduction, i.title, i.set_id, UNIX_TIMESTAMP(i.publish_on) AS publish_on, UNIX_TIMESTAMP(i.new_from) AS new_from,  UNIX_TIMESTAMP(i.new_until) AS new_until, m.url,
@@ -684,7 +684,7 @@ class FrontendPhotogalleryModel implements FrontendTagsInterface
 	 */
 	public static function getAllWithImages($limit = 10, $offset = 0)
 	{
-		$db = FrontendModel::getDB();
+		$db = FrontendModel::getContainer()->get('database');
 
 		$return =  (array) $db->getRecords(
 			'SELECT i.id, i.text, i.introduction, i.title, i.set_id, UNIX_TIMESTAMP(i.publish_on) AS publish_on, UNIX_TIMESTAMP(i.new_from) AS new_from,  UNIX_TIMESTAMP(i.new_until) AS new_until, m.url,
@@ -773,7 +773,7 @@ class FrontendPhotogalleryModel implements FrontendTagsInterface
 	public static function getForTags(array $ids)
 	{
 		// fetch items
-		$items = (array) FrontendModel::getDB()->getRecords(
+		$items = (array) FrontendModel::getContainer()->get('database')->getRecords(
 			'SELECT i.title, m.url
 			 FROM photogallery_albums AS i
 			 INNER JOIN meta AS m ON m.id = i.meta_id
@@ -821,7 +821,7 @@ class FrontendPhotogalleryModel implements FrontendTagsInterface
 	 */
 	public static function getExtraResolutionForKind($extra_id, $kind)
 	{
-		$return =  (array) FrontendModel::getDB()->getRecord(
+		$return =  (array) FrontendModel::getContainer()->get('database')->getRecord(
 			'SELECT i.*
 			FROM photogallery_extras_resolutions AS i
 			WHERE i.extra_id = ? AND i.kind = ?
@@ -833,7 +833,7 @@ class FrontendPhotogalleryModel implements FrontendTagsInterface
 
 	public static function getExtra($extra_id)
 	{
-		$return =  (array) FrontendModel::getDB()->getRecord(
+		$return =  (array) FrontendModel::getContainer()->get('database')->getRecord(
 			'SELECT i.*
 			FROM photogallery_extras AS i
 			WHERE i.id = ? 
@@ -852,7 +852,7 @@ class FrontendPhotogalleryModel implements FrontendTagsInterface
 	 */
 	public static function getAlbumsCount()
 	{
-		return (int) FrontendModel::getDB()->getVar('SELECT COUNT(i.id) AS count
+		return (int) FrontendModel::getContainer()->get('database')->getVar('SELECT COUNT(i.id) AS count
 														FROM photogallery_albums AS i
 														WHERE i.language = ? AND i.hidden = ? AND i.publish_on <= ? AND i.num_images_not_hidden > ?',
 														array(FRONTEND_LANGUAGE, 'N', FrontendModel::getUTCDate('Y-m-d H:i') . ':00', 0));
@@ -870,7 +870,7 @@ class FrontendPhotogalleryModel implements FrontendTagsInterface
 		$parameters[] = FrontendModel::getUTCDate('Y-m-d H:i') . ':00';
 		if(!is_null($parent_id)) $parameters[] = $parent_id;
 		
-		$return =  (array) FrontendModel::getDB()->getRecords(
+		$return =  (array) FrontendModel::getContainer()->get('database')->getRecords(
 			'SELECT c.id, c.title AS label, m.url, COUNT(c.id) AS total, c.parent_id,
 				m.keywords AS meta_keywords, m.keywords_overwrite AS meta_keywords_overwrite,
 				m.description AS meta_description, m.description_overwrite AS meta_description_overwrite,
@@ -916,7 +916,7 @@ class FrontendPhotogalleryModel implements FrontendTagsInterface
 	 */
 	public static function getAllCategoriesWithImage()
 	{
-	  $return =  (array) FrontendModel::getDB()->getRecords('SELECT c.id, c.title AS label, m.url, img.filename, img.set_id,
+	  $return =  (array) FrontendModel::getContainer()->get('database')->getRecords('SELECT c.id, c.title AS label, m.url, img.filename, img.set_id,
 	                            m.keywords AS meta_keywords, m.keywords_overwrite AS meta_keywords_overwrite,
 	                            m.description AS meta_description, m.description_overwrite AS meta_description_overwrite,
 	                            m.title AS meta_title, m.title_overwrite AS meta_title_overwrite, m.data AS meta_data
@@ -944,7 +944,7 @@ class FrontendPhotogalleryModel implements FrontendTagsInterface
 	/*
 	public static function getAllCategoriesWithImage()
 	{
-		$return =  (array) FrontendModel::getDB()->getRecords('SELECT c.id, c.title AS label, m.url, COUNT(c.id) AS total,
+		$return =  (array) FrontendModel::getContainer()->get('database')->getRecords('SELECT c.id, c.title AS label, m.url, COUNT(c.id) AS total,
 															m.keywords AS meta_keywords, m.keywords_overwrite AS meta_keywords_overwrite,
 															m.description AS meta_description, m.description_overwrite AS meta_description_overwrite,
 															m.title AS meta_title, m.title_overwrite AS meta_title_overwrite, m.data AS meta_data
@@ -967,12 +967,12 @@ class FrontendPhotogalleryModel implements FrontendTagsInterface
 			// unserialize
 			if(isset($row['meta_data'])) $row['meta_data'] = @unserialize($row['meta_data']);
 
-			$row['album'] = (array) FrontendModel::getDB()->getRecord('SELECT *
+			$row['album'] = (array) FrontendModel::getContainer()->get('database')->getRecord('SELECT *
 															FROM photogallery_albums
 															WHERE category_id = ? AND hidden = ? AND publish_on <= ?
 															ORDER BY sequence ASC LIMIT 1', array($row['id'], 'N', FrontendModel::getUTCDate('Y-m-d H:i') . ':00'));
 
-			$row['image'] = (array) FrontendModel::getDB()->getRecord('SELECT *
+			$row['image'] = (array) FrontendModel::getContainer()->get('database')->getRecord('SELECT *
 															FROM photogallery_sets_images
 															WHERE set_id = ?
 															ORDER BY sequence ASC LIMIT 1', array($row['album']['set_id']));
@@ -990,7 +990,7 @@ class FrontendPhotogalleryModel implements FrontendTagsInterface
 	 */
 	public static function getAllForCategoryCount($categoryURL)
 	{
-		return (int) FrontendModel::getDB()->getVar(
+		return (int) FrontendModel::getContainer()->get('database')->getVar(
 			'SELECT COUNT(DISTINCT i.id) AS count
 			FROM photogallery_albums AS i
 				INNER JOIN photogallery_categories_albums AS a ON i.id = a.album_id
@@ -1020,7 +1020,7 @@ class FrontendPhotogalleryModel implements FrontendTagsInterface
 	 */
 	public static function getAllForCategory($categoryURL, $limit = 10, $offset = 0, $ignoreLimit = false)
 	{
-		$db = FrontendModel::getDB();
+		$db = FrontendModel::getContainer()->get('database');
 		
 		// get the items
 		$return = (array) $db->getRecords(
@@ -1102,7 +1102,7 @@ class FrontendPhotogalleryModel implements FrontendTagsInterface
 		if(!$id) return array();
 
 		// get db
-		$db = FrontendModel::getDB(true);
+		$db = FrontendModel::getContainer()->get('database');
 
 		// get category
 		$category = self::getCategoryById((int) $id);
@@ -1127,7 +1127,7 @@ class FrontendPhotogalleryModel implements FrontendTagsInterface
 	public static function getCategoryById($id)
 	{
 		// get db
-		$db = FrontendModel::getDB();
+		$db = FrontendModel::getContainer()->get('database');
 
 		$category = (array) $db->getRecord(
 			'SELECT i.*,
@@ -1155,7 +1155,7 @@ class FrontendPhotogalleryModel implements FrontendTagsInterface
 	 */
 	public static function getAllForCategoryNavigation($categoryURL)
 	{
-		$db = FrontendModel::getDB();
+		$db = FrontendModel::getContainer()->get('database');
 		
 		// get the items
 		$return = (array) $db->getRecords(
@@ -1230,7 +1230,7 @@ class FrontendPhotogalleryModel implements FrontendTagsInterface
 	
 	public static function search(array $ids)
 	{
-		$items = (array) FrontendModel::getDB()->getRecords(
+		$items = (array) FrontendModel::getContainer()->get('database')->getRecords(
 			'SELECT i.id, i.title, i.introduction, i.text, m.url
 			 FROM photogallery_albums AS i
 			 INNER JOIN meta AS m ON i.meta_id = m.id
@@ -1257,7 +1257,7 @@ class FrontendPhotogalleryModel implements FrontendTagsInterface
 		
 		if(empty($item['category_ids'])) return array();
 		
-		$db = FrontendModel::getDB();
+		$db = FrontendModel::getContainer()->get('database');
 		
 		// Get other projects
 		$related = (array) $db ->getRecords(
@@ -1295,7 +1295,7 @@ class FrontendPhotogalleryModel implements FrontendTagsInterface
 		
 		if(empty($item)) return array();
 		
-		$db = FrontendModel::getDB();
+		$db = FrontendModel::getContainer()->get('database');
 		
 		$related = FrontendTagsModel::getRelatedItemsByTags((int) $item['id'], 'photogallery', 'photogallery');
 		

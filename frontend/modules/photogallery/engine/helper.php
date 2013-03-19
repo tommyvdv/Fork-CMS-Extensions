@@ -28,7 +28,7 @@ class FrontendPhotogalleryHelper
 
 		$filePath = $themePath . $file;
 
-		if(SpoonFile::exists(PATH_WWW . str_replace(PATH_WWW, '', $filePath))) return $filePath;
+		if(SpoonFile::exists(FrontendModel->getContainer()->getParameter('site.path_www') . str_replace(FrontendModel->getContainer()->getParameter('site.path_www'), '', $filePath))) return $filePath;
 
 		return '/frontend/modules/' . $module . '/js' . $file;
 	}
@@ -48,7 +48,7 @@ class FrontendPhotogalleryHelper
 
 		$filePath = $themePath . $file;
 
-		if(SpoonFile::exists(PATH_WWW . str_replace(PATH_WWW, '', $filePath))) return $filePath;
+		if(SpoonFile::exists(FrontendModel->getContainer()->getParameter('site.path_www') . str_replace(FrontendModel->getContainer()->getParameter('site.path_www'), '', $filePath))) return $filePath;
 
 		return '/frontend/modules/' . $module . '/layout/css' . $file;
 	}

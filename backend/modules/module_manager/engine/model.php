@@ -37,7 +37,7 @@ class BackendModulemanagerModel
 	public static function getModules()
 	{
 		// get installed modules
-		$installedModules = (array) BackendModel::getDB()->getRecords('SELECT name FROM modules', null, 'name');
+		$installedModules = (array) BackendModel::getContainer()->get('database')->getRecords('SELECT name FROM modules', null, 'name');
 
 		// get modules present on the filesystem
 		$modules = SpoonDirectory::getList(BACKEND_MODULES_PATH);
@@ -88,7 +88,7 @@ class BackendModulemanagerModel
 
 		// init installer
 		$installer = new $class(
-			BackendModel::getDB(true),
+			BackendModel::getContainer()->get('database'),
 			BL::getActiveLanguages(),
 			array_keys(BL::getInterfaceLanguages()),
 			false,
@@ -146,7 +146,7 @@ class BackendModulemanagerModel
 	 */
 	public static function actionExists($id)
 	{
-		return (bool) BackendModel::getDB()->getVar('SELECT i.id
+		return (bool) BackendModel::getContainer()->get('database')->getVar('SELECT i.id
 														FROM groups_rights_actions AS i
 														WHERE i.id = ?',
 														array((int) $id));
@@ -162,7 +162,7 @@ class BackendModulemanagerModel
 	 */
 	public static function delete($module)
 	{
-		$db = BackendModel::getDB();
+		$db = BackendModel::getContainer()->get('database');
 		$module = (string) $module;
 
 		$db->delete('modules', 'name = ?', array($module));
@@ -187,7 +187,7 @@ class BackendModulemanagerModel
 	 */
 	public static function deleteAction($id)
 	{
-		BackendModel::getDB()->delete('groups_rights_actions', 'id = ?', array((int) $id));
+		BackendModel::getContainer()->get('database')->delete('groups_rights_actions', 'id = ?', array((int) $id));
 	}
 
 
@@ -199,7 +199,7 @@ class BackendModulemanagerModel
 	 */
 	public static function exists($module)
 	{
-		return (bool) BackendModel::getDB()->getVar('SELECT i.name
+		return (bool) BackendModel::getContainer()->get('database')->getVar('SELECT i.name
 														FROM modules AS i
 														WHERE i.name = ?',
 														array((string) $module));
@@ -214,7 +214,7 @@ class BackendModulemanagerModel
 	 */
 	public static function get($module)
 	{
-		return (array) BackendModel::getDB()->getRecord('SELECT i.*
+		return (array) BackendModel::getContainer()->get('database')->getRecord('SELECT i.*
 															FROM modules AS i
 															WHERE i.name = ? LIMIT 1',array((string) $module));
 	}
@@ -228,7 +228,7 @@ class BackendModulemanagerModel
 	 */
 	public static function getAction($id)
 	{
-		return (array) BackendModel::getDB()->getRecord('SELECT i.*
+		return (array) BackendModel::getContainer()->get('database')->getRecord('SELECT i.*
 														FROM groups_rights_actions AS i
 														WHERE i.id = ? LIMIT 1',
 														array((int) $id));
@@ -242,7 +242,7 @@ class BackendModulemanagerModel
 	 */
 	public static function getGroupsForDropdown()
 	{
-		return (array) BackendModel::getDB()->getPairs('SELECT i.id, i.name
+		return (array) BackendModel::getContainer()->get('database')->getPairs('SELECT i.id, i.name
 															FROM groups AS i');
 	}
 
@@ -307,7 +307,7 @@ class BackendModulemanagerModel
 	 */
 	public static function getModuleActions($module)
 	{
-		return (array) BackendModel::getDB()->getColumn('SELECT i.action
+		return (array) BackendModel::getContainer()->get('database')->getColumn('SELECT i.action
 															FROM groups_rights_actions AS i
 															WHERE i.module = ?',array((string) $module));
 	}
@@ -320,7 +320,7 @@ class BackendModulemanagerModel
 	 */
 	public static function getModulesForDropdown()
 	{
-		return (array) BackendModel::getDB()->getPairs('SELECT i.name AS id, i.name FROM modules AS i');
+		return (array) BackendModel::getContainer()->get('database')->getPairs('SELECT i.name AS id, i.name FROM modules AS i');
 	}
 
 
@@ -332,7 +332,7 @@ class BackendModulemanagerModel
 	 */
 	public static function insertAction(array $item)
 	{
-		return BackendModel::getDB(true)->insert('groups_rights_actions', $item);
+		return BackendModel::getContainer()->get('database')->insert('groups_rights_actions', $item);
 	}
 
 
@@ -348,7 +348,7 @@ class BackendModulemanagerModel
 	 */
 	public static function rightActionExists($group_id, $action, $module, $level)
 	{
-		return (bool) BackendModel::getDB()->getVar('SELECT i.id
+		return (bool) BackendModel::getContainer()->get('database')->getVar('SELECT i.id
 														FROM groups_rights_actions AS i
 														WHERE i.group_id = ? AND i.module = ? AND i.action = ? AND i.level = ?',
 														array((int) $group_id, (string) $module, (string) $action,(int) $level));
@@ -363,7 +363,7 @@ class BackendModulemanagerModel
 	 */
 	public static function updateAction(array $item)
 	{
-		BackendModel::getDB(true)->update('groups_rights_actions', $item, 'id = ?', array( (int) $item['id']));
+		BackendModel::getContainer()->get('database')->update('groups_rights_actions', $item, 'id = ?', array( (int) $item['id']));
 	}
 	
 

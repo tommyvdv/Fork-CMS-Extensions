@@ -179,7 +179,7 @@ class BackendPhotogalleryEdit extends BackendBaseActionEdit
 		$url404 = BackendModel::getURL(404);
 
 		// parse additional variables
-		if($url404 != $url) $this->tpl->assign('detailURL', SITE_URL . $url);
+		if($url404 != $url) $this->tpl->assign('detailURL', BackendModel->getContainer()->getParameter('site.url') . $url);
 
 		// fetch proper slug
 		$this->record['url'] = $this->meta->getURL();
@@ -276,7 +276,7 @@ class BackendPhotogalleryEdit extends BackendBaseActionEdit
 				BackendSearchModel::saveIndex('photogallery', $item['id'], array('title' => $item['title'], 'text' => $item['text']));
 
 				// ping
-				if(BackendModel::getModuleSetting($this->getModule(), 'ping_services', false)) BackendModel::ping(SITE_URL . BackendModel::getURLForBlock('photogallery', 'detail') . '/' . $this->meta->getURL());
+				if(BackendModel::getModuleSetting($this->getModule(), 'ping_services', false)) BackendModel::ping(BackendModel->getContainer()->getParameter('site.url') . BackendModel::getURLForBlock('photogallery', 'detail') . '/' . $this->meta->getURL());
 				
 				// save the item
 			  	$id = BackendPhotogalleryModel::updateAlbum($item);
