@@ -85,7 +85,7 @@ class FrontendPhotogalleryRSS extends FrontendBaseBlock
 	private function parse()
 	{
 		// get vars
-		$title = (isset($this->settings['rss_title_' . FRONTEND_LANGUAGE])) ? $this->settings['rss_title_' . FRONTEND_LANGUAGE] : FrontendModel::getModuleSetting('photogallery', 'rss_title_' . FRONTEND_LANGUAGE, FrontendModel->getContainer()->getParameter('site.default_title'));
+		$title = (isset($this->settings['rss_title_' . FRONTEND_LANGUAGE])) ? $this->settings['rss_title_' . FRONTEND_LANGUAGE] : FrontendModel::getModuleSetting('photogallery', 'rss_title_' . FRONTEND_LANGUAGE, SITE_DEFAULT_TITLE);
 		$link = SITE_URL . FrontendNavigation::getURLForBlock('photogallery');
 		$description = (isset($this->settings['rss_description_' . FRONTEND_LANGUAGE])) ? $this->settings['rss_description_' . FRONTEND_LANGUAGE] : null;
 
