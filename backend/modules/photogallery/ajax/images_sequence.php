@@ -30,7 +30,6 @@ class BackendPhotogalleryAjaxImagesSequence extends BackendBaseAJAXAction
 		$ids = (array) explode(',', rtrim($newIdSequence, ','));
 		$count = count($ids);
 
-
 		// loop id's and set new sequence
 		foreach($ids as $i => $id)
 		{
