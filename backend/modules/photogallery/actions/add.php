@@ -93,7 +93,7 @@ class BackendPhotogalleryAdd extends BackendBaseActionAdd
 		$url404 = BackendModel::getURL(404);
 
 		// parse additional variables
-		if($url404 != $url) $this->tpl->assign('detailURL', BackendModel->getContainer()->getParameter('site.url') . $url);
+		if($url404 != $url) $this->tpl->assign('detailURL', SITE_URL . $url);
 		
 		// parse categories to template
 		$this->tpl->assign('categories', $this->categories);
@@ -203,7 +203,7 @@ class BackendPhotogalleryAdd extends BackendBaseActionAdd
 				BackendSearchModel::saveIndex('photogallery', $item['id'], array('title' => $item['title'], 'text' => $item['text']));
 
 				// ping
-				if(BackendModel::getModuleSetting($this->getModule(), 'ping_services', false)) BackendModel::ping(BackendModel->getContainer()->getParameter('site.url') . BackendModel::getURLForBlock('photogallery', 'detail') . '/' . $this->meta->getURL());
+				if(BackendModel::getModuleSetting($this->getModule(), 'ping_services', false)) BackendModel::ping(SITE_URL . BackendModel::getURLForBlock('photogallery', 'detail') . '/' . $this->meta->getURL());
 
 			  	// everything is saved, so redirect
 			  	$this->redirect(BackendModel::createURLForAction('add_images_choose') . '&report=added-album&album_id=' . $item['id']);

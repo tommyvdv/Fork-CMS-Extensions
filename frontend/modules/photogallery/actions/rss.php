@@ -86,7 +86,7 @@ class FrontendPhotogalleryRSS extends FrontendBaseBlock
 	{
 		// get vars
 		$title = (isset($this->settings['rss_title_' . FRONTEND_LANGUAGE])) ? $this->settings['rss_title_' . FRONTEND_LANGUAGE] : FrontendModel::getModuleSetting('photogallery', 'rss_title_' . FRONTEND_LANGUAGE, FrontendModel->getContainer()->getParameter('site.default_title'));
-		$link = FrontendModel->getContainer()->getParameter('site.url') . FrontendNavigation::getURLForBlock('photogallery');
+		$link = SITE_URL . FrontendNavigation::getURLForBlock('photogallery');
 		$description = (isset($this->settings['rss_description_' . FRONTEND_LANGUAGE])) ? $this->settings['rss_description_' . FRONTEND_LANGUAGE] : null;
 
 		// create new rss instance
@@ -117,17 +117,17 @@ class FrontendPhotogalleryRSS extends FrontendBaseBlock
 						if($this->data['action'] == 'paged')
 						{
 							// append image
-							$description .= '		<a href="' . FrontendModel->getContainer()->getParameter('site.url') . $image['full_url'] . '"><img src="' . FrontendModel->getContainer()->getParameter('site.url') . FrontendPhotogalleryHelper::createImage(null, $image['set_id'], $image['filename'], $this->thumbnail_resolution) . '" /></a>';
+							$description .= '		<a href="' . SITE_URL . $image['full_url'] . '"><img src="' . SITE_URL . FrontendPhotogalleryHelper::createImage(null, $image['set_id'], $image['filename'], $this->thumbnail_resolution) . '" /></a>';
 						}
 						elseif($this->data['action'] == 'lightbox')
 						{
 							// append image
-							$description .= '		<a href="' . FrontendModel::addURLParameters($link, array(FL::act('LightboxImage') => $image['id'])) . '"><img src="' . FrontendModel->getContainer()->getParameter('site.url') . FrontendPhotogalleryHelper::createImage(null, $image['set_id'], $image['filename'], $this->thumbnail_resolution)  . '" /></a>';
+							$description .= '		<a href="' . FrontendModel::addURLParameters($link, array(FL::act('LightboxImage') => $image['id'])) . '"><img src="' . SITE_URL . FrontendPhotogalleryHelper::createImage(null, $image['set_id'], $image['filename'], $this->thumbnail_resolution)  . '" /></a>';
 						}
 						else
 						{
 							// append image
-							$description .= '		<img src="' . FrontendModel->getContainer()->getParameter('site.url') . FrontendPhotogalleryHelper::createImage(null, $image['set_id'], $image['filename'], $this->thumbnail_resolution) . '" />';
+							$description .= '		<img src="' . SITE_URL . FrontendPhotogalleryHelper::createImage(null, $image['set_id'], $image['filename'], $this->thumbnail_resolution) . '" />';
 						}
 						$description .= '	</p>';
 					}
