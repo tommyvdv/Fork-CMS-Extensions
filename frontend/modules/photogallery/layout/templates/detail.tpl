@@ -53,12 +53,12 @@
 				{iteration:blockPhotogalleryAlbum.images}
 				<li>
 					{option:!blockPhotogalleryAlbum.images.data.external_link}
-						<a data-image-id="{$blockPhotogalleryAlbum.images.id}" href="{$var|createimage:{$blockPhotogalleryAlbum.images.set_id}:{$blockPhotogalleryAlbum.images.filename}:{$moduleProjectsDetailLargeResolution.width}:{$moduleProjectsDetailLargeResolution.height}:{$moduleProjectsDetailLargeResolution.method}}" rel="{$blockPhotogalleryAlbum.id}" class="linkedImage linkOverlay" title="{$blockPhotogalleryAlbum.title}">
+						<a data-image-id="{$blockPhotogalleryAlbum.images.id}" href="{$var|createimage:{$blockPhotogalleryAlbum.images.set_id}:{$blockPhotogalleryAlbum.images.filename}:{$modulePhotogalleryDetailLargeResolution.width}:{$modulePhotogalleryDetailLargeResolution.height}:{$modulePhotogalleryDetailLargeResolution.method}}" rel="{$blockPhotogalleryAlbum.id}" class="linkedImage linkOverlay" title="{$blockPhotogalleryAlbum.title}">
 					{/option:!blockPhotogalleryAlbum.images.data.external_link}
 					{option:blockPhotogalleryAlbum.images.data.external_link}
 						<a data-image-id="{$blockPhotogalleryAlbum.images.id}" href="{$blockPhotogalleryAlbum.images.data.external_link.url}" rel="{$blockPhotogalleryAlbum.id}" class="linkedImage linkOverlay" title="{$blockPhotogalleryAlbum.title}">
 					{/option:blockPhotogalleryAlbum.images.data.external_link}
-						<img src="{$blockPhotogalleryAlbum.images.thumbnail_url}" />
+						<img src="{$var|createimage:{$blockPhotogalleryAlbum.images.set_id}:{$blockPhotogalleryAlbum.images.filename}:{$modulePhotogalleryDetailThumbnailResolution.width}:{$modulePhotogalleryDetailThumbnailResolution.height}:{$modulePhotogalleryDetailThumbnailResolution.method}}" />
 					</a>
 					<div class="caption">
 						{option:blockPhotogalleryAlbum.images.title}<h3>{$blockPhotogalleryAlbum.images.title}</h3>{/option:blockPhotogalleryAlbum.images.title}
