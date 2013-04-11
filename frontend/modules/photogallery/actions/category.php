@@ -82,6 +82,8 @@ class FrontendPhotogalleryCategory extends FrontendBaseBlock
 		// get resolution
 		$thumbnail_resolution = FrontendPhotogalleryModel::getExtraResolutionForKind($this->data['extra_id'], 'album_overview_thumbnail');
 
+   		$this->tpl->assign('modulePhotogalleryCategoryThumbnailResolution', $thumbnail_resolution);
+
 		// validate category
 		if($requestedCategory == 'false')
 		{
@@ -121,11 +123,6 @@ class FrontendPhotogalleryCategory extends FrontendBaseBlock
 				foreach($this->categories[$cat_key]['albums'] as $album_cat_key => $album_cat_row)
 				{
 					$this->categories[$cat_key]['albums'][$album_cat_key]['tags'] = FrontendTagsModel::getForItem($this->getModule(), $album_cat_row['id']);
-					
-					if(!empty($album_cat_row['image']))
-					{
-						$this->categories[$cat_key]['albums'][$album_cat_key]['image']['thumbnail_url'] =  FRONTEND_FILES_URL . '/' . $this->getModule() . '/sets/frontend/' . $album_cat_row['image']['set_id'] . '/' . $thumbnail_resolution['width'] . 'x' . $thumbnail_resolution['height'] . '_' . $thumbnail_resolution['method'] . '/' . $album_cat_row['image']['filename'];
-					}
 				}
 			}
 		}
@@ -157,10 +154,6 @@ class FrontendPhotogalleryCategory extends FrontendBaseBlock
 			foreach($this->items as &$row)
 			{
 				$row['tags'] = FrontendTagsModel::getForItem($this->getModule(), $row['id']);
-				if(!empty($row['image']))
-				{
-					$row['image']['thumbnail_url'] = FrontendPhotogalleryHelper::getImageURL($this->getModule(), $row['image'], $thumbnail_resolution);
-				}
 			}
 		}
 	}

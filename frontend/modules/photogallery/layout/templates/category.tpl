@@ -50,7 +50,8 @@
 						
 						{* Image *}
 							<a href="{$blockPhotogalleryCategories.albums.full_url}" class="linkedImage" title="{$blockPhotogalleryCategories.albums.title}">
-								<img src="{$blockPhotogalleryCategories.albums.image.thumbnail_url}" alt="{$blockPhotogalleryCategories.albums.image.title}" />
+								<img src="{$var|createimage:{$blockPhotogalleryCategories.set_id}:{$blockPhotogalleryCategories.image.filename}:{$modulePhotogalleryCatergoryThumbnailResolution.width}:{$modulePhotogalleryCatergoryThumbnailResolution.height}:{$modulePhotogalleryCatergoryThumbnailResolution.method}}" />
+
 							</a>
 					
 					{/iteration:blockPhotogalleryCategories.albums}
@@ -102,8 +103,7 @@
 				
 				{* Image *}
 					<a href="{$blockPhotogalleryCategoryAlbums.full_url}" class="linkedImage" title="{$blockPhotogalleryCategoryAlbums.image.title}">
-						<img src="{$blockPhotogalleryCategoryAlbums.image.thumbnail_url}" alt="{$blockPhotogalleryCategoryAlbums.image.title}" />
-					</a>
+	<img src="{$var|createimage:{$blockPhotogalleryCategories.set_id}:{$blockPhotogalleryCategories.image.filename}:{$modulePhotogalleryCatergoryThumbnailResolution.width}:{$modulePhotogalleryCatergoryThumbnailResolution.height}:{$modulePhotogalleryCatergoryThumbnailResolution.method}}" />					</a>
 			
 			{/iteration:blockPhotogalleryCategoryAlbums}
 		{/option:blockPhotogalleryCategoryAlbums}

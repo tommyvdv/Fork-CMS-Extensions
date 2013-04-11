@@ -24,7 +24,7 @@
             animationLoop = false;
             sync = '#flexsliderNavigation' + slideshowId;
             randomize = false;
-            directionNav = false;
+            directionNav = directionNav;
             pauseOnHover = false;
 
             $(sync).flexslider({
@@ -47,7 +47,7 @@
 			controlNav: controlNav,
             sync: sync,
             animationLoop: animationLoop,
-            slideshow: slideshow,
+            slideshow: slideshow
     	});
 
     })

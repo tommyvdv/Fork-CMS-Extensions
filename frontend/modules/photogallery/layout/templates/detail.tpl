@@ -61,8 +61,12 @@
 						<img src="{$var|createimage:{$blockPhotogalleryAlbum.images.set_id}:{$blockPhotogalleryAlbum.images.filename}:{$modulePhotogalleryDetailThumbnailResolution.width}:{$modulePhotogalleryDetailThumbnailResolution.height}:{$modulePhotogalleryDetailThumbnailResolution.method}}" />
 					</a>
 					<div class="caption">
-						{option:blockPhotogalleryAlbum.images.title}<h3>{$blockPhotogalleryAlbum.images.title}</h3>{/option:blockPhotogalleryAlbum.images.title}
+						{option:!blockPhotogalleryAlbum.images.title_hidden}
+							{option:blockPhotogalleryAlbum.images.title}
+								<h3>{$blockPhotogalleryAlbum.images.title}</h3>
+							{/option:blockPhotogalleryAlbum.images.title}
 						{$blockPhotogalleryAlbum.images.text}
+						{/option:!blockPhotogalleryAlbum.images.title_hidden}
 					</div>
 				</li>
 				{/iteration:blockPhotogalleryAlbum.images}
@@ -78,7 +82,7 @@
 				{iteration:blockPhotogalleryAlbum.images}
 				<li>
 					<a href="{$blockPhotogalleryAlbum.images.full_url}" rel="{$blockPhotogalleryAlbum.id}" class="linkedImage" title="{$blockPhotogalleryAlbum.image.title}">
-						<img src="{$blockPhotogalleryAlbum.images.thumbnail_url}" />
+						<img src="{$var|createimage:{$blockPhotogalleryAlbum.images.set_id}:{$blockPhotogalleryAlbum.images.filename}:{$modulePhotogalleryDetailThumbnailResolution.width}:{$modulePhotogalleryDetailThumbnailResolution.height}:{$modulePhotogalleryDetailThumbnailResolution.method}}" />
 					</a>
 				</li>
 				{/iteration:blockPhotogalleryAlbum.images}
