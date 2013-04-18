@@ -50,7 +50,7 @@
 						
 						{* Image *}
 							<a href="{$blockPhotogalleryCategories.albums.full_url}" class="linkedImage" title="{$blockPhotogalleryCategories.albums.title}">
-								<img src="{$var|createimage:{$blockPhotogalleryCategories.set_id}:{$blockPhotogalleryCategories.image.filename}:{$modulePhotogalleryCatergoryThumbnailResolution.width}:{$modulePhotogalleryCatergoryThumbnailResolution.height}:{$modulePhotogalleryCatergoryThumbnailResolution.method}}" />
+								<img src="{$var|createimage:{$blockPhotogalleryCategories.set_id}:{$blockPhotogalleryCategories.image.filename}:{$modulePhotogalleryCategoryThumbnailResolution.width}:{$modulePhotogalleryCategoryThumbnailResolution.height}:{$modulePhotogalleryCategoryThumbnailResolution.method}}" />
 
 							</a>
 					
@@ -66,7 +66,6 @@
 	{option:blockPhotogalleryCategoryView}
 	
 		<h1>{$lblOnCategory|sprintf:{$blockPhotogalleryCategory.label}|ucfirst}</h1>
-
 		{option:blockPhotogalleryCategoryAlbums}
 			{iteration:blockPhotogalleryCategoryAlbums}
 			
@@ -103,7 +102,7 @@
 				
 				{* Image *}
 					<a href="{$blockPhotogalleryCategoryAlbums.full_url}" class="linkedImage" title="{$blockPhotogalleryCategoryAlbums.image.title}">
-	<img src="{$var|createimage:{$blockPhotogalleryCategories.set_id}:{$blockPhotogalleryCategories.image.filename}:{$modulePhotogalleryCatergoryThumbnailResolution.width}:{$modulePhotogalleryCatergoryThumbnailResolution.height}:{$modulePhotogalleryCatergoryThumbnailResolution.method}}" />					</a>
+	<img src="{$var|createimage:{$blockPhotogalleryCategoryAlbums.set_id}:{$blockPhotogalleryCategoryAlbums.image.filename}:{$modulePhotogalleryCategoryThumbnailResolution.width}:{$modulePhotogalleryCategoryThumbnailResolution.height}:{$modulePhotogalleryCategoryThumbnailResolution.method}}" />					</a>
 			
 			{/iteration:blockPhotogalleryCategoryAlbums}
 		{/option:blockPhotogalleryCategoryAlbums}

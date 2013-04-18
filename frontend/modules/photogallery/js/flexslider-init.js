@@ -17,6 +17,14 @@
         var slider = '#flexslider' + slideshowId;
         var pauseOnHover = slideshowSettings.pause_on_hover;
 
+        var animation = slideshowSettings.animation;
+        var slideshow_item_width = parseInt(slideshowSettings.slideshow_item_width);
+
+        if(jQuery.type(slideshow_item_width) == 'number')
+        {
+            if( slideshow_item_width > 0) animation = 'slide';
+        }
+
         if(controlTypeIsThumbnails)
         {
             controlNav = false;
@@ -47,7 +55,9 @@
 			controlNav: controlNav,
             sync: sync,
             animationLoop: animationLoop,
-            slideshow: slideshow
+            slideshow: slideshow,
+            animation: animation,
+            itemWidth: slideshow_item_width
     	});
 
     })

@@ -156,7 +156,6 @@ class BackendPhotogalleryEditImage extends BackendBaseActionEdit
 			// no errors?
 			if($this->frm->isCorrect())
 			{
-
 				// init var
 				$data = null;
 
@@ -186,8 +185,9 @@ class BackendPhotogalleryEditImage extends BackendBaseActionEdit
 				// Update some statistics
 				BackendPhotogalleryModel::updateSetStatistics($this->record['set_id']);
 
+
 			  	// everything is saved, so redirect to the overview
-			  	$this->redirect(BackendModel::createURLForAction('edit') . '&report=edited-image&id=' . $content['album_id'] . '&highlight=row-' . $item['id'] . '#tabImages');
+			  	$this->redirect(BackendModel::createURLForAction('edit_image') . '&report=edited-image&album_id=' . $this->album_id . '&id=' . $this->id );
 			}
 		}
 	}

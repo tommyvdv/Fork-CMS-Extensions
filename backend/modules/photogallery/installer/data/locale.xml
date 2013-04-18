@@ -73,6 +73,41 @@
 			</item>
 		</core>
 		<photogallery>
+			<item type="label" name="ShowInAlbums">
+				<translation language="nl"><![CDATA[toon in de albums]]></translation>
+				<translation language="en"><![CDATA[show in albums]]></translation>
+			</item>
+
+			<item type="label" name="HideTitle">
+				<translation language="nl"><![CDATA[verberg titel]]></translation>
+				<translation language="en"><![CDATA[hide title]]></translation>
+			</item>
+
+			<item type="label" name="Fade">
+				<translation language="nl"><![CDATA[fade]]></translation>
+				<translation language="en"><![CDATA[fade]]></translation>
+			</item>
+
+			<item type="label" name="Slide">
+				<translation language="nl"><![CDATA[slide]]></translation>
+				<translation language="en"><![CDATA[slide]]></translation>
+			</item>
+
+			<item type="label" name="Animation">
+				<translation language="nl"><![CDATA[animatie]]></translation>
+				<translation language="en"><![CDATA[animation]]></translation>
+			</item>
+
+			<item type="label" name="SlideshowItemWidth">
+				<translation language="nl"><![CDATA[slideshow element breedte]]></translation>
+				<translation language="en"><![CDATA[slideshow item width]]></translation>
+			</item>
+
+		
+			<item type="message" name="HelpShowInAlbums">
+				<translation language="nl"><![CDATA[Door dit uit te vinken, zal het album niet getoond worden in het album overzicht.]]></translation>
+				<translation language="en"><![CDATA[By unchecking this, the album will not show up in the album overview.]]></translation>
+			</item>
 
 			<item type="label" name="Embed">
 				<translation language="nl"><![CDATA[embed code]]></translation>

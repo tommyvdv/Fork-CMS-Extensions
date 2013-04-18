@@ -95,8 +95,9 @@ class BackendPhotogalleryEditWidgetSlideshow extends BackendBaseActionEdit
 		$this->frm->addText('slideshow_speed', $this->record['data']['settings']['slideshow_speed']);
 		$this->frm->addText('animation_speed', $this->record['data']['settings']['animation_speed']);
 		$this->frm->addDropdown('pagination_type', array('bullets' => ucfirst(BL::getLabel('Bullets')), 'numbers' => ucfirst(BL::getLabel('Numbers')) , 'thumbnails' => ucfirst(BL::getLabel('Thumbnails'))), $this->record['data']['settings']['pagination_type']);
-
-
+		
+		$this->frm->addDropdown('animation', array('fade' => ucfirst(BL::getLabel('Fade')), 'slide' => ucfirst(BL::getLabel('Slide'))), $this->record['data']['settings']['animation']);
+		$this->frm->addText('slideshow_item_width', $this->record['data']['settings']['slideshow_item_width']);
 	}
 
 	/**
@@ -136,6 +137,8 @@ class BackendPhotogalleryEditWidgetSlideshow extends BackendBaseActionEdit
 			$this->frm->getField('slideshow_speed')->isFilled(BL::getError('FieldIsRequired'));
 			$this->frm->getField('animation_speed')->isFilled(BL::getError('FieldIsRequired'));
 
+			if($this->frm->getField('slideshow_item_width')->isFilled(BL::getError('FieldIsRequired'))) $this->frm->getField('slideshow_item_width')->isNumeric(BL::getError('InvalidNumber'));
+
 			// no errors?
 			if($this->frm->isCorrect())
 			{
@@ -156,6 +159,8 @@ class BackendPhotogalleryEditWidgetSlideshow extends BackendBaseActionEdit
 												'slideshow_speed' => $this->frm->getField('slideshow_speed')->getValue(),
 												'animation_speed' => $this->frm->getField('animation_speed')->getValue(),
 												'pagination_type' => $this->frm->getField('pagination_type')->getValue(),
+												'animation' => $this->frm->getField('animation')->getValue(),
+												'slideshow_item_width' => $this->frm->getField('slideshow_item_width')->getValue(),
 										)
 									)
 								);

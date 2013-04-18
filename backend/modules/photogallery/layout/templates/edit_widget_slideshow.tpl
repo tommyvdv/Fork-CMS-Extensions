@@ -78,6 +78,18 @@
 				{$txtAnimationSpeed} {$txtAnimationSpeedError}
 			</p>
 			
+			<p>
+				<label for="animation">{$lblAnimation|ucfirst}</label>
+				{$ddmAnimation} {$ddmAnimationError}
+			</p>
+
+			<p>
+				<label for="slideshowItemWidth">{$lblSlideshowItemWidth|ucfirst}</label>
+				{$txtSlideshowItemWidth} {$txtSlideshowItemWidthError}
+			</p>
+
+	
+			
 		</div>
 	</div>
 	

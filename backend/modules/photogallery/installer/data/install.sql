@@ -11,6 +11,7 @@ CREATE TABLE `photogallery_albums` (
   `edited_on` datetime NOT NULL,
   `publish_on` datetime NOT NULL,
   `hidden` enum('Y','N') COLLATE utf8_unicode_ci NOT NULL DEFAULT 'N',
+  `show_in_albums` enum('Y','N') COLLATE utf8_unicode_ci NOT NULL DEFAULT 'Y',
   `num_images` int(11) NOT NULL,
   `num_images_hidden` int(11) NOT NULL,
   `num_images_not_hidden` int(11) NOT NULL,

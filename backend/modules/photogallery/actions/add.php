@@ -74,6 +74,8 @@ class BackendPhotogalleryAdd extends BackendBaseActionAdd
 			$this->frm->getField('new_date_until')->setAttribute('disabled', 'disabled');
 		}
 
+		$this->frm->addCheckbox('show_in_albums', true);
+
 		// meta
 		$this->meta = new BackendMeta($this->frm, null, 'title', true);
 
@@ -136,6 +138,7 @@ class BackendPhotogalleryAdd extends BackendBaseActionAdd
 				$item['created_on'] = BackendModel::getUTCDate();
 				$item['edited_on'] = BackendModel::getUTCDate();
 				$item['hidden'] = $this->frm->getField('hidden')->getValue();
+				$item['show_in_albums'] = $this->frm->getField('show_in_albums')->isChecked() ? 'Y' : 'N';
 				$item['publish_on'] = BackendModel::getUTCDate(null, BackendModel::getUTCTimestamp($this->frm->getField('publish_on_date'), $this->frm->getField('publish_on_time')));
 				$item['sequence'] = (int) BackendPhotogalleryModel::getSequenceAlbum() + 1;
 				$item['user_id'] = BackendAuthentication::getUser()->getUserId();

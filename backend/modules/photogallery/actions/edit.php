@@ -102,6 +102,8 @@ class BackendPhotogalleryEdit extends BackendBaseActionEdit
 			$this->frm->getField('new_date_until')->setAttribute('disabled', 'disabled');
 		}
 		
+		$this->frm->addCheckbox('show_in_albums', $this->record['show_in_albums'] === 'Y');
+
 		// meta
 		$this->meta = new BackendMeta($this->frm, $this->record['meta_id'], 'title', true);
 		
@@ -230,6 +232,7 @@ class BackendPhotogalleryEdit extends BackendBaseActionEdit
 				$item['text'] = $this->frm->getField('text')->getValue();
 				$item['edited_on'] = BackendModel::getUTCDate();
 				$item['hidden'] = $this->frm->getField('hidden')->getValue();
+				$item['show_in_albums'] = $this->frm->getField('show_in_albums')->isChecked() ? 'Y' : 'N';
 				$item['publish_on'] = BackendModel::getUTCDate(null, BackendModel::getUTCTimestamp($this->frm->getField('publish_on_date'), $this->frm->getField('publish_on_time')));
 				$item['id'] = $this->id;
 				

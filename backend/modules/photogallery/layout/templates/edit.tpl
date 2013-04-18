@@ -110,6 +110,15 @@
 									</p>
 								</div>
 							</div>
+
+							<div class="options">
+								<ul class="inputList pb0">
+									<li>
+										{$chkShowInAlbums} <label for="showInAlbums">{$lblShowInAlbums|ucfirst}</label>
+										<span class="helpTxt">{$msgHelpShowInAlbums}</span>
+									</li>
+								</ul>
+							</div>
 							
 							 
 						</div>
