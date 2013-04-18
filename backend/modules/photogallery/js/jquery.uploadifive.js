@@ -1,5 +1,5 @@
 /*
-UploadiFive 1.1.0
+UploadiFive 1.1.1
 Copyright (c) 2012 Reactive Apps, Ronnie Garcia
 Released under the UploadiFive Standard License <http://www.uploadify.com/uploadifive-standard-license>
 */
@@ -98,9 +98,12 @@ Released under the UploadiFive Standard License <http://www.uploadify.com/upload
                 // Create a template for a file input
                 $data.inputTemplate = $('<input type="file">')
                 .css({
-                   'opacity'  : 0,
-                   'position' : 'absolute',
-                   'z-index'  : 999 
+                    'font-size' : settings.height + 'px',
+                    'opacity'   : 0,
+                    'position'  : 'absolute',
+                    'right'     : '-3px',
+                    'top'       : '-3px',
+                    'z-index'   : 999 
                 });
 
                 // Create a new input
@@ -627,15 +630,6 @@ Released under the UploadiFive Standard License <http://www.uploadify.com/upload
                     // Create a new input
                     $data.createInput.call($this);
 
-                    // Position the browse files button under the cursor
-                    $data.button.mousemove(function(e) {
-                        var offset = $data.button.offset();
-                        $data.currentInput.css({
-                           'left' : e.pageX - offset.left - $this.width() + 10,
-                           'top'  : e.pageY - offset.top - $this.height() + 10
-                        });
-                    });
-
                     // Create the queue container
                     if (!settings.queueID) {
                         settings.queueID = settings.id + '-queue';
@@ -728,7 +722,7 @@ Released under the UploadiFive Standard License <http://www.uploadify.com/upload
                 }
                 // Trigger the onClearQueue event
                 if (typeof settings.onClearQueue === 'function') {
-                    settings.onClearQueue.call($this, $('#' + $data.options.queueID));
+                    settings.onClearQueue.call($this, $('#' + $data.settings.queueID));
                 }
 
             });
