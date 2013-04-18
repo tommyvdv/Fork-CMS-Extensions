@@ -27,16 +27,13 @@ $(document).ready(function() {
 					'background': 'rgba(255, 255, 255, 0.85)' //Browsers who don`t support rgba will fall back to default color value defined at CSS file
 				},
 				closeClick: true
-			},
+			}
 			/*
 			buttons : {
 				tpl : '<div id="fancybox-buttons"><ul><li><a class="btnPrev linkedImage" title="Previous" href="javascript:;"></a></li><li><a class="btnPlay linkedImage" title="Start slideshow" href="javascript:;"></a></li><li><a class="btnNext linkedImage" title="Next" href="javascript:;"></a></li><li><a class="btnToggle linkedImage" title="Toggle size" href="javascript:;"></a></li><li><a class="btnClose linkedImage" title="Close" href="javascript:jQuery.fancybox.close();"></a></li></ul></div>'
 			},
 			*/
-			thumbs	: {
-				width	: 100,
-				height	: 100
-			}
+		
 		},
 		beforeShow: function()
 		{
