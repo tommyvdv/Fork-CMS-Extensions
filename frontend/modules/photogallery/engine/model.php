@@ -392,7 +392,7 @@ class FrontendPhotogalleryModel implements FrontendTagsInterface
 	{
 		$db = FrontendModel::getContainer()->get('database');
 
-		$return =  (array) $db->getRecord('SELECT images.id, images.sequence, images.filename, 
+		$return =  (array) $db->getRecord('SELECT images.id, images.sequence, images.filename, content.title_hidden,
 											content.album_id, content.title, content.text,  content.set_id, content.data,
 											album.title AS album_title, 
 											album.introduction AS album_introduction, 
@@ -436,18 +436,23 @@ class FrontendPhotogalleryModel implements FrontendTagsInterface
 		$return['data'] = $return['data'] != null ? unserialize($return['data']) : null;
 
 		$return['title_hidden'] = ($return['title_hidden'] == 'Y');
-		
-		$return['categories'] = (array) $db->getRecords('SELECT i.title, i.id, m.url
-														FROM photogallery_categories as i
-														INNER JOIN meta as m ON m.id = i.meta_id
-														WHERE i.id IN (' . implode(', ', $return['category_ids']) . ')
-													');
-		
-		$categoryLink = FrontendNavigation::getURLForBlock('photogallery', 'category');
-		
-		foreach($return['categories'] as &$category)
+
+
+		if($return['category_ids'] !== null)
 		{
-			$category['full_url'] = $categoryLink . '/' . $category['url'];
+
+			$return['categories'] = (array) $db->getRecords('SELECT i.title, i.id, m.url
+															FROM photogallery_categories as i
+															INNER JOIN meta as m ON m.id = i.meta_id
+															WHERE i.id IN (' . implode(', ', $return['category_ids']) . ')
+														');
+			
+			$categoryLink = FrontendNavigation::getURLForBlock('photogallery', 'category');
+			
+			foreach($return['categories'] as &$category)
+			{
+				$category['full_url'] = $categoryLink . '/' . $category['url'];
+			}
 		}
 		
 		return $return;
@@ -926,7 +931,7 @@ class FrontendPhotogalleryModel implements FrontendTagsInterface
 	                            INNER JOIN photogallery_sets_images AS img ON i.set_id = img.set_id
 	                            INNER JOIN meta AS m ON m.id = c.meta_id
 	                            WHERE c.language = ? AND i.hidden = ?  AND i.show_in_albums = ? AND i.publish_on <= ?  AND i.num_images > 0
-	                            ORDER BY i.sequence DESC, img.sequence DESC',
+	                            ORDER BY i.sequence DESC, img.sequence ASC',
 	                            array(FRONTEND_LANGUAGE, 'N', 'Y', FrontendModel::getUTCDate('Y-m-d H:i') . ':00'), 'id');
 
 	  $categoryLink = FrontendNavigation::getURLForBlock('photogallery', 'category');
@@ -1067,7 +1072,7 @@ class FrontendPhotogalleryModel implements FrontendTagsInterface
 														INNER JOIN photogallery_sets_images_content AS c ON i.id = c.set_image_id
 														INNER JOIN meta AS m ON m.id = c.meta_id
 														WHERE i.set_id = ? AND c.language = ? AND i.hidden = ?
-														ORDER BY sequence ASC LIMIT 1',
+														ORDER BY sequence DESC LIMIT 1',
 														array((int) $row['set_id'], FRONTEND_LANGUAGE, 'N'));
 
 			$row['category_ids'] = ($row['category_ids'] != '') ? (array) explode(',', $row['category_ids']) : null;

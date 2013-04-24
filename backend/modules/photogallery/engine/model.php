@@ -49,7 +49,7 @@ class BackendPhotogalleryModel
 		FROM photogallery_sets_images AS i
 		INNER JOIN photogallery_sets_images_content AS c on c.set_image_id = i.id
 		WHERE i.set_id = ? AND c.album_id = ? AND c.language = ?
-		GROUP BY i.id ORDER BY i.sequence ASC';
+		GROUP BY i.id ORDER BY i.sequence DESC';
 
 	const RESIZE_ORIGINAL_IMAGE = true; // resize the original image?
 	const KEEP_ORIGINAL_IMAGE = true; // resize the original image?

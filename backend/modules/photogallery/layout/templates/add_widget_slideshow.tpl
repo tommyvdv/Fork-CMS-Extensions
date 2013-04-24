@@ -38,14 +38,28 @@
 
 	<div class="box horizontal">
 		<div class="heading">
-			<h3>{$lblSettings|ucfirst}</h3>
+			<h3>{$lblDisplay|ucfirst}</h3>
 		</div>
 		<div class="options labelWidthLong">
+			
 			<p>
 				<label for="showCaption">{$lblShowCaption|ucfirst}</label>
 				{$ddmShowCaption} {$ddmShowCaptionError}
 			</p>
+			<p>
+				<label for="slideshowItemWidth">{$lblSlideshowItemWidth|ucfirst}</label>
+				{$txtSlideshowItemWidth} {$txtSlideshowItemWidthError}
+				<span class="helpTxt">{$msgSlideshowItemWidthHelpText}</span>
+			</p>
 
+		</div>
+	</div>
+
+	<div class="box horizontal">
+		<div class="heading">
+			<h3>{$lblNavigation|ucfirst}</h3>
+		</div>
+		<div class="options labelWidthLong">
 			<p>
 				<label for="showPagination">{$lblShowPagination|ucfirst}</label>
 				{$ddmShowPagination} {$ddmShowPaginationError}
@@ -65,7 +79,14 @@
 				<label for="pauseOnHover">{$lblPauseOnHover|ucfirst}</label>
 				{$ddmPauseOnHover} {$ddmPauseOnHoverError}
 			</p>
+		</div>
+	</div>
 
+	<div class="box horizontal">
+		<div class="heading">
+			<h3>{$lblAnimation|ucfirst}</h3>
+		</div>
+		<div class="options labelWidthLong">
 			<p>
 				<label for="random">{$lblRandom|ucfirst}</label>
 				{$ddmRandom} {$ddmRandomError}
@@ -86,12 +107,6 @@
 				{$ddmAnimation} {$ddmAnimationError}
 			</p>
 
-			<p>
-				<label for="slideshowItemWidth">{$lblSlideshowItemWidth|ucfirst}</label>
-				{$txtSlideshowItemWidth} {$txtSlideshowItemWidthError}
-			</p>
-
-			
 		</div>
 	</div>
 	

@@ -113,6 +113,12 @@
 				<translation language="nl"><![CDATA[embed code]]></translation>
 				<translation language="en"><![CDATA[embed code]]></translation>
 			</item>
+			<item type="message" name="SlideshowItemWidthHelpText">
+				<translation language="nl"><![CDATA[Bepaal de breedte van elke afbeelding binnen de slideshow. Nul is de standaard.]]></translation>
+				<translation language="en"><![CDATA[This will set the width each image in the slideshow. Zero is default.]]></translation>
+			</item>
+
+			
 			<item type="label" name="Iframe">
 				<translation language="nl"><![CDATA[iframe]]></translation>
 				<translation language="en"><![CDATA[iframe]]></translation>
@@ -123,8 +129,8 @@
 				<translation language="en"><![CDATA[bullets]]></translation>
 			</item>
 			<item type="label" name="Thumbnails">
-				<translation language="nl"><![CDATA[thumbnails]]></translation>
-				<translation language="en"><![CDATA[duimnagels]]></translation>
+				<translation language="nl"><![CDATA[duimnagels]]></translation>
+				<translation language="en"><![CDATA[thumbnails]]></translation>
 			</item>
 
 

@@ -100,12 +100,7 @@ class FrontendPhotogalleryIndex extends FrontendBaseBlock
 		elseif($this->data['display'] == 'categories')
 		{
 			$categories = FrontendPhotogalleryModel::getAllCategoriesWithImage();
-			
-			foreach($categories as &$item)
-			{
-				$item['filename_url']   = FrontendPhotogalleryHelper::getImageURL($this->getModule(), $item, $thumbnail_resolution);
-			}
-			
+
 			$this->tpl->assign('modulePhotogalleryCategories', $categories);
 		}
 	}

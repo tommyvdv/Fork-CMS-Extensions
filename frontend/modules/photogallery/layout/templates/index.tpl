@@ -62,7 +62,7 @@
 
 				{* Image *}
 					<a href="{$modulePhotogalleryCategories.full_url}"  class="linkedImage" title="{$modulePhotogalleryCategories.label}">
-						<img src="{$var|createimage:{$modulePhotogalleryCategories.image.set_id}:{$modulePhotogalleryCategories.image.filename}:{$modulePhotogalleryIndexResolution.width}:{$modulePhotogalleryIndexResolution.height}:{$modulePhotogalleryIndexResolution.method}}" />
+						<img src="{$var|createimage:{$modulePhotogalleryCategories.set_id}:{$modulePhotogalleryCategories.filename}:{$modulePhotogalleryIndexResolution.width}:{$modulePhotogalleryIndexResolution.height}:{$modulePhotogalleryIndexResolution.method}}" />
 					</a>
 
 			{/iteration:modulePhotogalleryCategories}

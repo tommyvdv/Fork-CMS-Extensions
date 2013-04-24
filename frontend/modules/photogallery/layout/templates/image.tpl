@@ -33,6 +33,7 @@
 {* Text *}	
 	{$blockPhotogalleryAlbumImage.text}
 
+
 {* Image *}
 	{* With internal link *}
 	{option:blockPhotogalleryAlbumImage.data.internal_link}
@@ -51,7 +52,7 @@
 	{* No link *}
 	{option:!blockPhotogalleryAlbumImage.data.internal_link}
 		{option:!blockPhotogalleryAlbumImage.data.external_link}
-			<img src="{$var|createimage:{$blockPhotogalleryAlbumImage.set_id}:{$blockPhotogalleryAlbumImage.filename}:{$modulePhotogalleryImageLargeResolution.width}:{$modulePhotogalleryImageLargeResolution.height}:{$modulePhotogalleryImageLargeResolution.mehtod}}" />
+			<img src="{$var|createimage:{$blockPhotogalleryAlbumImage.set_id}:{$blockPhotogalleryAlbumImage.filename}:{$modulePhotogalleryImageLargeResolution.width}:{$modulePhotogalleryImageLargeResolution.height}:{$modulePhotogalleryImageLargeResolution.method}}" />
 		{/option:!blockPhotogalleryAlbumImage.data.external_link}
 	{/option:!blockPhotogalleryAlbumImage.data.internal_link}
 

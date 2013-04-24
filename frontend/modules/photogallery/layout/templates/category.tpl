@@ -1,6 +1,5 @@
 {option:!blockPhotogalleryCategoryView}
 	{option:blockPhotogalleryCategories}
-
 		<h1>{$lblAllCategories|ucfirst}</h1>
 
 		{iteration:blockPhotogalleryCategories}
@@ -50,12 +49,13 @@
 						
 						{* Image *}
 							<a href="{$blockPhotogalleryCategories.albums.full_url}" class="linkedImage" title="{$blockPhotogalleryCategories.albums.title}">
-								<img src="{$var|createimage:{$blockPhotogalleryCategories.set_id}:{$blockPhotogalleryCategories.image.filename}:{$modulePhotogalleryCategoryThumbnailResolution.width}:{$modulePhotogalleryCategoryThumbnailResolution.height}:{$modulePhotogalleryCategoryThumbnailResolution.method}}" />
+								<img src="{$var|createimage:{$blockPhotogalleryCategories.albums.set_id}:{$blockPhotogalleryCategories.albums.image.filename}:{$modulePhotogalleryCategoryThumbnailResolution.width}:{$modulePhotogalleryCategoryThumbnailResolution.height}:{$modulePhotogalleryCategoryThumbnailResolution.method}}" />
 
 							</a>
 					
 					{/iteration:blockPhotogalleryCategories.albums}
 				{/option:blockPhotogalleryCategories.albums}
+
 
 		{/iteration:blockPhotogalleryCategories}
 
