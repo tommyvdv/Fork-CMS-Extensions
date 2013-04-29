@@ -19,7 +19,7 @@
 							<a href="{$widgetPhotogallerySlideshow.images.data.external_link.url}" class="linkedImage targetBlank">
 							{/option:widgetPhotogallerySlideshow.images.data.external_link}
 
-							<img src="{$var|createimage:{$widgetPhotogallerySlideshow.images.set_id}:{$widgetPhotogallerySlideshow.images.filename}:{$widgetPhotogallerySlideshowResolution.width}:{$widgetPhotogallerySlideshowResolution.height}:{$widgetPhotogallerySlideshowResolution.method}}" />
+							<img src="{$var|createimagephotogallery:{$widgetPhotogallerySlideshow.images.set_id}:{$widgetPhotogallerySlideshow.images.filename}:{$widgetPhotogallerySlideshowResolution.width}:{$widgetPhotogallerySlideshowResolution.height}:{$widgetPhotogallerySlideshowResolution.method}}" />
 							
 							{* With internal link *}
 							{option:widgetPhotogallerySlideshow.images.data.internal_link}
@@ -54,7 +54,7 @@
 			<div  id="flexsliderNavigation{$widgetPhotogallerySlideshow.id}" class="flexslider">
 				<ul class="slides">
 					{iteration:widgetPhotogallerySlideshow.images}
-						<li><img src="{$var|createimage:{$widgetPhotogallerySlideshow.images.set_id}:{$widgetPhotogallerySlideshow.images.filename}:150:150:'crop'}" /></li>
+						<li><img src="{$var|createimagephotogallery:{$widgetPhotogallerySlideshow.images.set_id}:{$widgetPhotogallerySlideshow.images.filename}:150:150:'crop'}" /></li>
 					{/iteration:widgetPhotogallerySlideshow.images}
 				</ul>
 			</div>

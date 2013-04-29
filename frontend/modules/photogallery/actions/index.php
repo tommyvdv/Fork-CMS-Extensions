@@ -122,6 +122,6 @@ class FrontendPhotogalleryIndex extends FrontendBaseBlock
 		// add RSS-feed
 		$this->header->addLink(array('rel' => 'alternate', 'type' => 'application/rss+xml', 'title' => FrontendModel::getModuleSetting('photogallery', 'rss_title_' . FRONTEND_LANGUAGE), 'href' => $rssLink), true);
 		
-		$this->tpl->mapModifier('createimage', array('FrontendPhotogalleryHelper', 'createImage'));
+		$this->tpl->mapModifier('createimagephotogallery', array('FrontendPhotogalleryHelper', 'createImage'));
 	}
 }

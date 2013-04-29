@@ -81,7 +81,7 @@ class FrontendPhotogalleryWidgetSlideshow extends FrontendBaseWidget
 				FrontendPhotogalleryHelper::getPathJS('/flexslider-init.js', $this->getModule())
 		);
 
-		$this->tpl->mapModifier('createimage', array('FrontendPhotogalleryHelper', 'createImage'));
+		$this->tpl->mapModifier('createimagephotogallery', array('FrontendPhotogalleryHelper', 'createImage'));
 
 		$this->addJSData('slideshow_settings_' . $this->record['id'], $this->record['extra']['data']['settings']);
 	}

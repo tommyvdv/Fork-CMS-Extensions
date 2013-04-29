@@ -43,8 +43,8 @@
 			<ul class="photogalleryLightbox">
 				{iteration:widgetPhotogalleryLightbox.images}
 				<li>
-					<a href="{$var|createimage:{$widgetPhotogalleryLightbox.images.set_id}:{$widgetPhotogalleryLightbox.images.filename}:{$widgetPhotogalleryLightboxLargeResolution.width}:{$widgetPhotogalleryLightboxLargeResolution.height}:{$widgetPhotogalleryLightboxLargeResolution.method}}" rel="{$widgetPhotogalleryLightbox.id}" class="linkedImage linkOverlay"{option:!widgetPhotogalleryLightbox.images.title_hidden} title="{$widgetPhotogalleryLightbox.images.title|htmlentities}"{/option:!widgetPhotogalleryLightbox.images.title_hidden}>
-						<img src="{$var|createimage:{$widgetPhotogalleryLightbox.images.set_id}:{$widgetPhotogalleryLightbox.images.filename}:{$widgetPhotogalleryLightboxThumbnailResolution.width}:{$widgetPhotogalleryLightboxThumbnailResolution.height}:{$widgetPhotogalleryLightboxThumbnailResolution.method}}
+					<a href="{$var|createimagephotogallery:{$widgetPhotogalleryLightbox.images.set_id}:{$widgetPhotogalleryLightbox.images.filename}:{$widgetPhotogalleryLightboxLargeResolution.width}:{$widgetPhotogalleryLightboxLargeResolution.height}:{$widgetPhotogalleryLightboxLargeResolution.method}}" rel="{$widgetPhotogalleryLightbox.id}" class="linkedImage linkOverlay"{option:!widgetPhotogalleryLightbox.images.title_hidden} title="{$widgetPhotogalleryLightbox.images.title|htmlentities}"{/option:!widgetPhotogalleryLightbox.images.title_hidden}>
+						<img src="{$var|createimagephotogallery:{$widgetPhotogalleryLightbox.images.set_id}:{$widgetPhotogalleryLightbox.images.filename}:{$widgetPhotogalleryLightboxThumbnailResolution.width}:{$widgetPhotogalleryLightboxThumbnailResolution.height}:{$widgetPhotogalleryLightboxThumbnailResolution.method}}
 " />
 					</a>
 					

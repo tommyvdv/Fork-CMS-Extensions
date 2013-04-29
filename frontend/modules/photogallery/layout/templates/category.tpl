@@ -49,7 +49,7 @@
 						
 						{* Image *}
 							<a href="{$blockPhotogalleryCategories.albums.full_url}" class="linkedImage" title="{$blockPhotogalleryCategories.albums.title}">
-								<img src="{$var|createimage:{$blockPhotogalleryCategories.albums.set_id}:{$blockPhotogalleryCategories.albums.image.filename}:{$modulePhotogalleryCategoryThumbnailResolution.width}:{$modulePhotogalleryCategoryThumbnailResolution.height}:{$modulePhotogalleryCategoryThumbnailResolution.method}}" />
+								<img src="{$var|createimagephotogallery:{$blockPhotogalleryCategories.albums.set_id}:{$blockPhotogalleryCategories.albums.image.filename}:{$modulePhotogalleryCategoryThumbnailResolution.width}:{$modulePhotogalleryCategoryThumbnailResolution.height}:{$modulePhotogalleryCategoryThumbnailResolution.method}}" />
 
 							</a>
 					
@@ -102,7 +102,7 @@
 				
 				{* Image *}
 					<a href="{$blockPhotogalleryCategoryAlbums.full_url}" class="linkedImage" title="{$blockPhotogalleryCategoryAlbums.image.title}">
-	<img src="{$var|createimage:{$blockPhotogalleryCategoryAlbums.set_id}:{$blockPhotogalleryCategoryAlbums.image.filename}:{$modulePhotogalleryCategoryThumbnailResolution.width}:{$modulePhotogalleryCategoryThumbnailResolution.height}:{$modulePhotogalleryCategoryThumbnailResolution.method}}" />					</a>
+	<img src="{$var|createimagephotogallery:{$blockPhotogalleryCategoryAlbums.set_id}:{$blockPhotogalleryCategoryAlbums.image.filename}:{$modulePhotogalleryCategoryThumbnailResolution.width}:{$modulePhotogalleryCategoryThumbnailResolution.height}:{$modulePhotogalleryCategoryThumbnailResolution.method}}" />					</a>
 			
 			{/iteration:blockPhotogalleryCategoryAlbums}
 		{/option:blockPhotogalleryCategoryAlbums}

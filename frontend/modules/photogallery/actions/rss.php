@@ -45,7 +45,7 @@ class FrontendPhotogalleryRSS extends FrontendBaseBlock
 	private function getData()
 	{
 
-		$this->tpl->mapModifier('createimage', array('FrontendPhotogalleryHelper', 'createImage'));
+		$this->tpl->mapModifier('createimagephotogallery', array('FrontendPhotogalleryHelper', 'createImage'));
 
 		$thumbnail_resolution = FrontendPhotogalleryModel::getExtraResolutionForKind($this->data['extra_id'], 'album_overview_thumbnail');
 

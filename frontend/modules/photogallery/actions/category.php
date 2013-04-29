@@ -211,6 +211,6 @@ class FrontendPhotogalleryCategory extends FrontendBaseBlock
 		// parse the pagination
 		$this->parsePagination();
 
-		$this->tpl->mapModifier('createimage', array('FrontendPhotogalleryHelper', 'createImage'));
+		$this->tpl->mapModifier('createimagephotogallery', array('FrontendPhotogalleryHelper', 'createImage'));
 	}
 }

@@ -109,6 +109,6 @@ class FrontendPhotogalleryWidgetLightbox extends FrontendBaseWidget
 		$this->header->addCSS('/frontend/modules/' . $this->getModule() . '/layout/css/photogallery.css');
 		
 		$this->tpl->assign('widgetPhotogalleryLightbox', $this->record);
-		$this->tpl->mapModifier('createimage', array('FrontendPhotogalleryHelper', 'createImage'));
+		$this->tpl->mapModifier('createimagephotogallery', array('FrontendPhotogalleryHelper', 'createImage'));
 	}
 }
