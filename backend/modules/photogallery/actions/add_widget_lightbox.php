@@ -82,7 +82,6 @@ class BackendPhotogalleryAddWidgetLightbox extends BackendBaseActionAdd
 
 		// overlay
 		$this->frm->addDropdown('show_overlay', array('false' => ucfirst(BL::getLabel('No')), 'true' => ucfirst(BL::getLabel('Yes'))), 'true');
-		$this->frm->addText('overlay_opacity', 1);
 		$this->frm->addText('overlay_color', 'rgba(255, 255, 255, 0.85)');
 
 
@@ -131,7 +130,6 @@ class BackendPhotogalleryAddWidgetLightbox extends BackendBaseActionAdd
 			$this->frm->getField('play_speed')->isFilled(BL::getError('FieldIsRequired'));
 			$this->frm->getField('thumbnail_navigation_width')->isFilled(BL::getError('FieldIsRequired'));
 			$this->frm->getField('thumbnail_navigation_height')->isFilled(BL::getError('FieldIsRequired'));
-			$this->frm->getField('overlay_opacity')->isFilled(BL::getError('FieldIsRequired'));
 			$this->frm->getField('overlay_color')->isFilled(BL::getError('FieldIsRequired'));
 
 			// no errors?
@@ -168,7 +166,6 @@ class BackendPhotogalleryAddWidgetLightbox extends BackendBaseActionAdd
 												'thumbnail_navigation_width ' => $this->frm->getField('thumbnail_navigation_width')->getValue(),
 												'thumbnail_navigation_height ' => $this->frm->getField('thumbnail_navigation_height')->getValue(),
 												'show_overlay ' => $this->frm->getField('show_overlay')->getValue(),
-												'overlay_opacity ' => $this->frm->getField('overlay_opacity')->getValue(),
 												'overlay_color ' => $this->frm->getField('overlay_color')->getValue(),
 										)
 									)
