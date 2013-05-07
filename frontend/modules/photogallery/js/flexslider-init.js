@@ -15,7 +15,7 @@
         var randomize = slideshowSettings.random == 'true';
         var directionNav = slideshowSettings.show_arrows == 'true';
         var slider = '#flexslider' + slideshowId;
-        var pauseOnHover = slideshowSettings.pause_on_hover;
+        var pauseOnHover = slideshowSettings.pause_on_hover == 'true';
 
         var animation = slideshowSettings.animation;
         var slideshow_item_width = parseInt(slideshowSettings.slideshow_item_width);

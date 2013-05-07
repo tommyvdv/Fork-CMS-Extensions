@@ -40,7 +40,7 @@
 	
 	{* Images *}
 		{option:widgetPhotogalleryLightbox.images}
-			<ul class="photogalleryLightbox">
+			<ul class="photogalleryLightbox" data-id="{$widgetPhotogalleryLightbox.id}">
 				{iteration:widgetPhotogalleryLightbox.images}
 				<li>
 					<a href="{$var|createimagephotogallery:{$widgetPhotogalleryLightbox.images.set_id}:{$widgetPhotogalleryLightbox.images.filename}:{$widgetPhotogalleryLightboxLargeResolution.width}:{$widgetPhotogalleryLightboxLargeResolution.height}:{$widgetPhotogalleryLightboxLargeResolution.method}}" rel="{$widgetPhotogalleryLightbox.id}" class="linkedImage linkOverlay"{option:!widgetPhotogalleryLightbox.images.title_hidden} title="{$widgetPhotogalleryLightbox.images.title|htmlentities}"{/option:!widgetPhotogalleryLightbox.images.title_hidden}>

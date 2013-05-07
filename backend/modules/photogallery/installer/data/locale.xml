@@ -73,9 +73,159 @@
 			</item>
 		</core>
 		<photogallery>
-			<item type="label" name="ShowInAlbums">
-				<translation language="nl"><![CDATA[toon in de albums]]></translation>
-				<translation language="en"><![CDATA[show in albums]]></translation>
+
+
+			<item type="label" name="ShowCloseButton">
+				<translation language="nl"><![CDATA[toon sluit knop]]></translation>
+				<translation language="en"><![CDATA[show close button]]></translation>
+			</item>
+
+
+			<item type="label" name="CaptionType">
+				<translation language="nl"><![CDATA[caption type]]></translation>
+				<translation language="en"><![CDATA[caption type]]></translation>
+			</item>
+
+			<item type="label" name="Padding">
+				<translation language="nl"><![CDATA[padding]]></translation>
+				<translation language="en"><![CDATA[padding]]></translation>
+			</item>
+
+			<item type="label" name="Margin">
+				<translation language="nl"><![CDATA[marge]]></translation>
+				<translation language="en"><![CDATA[margin]]></translation>
+			</item>
+
+			<item type="label" name="Over">
+				<translation language="nl"><![CDATA[over]]></translation>
+				<translation language="en"><![CDATA[over]]></translation>
+			</item>
+
+			<item type="label" name="Outside">
+				<translation language="nl"><![CDATA[buiten]]></translation>
+				<translation language="en"><![CDATA[outside]]></translation>
+			</item>
+
+			<item type="label" name="Inside">
+				<translation language="nl"><![CDATA[binnen]]></translation>
+				<translation language="en"><![CDATA[binnen]]></translation>
+			</item>
+
+			<item type="label" name="Float">
+				<translation language="nl"><![CDATA[drijven]]></translation>
+				<translation language="en"><![CDATA[float]]></translation>
+			</item>
+
+			<item type="label" name="Modal">
+				<translation language="nl"><![CDATA[modal]]></translation>
+				<translation language="en"><![CDATA[modal]]></translation>
+			</item>
+
+			<item type="label" name="CloseClick">
+				<translation language="nl"><![CDATA[sluit op klik]]></translation>
+				<translation language="en"><![CDATA[close on outside click]]></translation>
+			</item>
+
+			<item type="label" name="MediaHelper">
+				<translation language="nl"><![CDATA[media helper]]></translation>
+				<translation language="en"><![CDATA[media helper]]></translation>
+			</item>
+
+			<item type="label" name="NavigationEffect">
+				<translation language="nl"><![CDATA[navigatie effect]]></translation>
+				<translation language="en"><![CDATA[navigation effect]]></translation>
+			</item>
+
+			<item type="label" name="OpenEffect">
+				<translation language="nl"><![CDATA[open effect]]></translation>
+				<translation language="en"><![CDATA[open effect]]></translation>
+			</item>
+
+			<item type="label" name="CloseEffect">
+				<translation language="nl"><![CDATA[sluit effect]]></translation>
+				<translation language="en"><![CDATA[close effect]]></translation>
+			</item>
+
+			<item type="label" name="PlaySpeed">
+				<translation language="nl"><![CDATA[speel snelheid]]></translation>
+				<translation language="en"><![CDATA[play speed]]></translation>
+			</item>
+
+			<item type="label" name="Loop">
+				<translation language="nl"><![CDATA[Loop]]></translation>
+				<translation language="en"><![CDATA[Loop]]></translation>
+			</item>
+
+
+			<item type="label" name="ShowThumbnails">
+				<translation language="nl"><![CDATA[toon duimnagels]]></translation>
+				<translation language="en"><![CDATA[show thumbnails]]></translation>
+			</item>
+
+
+			<item type="label" name="ThumbnailsPosition">
+				<translation language="nl"><![CDATA[positie]]></translation>
+				<translation language="en"><![CDATA[position]]></translation>
+			</item>
+
+			<item type="label" name="Bottom">
+				<translation language="nl"><![CDATA[onderaan]]></translation>
+				<translation language="en"><![CDATA[bottom]]></translation>
+			</item>
+
+			<item type="label" name="Top">
+				<translation language="nl"><![CDATA[bovenaan]]></translation>
+				<translation language="en"><![CDATA[top]]></translation>
+			</item>
+
+			<item type="label" name="Elastic">
+				<translation language="nl"><![CDATA[elastisch]]></translation>
+				<translation language="en"><![CDATA[elastic]]></translation>
+			</item>
+
+			<item type="label" name="ThumbnailWidth">
+				<translation language="nl"><![CDATA[breedte]]></translation>
+				<translation language="en"><![CDATA[width]]></translation>
+			</item>
+
+			<item type="label" name="ThumbnailHeight">
+				<translation language="nl"><![CDATA[hoogte]]></translation>
+				<translation language="en"><![CDATA[height]]></translation>
+			</item>
+
+			<item type="label" name="Overlay">
+				<translation language="nl"><![CDATA[achtergrond]]></translation>
+				<translation language="en"><![CDATA[overlay]]></translation>
+			</item>
+
+			<item type="label" name="ThumbnailNavigation">
+				<translation language="nl"><![CDATA[duimnagel navigatie]]></translation>
+				<translation language="en"><![CDATA[thumbnail navigation]]></translation>
+			</item>
+
+			<item type="label" name="Appearance">
+				<translation language="nl"><![CDATA[uiterlijk]]></translation>
+				<translation language="en"><![CDATA[appearance]]></translation>
+			</item>
+
+			<item type="label" name="ShowOverlay">
+				<translation language="nl"><![CDATA[toon achtergrond]]></translation>
+				<translation language="en"><![CDATA[show overlay]]></translation>
+			</item>
+
+			<item type="label" name="OverlayOpacity">
+				<translation language="nl"><![CDATA[transparantie]]></translation>
+				<translation language="en"><![CDATA[opacity]]></translation>
+			</item>
+
+			<item type="label" name="OverlayColor">
+				<translation language="nl"><![CDATA[kleur]]></translation>
+				<translation language="en"><![CDATA[color]]></translation>
+			</item>
+
+			<item type="label" name="Miscellaneous">
+				<translation language="nl"><![CDATA[overige]]></translation>
+				<translation language="en"><![CDATA[miscellaneous]]></translation>
 			</item>
 
 			<item type="label" name="HideTitle">

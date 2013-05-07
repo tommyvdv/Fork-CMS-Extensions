@@ -592,8 +592,10 @@ class BackendPhotogalleryModel
 			LIMIT 1',
 			array((int) $id, BL::getWorkingLanguage(), $album_id));
 
+
 		// unserialize data
 		if($return['data'] !== null) $return['data'] = unserialize($return['data']);
+		$return['title_hidden'] = ($return['title_hidden'] == 'Y');
 
 		return $return;
 	}

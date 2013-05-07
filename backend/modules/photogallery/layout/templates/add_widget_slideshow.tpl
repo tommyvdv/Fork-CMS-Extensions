@@ -38,7 +38,7 @@
 
 	<div class="box horizontal">
 		<div class="heading">
-			<h3>{$lblDisplay|ucfirst}</h3>
+			<h3>{$lblAppearance|ucfirst}</h3>
 		</div>
 		<div class="options labelWidthLong">
 			

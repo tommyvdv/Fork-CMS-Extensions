@@ -153,6 +153,17 @@ class BackendPhotogalleryAddImagesExisting extends BackendBaseActionAdd
 						$temp['created_on'] = BackendModel::getUTCDate();
 						$temp['edited_on'] = BackendModel::getUTCDate();
 
+						/*
+						$imageContent = BackendPhotogalleryModel::getImageWithContent($image['id'], $this->id);
+
+						$temp['title_hidden'] = $imageContent['title_hidden'] ? 'Y' : 'N';
+						$temp['text'] = $imageContent['text']; 
+
+						$temp['data'] = serialize($imageContent['data']);
+						$temp['title'] = $imageContent['title'];
+						*/
+
+						
 						// add
 						$content[] = $temp;
 					}
