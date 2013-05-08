@@ -129,7 +129,7 @@ class FrontendPhotogalleryDetail extends FrontendBaseBlock
 
 			// Initialize
 			$this->header->addJS(
-				FrontendPhotogalleryHelper::getPathJS('/fancybox-init.js', $this->getModule())
+				FrontendPhotogalleryHelper::getPathJS('/fancybox-module-init.js', $this->getModule())
 			);
 			
 			$this->tpl->assign('lightbox', true);

@@ -108,7 +108,7 @@
 
 			<item type="label" name="Inside">
 				<translation language="nl"><![CDATA[binnen]]></translation>
-				<translation language="en"><![CDATA[binnen]]></translation>
+				<translation language="en"><![CDATA[inside]]></translation>
 			</item>
 
 			<item type="label" name="Float">
@@ -122,8 +122,8 @@
 			</item>
 
 			<item type="label" name="CloseClick">
-				<translation language="nl"><![CDATA[sluit op klik]]></translation>
-				<translation language="en"><![CDATA[close on outside click]]></translation>
+				<translation language="nl"><![CDATA[sluit op afbeelding klik]]></translation>
+				<translation language="en"><![CDATA[close on image click]]></translation>
 			</item>
 
 			<item type="label" name="MediaHelper">

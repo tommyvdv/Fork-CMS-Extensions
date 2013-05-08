@@ -106,7 +106,7 @@ class FrontendPhotogalleryWidgetLightbox extends FrontendBaseWidget
 
 		// Initialize
 		$this->header->addJS(
-			FrontendPhotogalleryHelper::getPathJS('/fancybox-init.js', $this->getModule())
+			FrontendPhotogalleryHelper::getPathJS('/fancybox-widget-init.js', $this->getModule())
 		);
 
 		$this->header->addCSS('/frontend/modules/' . $this->getModule() . '/layout/css/photogallery.css');

@@ -360,7 +360,7 @@ class BackendPhotogalleryEditModule extends BackendBaseActionEdit
 				}
 
 				// everything is saved, so redirect to the overview
-				$this->redirect(BackendModel::createURLForAction('extras') . '&report=edited-module&highlight=row-' . $this->record['id']);
+				$this->redirect(BackendModel::createURLForAction('edit_module') . '&report=edited-module&id=' . $this->record['id']);
 			}
 		}
 	}

@@ -254,7 +254,7 @@ class BackendPhotogalleryEditWidgetSlideshow extends BackendBaseActionEdit
 				
 
 				// everything is saved, so redirect to the overview
-				$this->redirect(BackendModel::createURLForAction('extras') . '&report=edited-widget&highlight=row-' . $this->record['id']);
+				$this->redirect(BackendModel::createURLForAction('edit_widget_slideshow') . '&report=edited-widget&id=' . $this->record['id']);
 			}
 		}
 	}
