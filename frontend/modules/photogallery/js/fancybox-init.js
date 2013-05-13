@@ -105,5 +105,8 @@
 			}
 		});
 
+	 	var imageId = utils.url.getGetValue('{$actLightboxImage}');
+		if(imageId) $this.find("a[data-image-id=" + imageId + "]").trigger('click');
+
 	});   
  });
