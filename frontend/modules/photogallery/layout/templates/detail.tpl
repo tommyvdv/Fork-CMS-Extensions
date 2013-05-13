@@ -6,14 +6,6 @@
 		<li>
 			{* Written on *}
 			{$blockPhotogalleryAlbum.publish_on|date:{$dateFormatLong}:{$LANGUAGE}}
-
-			{* Category*}
-			{option:blockPhotogalleryAlbum.category_title}
-				{$lblIn} {$lblThe} {$lblCategory} 
-				<a href="{$blockPhotogalleryAlbum.category_full_url}" title="{$blockPhotogalleryAlbum.category_title}">{$blockPhotogalleryAlbum.category_title}</a>
-				{option:!blockPhotogalleryAlbum.tags}.{/option:!blockPhotogalleryAlbum.tags}
-			{/option:blockPhotogalleryAlbum.category_title}
-			
 			
 			{* Category*}
 			{option:blockPhotogalleryAlbum.categories}
@@ -49,7 +41,7 @@
 {* Lightbox *}
 	{option:lightbox}
 		{option:blockPhotogalleryAlbum.images}
-			<ul class="photogalleryDetailLightbox">
+			<ul class="photogalleryLightbox" data-id="{$blockPhotogalleryAlbum.id}">
 				{iteration:blockPhotogalleryAlbum.images}
 				<li>
 					{option:!blockPhotogalleryAlbum.images.data.external_link}
@@ -104,20 +96,3 @@
 			</li>
 		{/option:blockPhotogalleryAlbumNavigation.next}
 	</ul>
-	
-	
-{* Navigation in the same category *}
-{*
-	<ul class="photogalleryDetailAlbumsInCategoryNavigation">
-		{option:blockPhotogalleryAlbumNavigationInCategory.previous}
-			<li class="previousLink">
-				<a href="{$blockPhotogalleryAlbumNavigationInCategory.previous.url}" rel="prev">{$lblPreviousAlbum|ucfirst}: <em>{$blockPhotogalleryAlbumNavigationInCategory.previous.title}</em></a>
-			</li>
-		{/option:blockPhotogalleryAlbumNavigationInCategory.previous}
-		{option:blockPhotogalleryAlbumNavigationInCategory.next}
-			<li class="nextLink">
-				<a href="{$blockPhotogalleryAlbumNavigationInCategory.next.url}" rel="next">{$lblNextAlbum|ucfirst}: <em>{$blockPhotogalleryAlbumNavigationInCategory.next.title}</em></a>
-			</li>
-		{/option:blockPhotogalleryAlbumNavigationInCategory.next}
-	</ul>
-*}

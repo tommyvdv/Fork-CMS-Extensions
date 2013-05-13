@@ -133,7 +133,31 @@ class PhotogalleryInstaller extends ModuleInstaller
 		$db = $this->getDB();
 
 		// Block
-		$extraId = $db->insert('photogallery_extras', array('data' => serialize(array('action' => 'lightbox', 'display' => 'albums')), 'action' => null, 'kind' => 'module', 'allow_delete' => 'N', 'edited_on' => gmdate('Y-m-d H:i:00'), 'created_on' => gmdate('Y-m-d H:i:00')));
+		$blockDataSettings = array(
+									'show_close_button' => 'false',
+									'show_arrows' => 'true',
+									'show_caption' => 'true',
+									'caption_type' => 'outside',
+									'padding' =>  25,
+									'margin' => 20,
+									'modal' => 'false',
+									'show_hover_icon' => 'true',
+									'close_click' => 'false',
+									'media_helper' => 'true',
+									'navigation_effect' => 'none',
+									'open_effect' => 'none',
+									'close_effect' => 'none',
+									'play_speed' => 3000,
+									'loop' => 'true',
+									'show_thumbnails' => 'true',
+									'thumbnails_position' => 'bottom',
+									'thumbnail_navigation_width' => 50,
+									'thumbnail_navigation_height' => 50,
+									'show_overlay' => 'true',
+									'overlay_color' => 'rgba(255, 255, 255, 0.85)'
+							);
+
+		$extraId = $db->insert('photogallery_extras', array('data' => serialize(array('action' => 'lightbox', 'display' => 'albums', 'settings' => $blockDataSettings)), 'action' => null, 'kind' => 'module', 'allow_delete' => 'N', 'edited_on' => gmdate('Y-m-d H:i:00'), 'created_on' => gmdate('Y-m-d H:i:00')));
 		$db->insert('photogallery_extras_resolutions', array('extra_id' => $extraId, 'width' => 1200, 'height' => 1200, 'method' => 'resize', 'kind' => 'large'));
 		$db->insert('photogallery_extras_resolutions', array('extra_id' => $extraId, 'width' => 125, 'height' => 125, 'method' => 'crop', 'kind' => 'album_detail_overview_thumbnail'));
 		$db->insert('photogallery_extras_resolutions', array('extra_id' => $extraId, 'width' => 200, 'height' => 200, 'method' => 'crop', 'kind' => 'album_overview_thumbnail'));

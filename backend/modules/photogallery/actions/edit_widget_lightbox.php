@@ -100,6 +100,7 @@ class BackendPhotogalleryEditWidgetLightbox extends BackendBaseActionEdit
 		$this->frm->addText('padding', $this->record['data']['settings']['padding']);
 		$this->frm->addText('margin', $this->record['data']['settings']['margin']);
 		$this->frm->addDropdown('modal', array('false' => ucfirst(BL::getLabel('No')), 'true' => ucfirst(BL::getLabel('Yes'))), $this->record['data']['settings']['modal']);
+		$this->frm->addDropdown('show_hover_icon', array('false' => ucfirst(BL::getLabel('No')), 'true' => ucfirst(BL::getLabel('Yes'))), $this->record['data']['settings']['show_hover_icon']);
 
 		// misc
 		$this->frm->addDropdown('close_click', array('false' => ucfirst(BL::getLabel('No')), 'true' => ucfirst(BL::getLabel('Yes'))), $this->record['data']['settings']['close_click']);
@@ -192,6 +193,7 @@ class BackendPhotogalleryEditWidgetLightbox extends BackendBaseActionEdit
 												'thumbnail_navigation_height' => $this->frm->getField('thumbnail_navigation_height')->getValue(),
 												'show_overlay' => $this->frm->getField('show_overlay')->getValue(),
 												'overlay_color' => $this->frm->getField('overlay_color')->getValue(),
+												'show_hover_icon' => $this->frm->getField('show_hover_icon')->getValue(),
 										)
 									)
 								);

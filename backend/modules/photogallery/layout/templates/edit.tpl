@@ -13,7 +13,6 @@
 
 {form:edit}
 	
-	
 	<label for="title">{$lblTitle|ucfirst}</label>
 	{$txtTitle} {$txtTitleError}
 	

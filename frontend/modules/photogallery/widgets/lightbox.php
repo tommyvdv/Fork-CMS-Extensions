@@ -40,7 +40,6 @@ class FrontendPhotogalleryWidgetLightbox extends FrontendBaseWidget
 	private function getData()
 	{
 		$this->record = FrontendPhotogalleryModel::getAlbum($this->data);
-
 		
 		if(!empty($this->record))
 		{
@@ -54,7 +53,6 @@ class FrontendPhotogalleryWidgetLightbox extends FrontendBaseWidget
 			$this->tpl->assign('widgetPhotogalleryLightboxLargeResolution', $large_resolution);
 			$this->tpl->assign('widgetPhotogalleryLightboxThumbnailResolution', $thumbnail_resolution);
 		}
-
 	}
 
 	/**
@@ -64,8 +62,6 @@ class FrontendPhotogalleryWidgetLightbox extends FrontendBaseWidget
 	 */
 	private function parse()
 	{
-		
-		
 		// Lightbox
 		$this->header->addCSS(
 			FrontendPhotogalleryHelper::getPathJS('/fancybox/' . FrontendPhotogalleryModel::FANCYBOX_VERSION . '/jquery.fancybox.css', $this->getModule())
@@ -91,29 +87,27 @@ class FrontendPhotogalleryWidgetLightbox extends FrontendBaseWidget
 			FrontendPhotogalleryHelper::getPathJS('/fancybox/' . FrontendPhotogalleryModel::FANCYBOX_VERSION . '/helpers/jquery.fancybox-thumbs.js', $this->getModule())
 		);	
 		
-		// Link Icon
-		$this->header->addCSS(
-			FrontendPhotogalleryHelper::getPathJS('/link-icon/link-icon.css', $this->getModule())
-		);	
+		// Link Icon, only load when needed
+		if(isset($this->record['extra']['data']['settings']['show_hover_icon']) && $this->record['extra']['data']['settings']['show_hover_icon'] == 'true')
+		{			
+			$this->header->addCSS(
+				FrontendPhotogalleryHelper::getPathJS('/link-icon/link-icon.css', $this->getModule())
+			);	
 
-		$this->header->addJS(
-			FrontendPhotogalleryHelper::getPathJS('/link-icon/link-icon.js', $this->getModule())
-		);	
-
-		$this->header->addJS(
-			FrontendPhotogalleryHelper::getPathJS('/link-icon-init.js', $this->getModule())
-		);
+			$this->header->addJS(
+				FrontendPhotogalleryHelper::getPathJS('/link-icon/link-icon.js', $this->getModule())
+			);	
+		}
 
 		// Initialize
 		$this->header->addJS(
-			FrontendPhotogalleryHelper::getPathJS('/fancybox-widget-init.js', $this->getModule())
+			FrontendPhotogalleryHelper::getPathJS('/fancybox-init.js', $this->getModule())
 		);
-
+		
 		$this->header->addCSS('/frontend/modules/' . $this->getModule() . '/layout/css/photogallery.css');
 		
 		$this->tpl->assign('widgetPhotogalleryLightbox', $this->record);
 		$this->tpl->mapModifier('createimagephotogallery', array('FrontendPhotogalleryHelper', 'createImage'));
 		$this->addJSData('lightbox_settings_' . $this->record['id'], $this->record['extra']['data']['settings']);
-
 	}
 }

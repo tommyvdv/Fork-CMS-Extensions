@@ -80,6 +80,16 @@
 				<translation language="en"><![CDATA[show close button]]></translation>
 			</item>
 
+			<item type="label" name="LightboxSettings">
+				<translation language="nl"><![CDATA[lightbox instellingen]]></translation>
+				<translation language="en"><![CDATA[lightbox settings]]></translation>
+			</item>
+
+			<item type="label" name="ShowHoverIcon">
+				<translation language="nl"><![CDATA[toon hover icoon]]></translation>
+				<translation language="en"><![CDATA[show hover icon]]></translation>
+			</item>
+
 
 			<item type="label" name="CaptionType">
 				<translation language="nl"><![CDATA[caption type]]></translation>

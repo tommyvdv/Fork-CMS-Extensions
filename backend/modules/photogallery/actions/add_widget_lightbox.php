@@ -62,6 +62,8 @@ class BackendPhotogalleryAddWidgetLightbox extends BackendBaseActionAdd
 		$this->frm->addText('padding', 25);
 		$this->frm->addText('margin', 20);
 		$this->frm->addDropdown('modal', array('false' => ucfirst(BL::getLabel('No')), 'true' => ucfirst(BL::getLabel('Yes'))), 'false');
+		$this->frm->addDropdown('show_hover_icon', array('false' => ucfirst(BL::getLabel('No')), 'true' => ucfirst(BL::getLabel('Yes'))), 'true');
+
 
 		// misc
 		$this->frm->addDropdown('close_click', array('false' => ucfirst(BL::getLabel('No')), 'true' => ucfirst(BL::getLabel('Yes'))), 'false');
@@ -124,7 +126,6 @@ class BackendPhotogalleryAddWidgetLightbox extends BackendBaseActionAdd
 			$this->frm->getField('thumbnail_method')->isFilled(BL::getError('FieldIsRequired'));
 			$this->frm->getField('large_method')->isFilled(BL::getError('FieldIsRequired'));
 
-
 			$this->frm->getField('padding')->isFilled(BL::getError('FieldIsRequired'));
 			$this->frm->getField('margin')->isFilled(BL::getError('FieldIsRequired'));
 			$this->frm->getField('play_speed')->isFilled(BL::getError('FieldIsRequired'));
@@ -167,6 +168,7 @@ class BackendPhotogalleryAddWidgetLightbox extends BackendBaseActionAdd
 												'thumbnail_navigation_height' => $this->frm->getField('thumbnail_navigation_height')->getValue(),
 												'show_overlay' => $this->frm->getField('show_overlay')->getValue(),
 												'overlay_color' => $this->frm->getField('overlay_color')->getValue(),
+												'show_hover_icon' => $this->frm->getField('show_hover_icon')->getValue(),
 										)
 									)
 								);
