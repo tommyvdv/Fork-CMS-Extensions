@@ -41,7 +41,7 @@
 {* Lightbox *}
 	{option:lightbox}
 		{option:blockPhotogalleryAlbum.images}
-			<ul class="photogalleryLightbox" data-id="{$blockPhotogalleryAlbum.id}">
+			<ul class="photogalleryLightbox" data-id="{$blockPhotogalleryAlbum.data.extra_id}">
 				{iteration:blockPhotogalleryAlbum.images}
 				<li>
 					{option:!blockPhotogalleryAlbum.images.data.external_link}

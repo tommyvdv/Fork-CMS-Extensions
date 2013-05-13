@@ -61,6 +61,8 @@ class FrontendPhotogalleryDetail extends FrontendBaseBlock
 		// get tags
 		$this->record['tags'] = FrontendTagsModel::getForItem($this->getModule(), $this->record['id']);
 		$this->record['extra'] = FrontendPhotogalleryModel::getExtra($this->data['extra_id']);
+		$this->record['data'] = $this->data;
+
 
 		$thumbnail_resolution = FrontendPhotogalleryModel::getExtraResolutionForKind($this->data['extra_id'], 'album_detail_overview_thumbnail');
 		$large_resolution = FrontendPhotogalleryModel::getExtraResolutionForKind($this->data['extra_id'], 'large');
@@ -157,7 +159,7 @@ class FrontendPhotogalleryDetail extends FrontendBaseBlock
 
 		// assign article
 		$this->tpl->assign('blockPhotogalleryAlbum', $this->record);
-		$this->addJSData('lightbox_settings_' . $this->record['id'], $this->record['extra']['data']['settings']);
+		$this->addJSData('lightbox_settings_' . $this->data['extra_id'], $this->record['extra']['data']['settings']);
 		
 		// assign navigation
 		$this->tpl->assign('blockPhotogalleryAlbumNavigation', FrontendPhotogalleryModel::getNavigation($this->record['id']));

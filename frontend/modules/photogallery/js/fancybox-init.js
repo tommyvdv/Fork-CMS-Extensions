@@ -6,7 +6,6 @@
     	var lightboxId = $this.data('id');
     	var lightboxSettings = jsFrontend.data.get('photogallery.lightbox_settings_' + lightboxId);
 
-
     	var show_close_button = lightboxSettings.show_close_button == 'true'; 
     	var show_arrows = lightboxSettings.show_arrows == 'true';
     	var show_caption = lightboxSettings.show_caption == 'true';
@@ -17,7 +16,6 @@
     	var close_click = lightboxSettings.close_click == 'true';
     	var media_helper = lightboxSettings.media_helper == 'true';
     	var show_hover_icon = lightboxSettings.show_hover_icon == 'true';
-
     	
     	var navigation_effect = lightboxSettings.navigation_effect;
     	var open_effect = lightboxSettings.open_effect;
@@ -34,9 +32,6 @@
 		var overlay_color = lightboxSettings.overlay_color;
 
 		var fancybox = $(this).find('a');
-
-		 console.log(show_close_button);
-
 
 		var h = {};
 

@@ -44,8 +44,8 @@ class FrontendPhotogalleryWidgetLightbox extends FrontendBaseWidget
 		if(!empty($this->record))
 		{
 			$this->record['extra'] = FrontendPhotogalleryModel::getExtra($this->data['extra_id']);
-			// get tags
 			$this->record['tags'] = FrontendTagsModel::getForItem($this->getModule(), $this->record['id']);
+			$this->record['data'] = $this->data;
 
 			$thumbnail_resolution = FrontendPhotogalleryModel::getExtraResolutionForKind($this->data['extra_id'], 'thumbnail');
 			$large_resolution = FrontendPhotogalleryModel::getExtraResolutionForKind($this->data['extra_id'], 'large');
@@ -105,9 +105,9 @@ class FrontendPhotogalleryWidgetLightbox extends FrontendBaseWidget
 		);
 		
 		$this->header->addCSS('/frontend/modules/' . $this->getModule() . '/layout/css/photogallery.css');
-		
+
 		$this->tpl->assign('widgetPhotogalleryLightbox', $this->record);
 		$this->tpl->mapModifier('createimagephotogallery', array('FrontendPhotogalleryHelper', 'createImage'));
-		$this->addJSData('lightbox_settings_' . $this->record['id'], $this->record['extra']['data']['settings']);
+		$this->addJSData('lightbox_settings_' . $this->data['extra_id'], $this->record['extra']['data']['settings']);
 	}
 }
