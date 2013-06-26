@@ -1,9 +1,9 @@
 {* Images *}
 	{option:widgetPhotogallerySlideshow.images}
-		<div class="photogallerySlideshowWrapper photogallerySlideshowWrapperId{$widgetPhotogallerySlideshow.id}{option:widgetPhotogallerySlideshowNavigationNumbers} photogallerySlideshowNavigationNumbers{/option:widgetPhotogallerySlideshowNavigationNumbers}" data-id="{$widgetPhotogallerySlideshow.id}">
+		<div class="js-photogallery-slideshow-wrapper photogallery-slideshow-wrapper photogallerys-slideshow-wrapper-id-{$widgetPhotogallerySlideshow.id}{option:widgetPhotogallerySlideshowNavigationNumbers} photogallery-slideshow-navigation-numbers{/option:widgetPhotogallerySlideshowNavigationNumbers}" data-id="{$widgetPhotogallerySlideshow.id}">
 			
 			{* Slides *}
-			<div id="flexslider{$widgetPhotogallerySlideshow.id}"  class="flexslider">
+			<div id="photogallery-flexslider-id-{$widgetPhotogallerySlideshow.id}"  class="flexslider photogallery-flexslider">
 
 				<ul class="slides">
 					{iteration:widgetPhotogallerySlideshow.images}
@@ -31,7 +31,7 @@
 							</a>
 							{/option:widgetPhotogallerySlideshow.images.data.external_link}
 
-							<div class="caption">
+							<div class="caption photogallery-flexslider-caption">
 								{option:widgetPhotogallerySlideshowShowCaption}
 									{option:!widgetPhotogallerySlideshow.images.title_hidden}
 										{option:widgetPhotogallerySlideshow.images.title}
@@ -51,7 +51,7 @@
 
 			{* Slides thumbnail navigation *}
 			{option:widgetPhotogallerySlideshowNavigationThumnails}
-			<div  id="flexsliderNavigation{$widgetPhotogallerySlideshow.id}" class="flexslider">
+			<div  id="photogallery-flexslider-navigation-id-{$widgetPhotogallerySlideshow.id}" class="flexslider photogallery-flexslider-thumbnail-navigation">
 				<ul class="slides">
 					{iteration:widgetPhotogallerySlideshow.images}
 						<li><img src="{$var|createimagephotogallery:{$widgetPhotogallerySlideshow.images.set_id}:{$widgetPhotogallerySlideshow.images.filename}:150:150:'crop'}" /></li>

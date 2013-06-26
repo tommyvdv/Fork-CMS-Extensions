@@ -55,7 +55,7 @@ class FrontendPhotogalleryHelper
 
 	public static function getImagePath($set_id, $filename, $resolution)
 	{
-		return 'photogallery/sets/frontend/' . $set_id . '/' . $resolution['width'] . 'x' . $resolution['height'] . '_'  . $resolution['method'] . '/'  . $filename;
+		return 'photogallery/sets/frontend/' . $set_id . '/' . $resolution['width'] . 'x' . $resolution['height']  . $resolution['method'] . '/'  . $filename;
 	}
 
 	public static function getOriginalPath($set_id, $filename)

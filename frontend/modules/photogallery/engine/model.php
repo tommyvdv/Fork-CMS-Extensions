@@ -13,7 +13,7 @@
 class FrontendPhotogalleryModel implements FrontendTagsInterface
 {
 
-	const FANCYBOX_VERSION = '2.1.3';
+	const FANCYBOX_VERSION = '2.1.4';
 	const FLEXSLIDER_VERSION = '2.1';
 	
 	public static function buildCategoriesNavigation($parent_id = 0, $selectedUrl = null)

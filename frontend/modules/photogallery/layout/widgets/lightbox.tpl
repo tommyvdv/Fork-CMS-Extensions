@@ -1,5 +1,5 @@
 {option:widgetPhotogalleryLightbox.images}
-	<div class="photogalleryLightboxWrapper photogalleryLightboxId{$widgetPhotogalleryLightbox.id}">
+	<div class="photogallery-lightbox-wrapper photogallery-lightbox-id-{$widgetPhotogalleryLightbox.id}">
 	{* Title *}
 		<h3>{$widgetPhotogalleryLightbox.title}</h3>
 	
@@ -40,7 +40,7 @@
 	
 	{* Images *}
 		{option:widgetPhotogalleryLightbox.images}
-			<ul class="photogalleryLightbox" data-id="{$widgetPhotogalleryLightbox.data.extra_id}">
+			<ul class="js-photogallery-lightbox photogallery-list" data-id="{$widgetPhotogalleryLightbox.data.extra_id}">
 				{iteration:widgetPhotogalleryLightbox.images}
 				<li>
 					<a href="{$var|createimagephotogallery:{$widgetPhotogalleryLightbox.images.set_id}:{$widgetPhotogalleryLightbox.images.filename}:{$widgetPhotogalleryLightboxLargeResolution.width}:{$widgetPhotogalleryLightboxLargeResolution.height}:{$widgetPhotogalleryLightboxLargeResolution.method}}" rel="{$widgetPhotogalleryLightbox.id}" class="linkedImage"{option:!widgetPhotogalleryLightbox.images.title_hidden} title="{$widgetPhotogalleryLightbox.images.title|htmlentities}"{/option:!widgetPhotogalleryLightbox.images.title_hidden}>
@@ -49,7 +49,7 @@
 					</a>
 					
 					{* Caption *}
-					<div class="caption">
+					<div class="photogallery-lightbox-caption">
 						{option:!widgetPhotogalleryLightbox.images.title_hidden}
 							{option:widgetPhotogalleryLightbox.images.title}
 								<h3>{$widgetPhotogalleryLightbox.images.title}</h3>

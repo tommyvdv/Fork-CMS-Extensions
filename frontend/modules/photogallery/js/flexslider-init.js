@@ -1,6 +1,6 @@
  $(window).load(function()
  {
-    $('.photogallerySlideshowWrapper').each(function()
+    $('.js-photogallery-slideshow-wrapper').each(function()
     {
     	var $this = $(this);
     	var slideshowId = $this.data('id');
@@ -14,7 +14,7 @@
         var sync = '';
         var randomize = slideshowSettings.random == 'true';
         var directionNav = slideshowSettings.show_arrows == 'true';
-        var slider = '#flexslider' + slideshowId;
+        var slider = '#photogallery-flexslider-id-' + slideshowId;
         var pauseOnHover = slideshowSettings.pause_on_hover == 'true';
 
         var animation = slideshowSettings.animation;
@@ -30,7 +30,7 @@
             controlNav = false;
             slideshow = false;
             animationLoop = false;
-            sync = '#flexsliderNavigation' + slideshowId;
+            sync = '#photogallery-flexslider-navigation-id-' + slideshowId;
             randomize = false;
             directionNav = directionNav;
             pauseOnHover = false;
