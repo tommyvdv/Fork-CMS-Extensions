@@ -81,11 +81,12 @@ class FrontendPhotogalleryModel implements FrontendTagsInterface
 	{
 		return (int) FrontendModel::getContainer()->get('database')->getVar(
 			'SELECT category.id
-			FROM photogallery_categories AS category
+			FROM jeram_categories AS category
 				INNER JOIN meta AS meta ON meta.id = category.meta_id
-			WHERE meta.url = ?',
+			WHERE meta.url = ? AND category.language = ?',
 			array(
-				$url
+				$url,
+				FRONTEND_LANGUAGE
 			)
 		);
 	}
