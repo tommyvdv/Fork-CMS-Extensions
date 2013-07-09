@@ -807,38 +807,19 @@ class BackendPhotogalleryModel
 	 * @param bool[optional] $includeCount Include the count?
 	 * @return array
 	 */
-	/*
-	public static function getCategoriesForDropdown($includeCount = false)
-	{
-		$db = BackendModel::getContainer()->get('database');
-
-		if($includeCount)
-		{
-			return (array) $db->getPairs(
-				'SELECT i.id, CONCAT(i.title, " (", COUNT(p.album_id) ,")") AS title
-				 FROM photogallery_categories AS i
-				 LEFT OUTER JOIN photogallery_categories_albums AS p ON i.id = p.category_id 
-				 WHERE i.language = ? 
-				 GROUP BY i.id ORDER BY i.sequence ASC',
-				array(BL::getWorkingLanguage())
-			);
-		}
-
-		return (array) $db->getPairs(
-			'SELECT i.id, i.title
-			 FROM photogallery_categories AS i
-			 WHERE i.language = ? ORDER BY i.sequence ASC',
-			array(BL::getWorkingLanguage())
-		);
-	}
-	*/
 	public static function getCategoriesForDropdown($allowedDepth = null, $includeCount = false, $parent_id = 0, $depth = 0, $parent = null, $seperator = '&rsaquo;', $space = ' ')
 	{
+		if(is_array($allowedDepth))
+		{
+			$startAllowedDepth = $allowedDepth[0];
+			$allowedDepth = $allowedDepth[1];
+		}
+
 		$db = BackendModel::getContainer()->get('database');
 
 		$categories = (array) $db->getPairs(
 			'SELECT i.id, i.title
-			FROM photogallery_categories AS i
+			FROM jeram_categories AS i
 			WHERE i.language = ? AND i.parent_id = ?
 			ORDER BY i.sequence ASC',
 			array(
@@ -856,7 +837,11 @@ class BackendPhotogalleryModel
 		{
 			foreach($categories as $key => $value)
 			{
-				$output[$key] =  $value;
+				if(
+					!isset($startAllowedDepth) ||
+					$depth >= $startAllowedDepth
+				) $output[$key] =  $value;
+				
 				$children = self::getCategoriesForDropdown($allowedDepth, $includeCount, $key, $depth + 1, $value);
 				foreach($children as $c_key => $c_value)
 				{
