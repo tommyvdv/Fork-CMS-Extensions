@@ -12,5 +12,7 @@ app/config/parameters.yml
 *
 
 # Except for photogallery:
-!*/backend/modules/photogallery/*
-!*/frontend/modules/photogallery/*
+!/backend/modules/photogallery/
+!/backend/modules/photogallery/*/*
+!/frontend/modules/photogallery/*
+!/frontend/modules/photogallery/*/*
