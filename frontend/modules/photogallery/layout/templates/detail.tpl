@@ -41,7 +41,7 @@
 {* Lightbox *}
 	{option:lightbox}
 		{option:blockPhotogalleryAlbum.images}
-			<ul class="photogalleryLightbox" data-id="{$blockPhotogalleryAlbum.data.extra_id}">
+			<ul class="js-photogallery-lightbox photogallery-list" data-id="{$blockPhotogalleryAlbum.data.extra_id}">
 				{iteration:blockPhotogalleryAlbum.images}
 				<li>
 					{option:!blockPhotogalleryAlbum.images.data.external_link}
@@ -52,7 +52,7 @@
 					{/option:blockPhotogalleryAlbum.images.data.external_link}
 						<img src="{$var|createimagephotogallery:{$blockPhotogalleryAlbum.images.set_id}:{$blockPhotogalleryAlbum.images.filename}:{$modulePhotogalleryDetailThumbnailResolution.width}:{$modulePhotogalleryDetailThumbnailResolution.height}:{$modulePhotogalleryDetailThumbnailResolution.method}}" />
 					</a>
-					<div class="caption">
+					<div class="photogallery-lightbox-caption">
 						{option:!blockPhotogalleryAlbum.images.title_hidden}
 							{option:blockPhotogalleryAlbum.images.title}
 								<h3>{$blockPhotogalleryAlbum.images.title}</h3>
@@ -70,7 +70,7 @@
 {* Paged *}
 	{option:paged}
 		{option:blockPhotogalleryAlbum.images}
-			<ul>
+			<ul class="photogallery-list">
 				{iteration:blockPhotogalleryAlbum.images}
 				<li>
 					<a href="{$blockPhotogalleryAlbum.images.full_url}" rel="{$blockPhotogalleryAlbum.id}" class="linkedImage" title="{$blockPhotogalleryAlbum.image.title}">

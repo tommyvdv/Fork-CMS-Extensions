@@ -1,6 +1,6 @@
  $(window).load(function()
  {
-    $('.photogalleryLightbox').each(function()
+    $('.js-photogallery-lightbox').each(function()
     {
     	var $this = $(this);
     	var lightboxId = $this.data('id');
@@ -96,7 +96,7 @@
 				// Get rich titles
 				var currentElement = this.element;
 				var next = $(currentElement).next();
-				if(next.length && next.hasClass('caption')) this.title = next.html();
+				if(next.length && next.hasClass('photogallery-lighbox-caption')) this.title = next.html();
 
 				// Disable right click
 				$.fancybox.wrap.bind("contextmenu", function (e) {

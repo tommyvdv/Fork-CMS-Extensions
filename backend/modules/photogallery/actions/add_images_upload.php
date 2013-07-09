@@ -167,7 +167,7 @@ class BackendPhotogalleryAddImagesUpload extends BackendBaseActionAdd
 				$allowEnlargement = true;
 
 				$this->frm->getField($field)->createThumbnail(
-					$setsFilesPath . '/backend/' . $set_id . '/' . $resolution['width'] . 'x' . $resolution['height'] . '_' . $resolution['method'] . '/' . $filename,
+					$setsFilesPath . '/backend/' . $set_id . '/' . $resolution['width'] . 'x' . $resolution['height'] . $resolution['method'] . '/' . $filename,
 					$resolution['width'], $resolution['height'],
 					$allowEnlargement, $forceOriginalAspectRatio, BackendPhotogalleryModel::IMAGE_QUALITY
 				);

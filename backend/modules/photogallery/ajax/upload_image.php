@@ -173,7 +173,7 @@ class BackendPhotogalleryAjaxUploadImage extends BackendBaseAJAXAction
 					$thumbnail = new SpoonThumbnail($tempFile , $resolution['width'], $resolution['height'], true);
 					$thumbnail->setAllowEnlargement($allowEnlargement);
 					$thumbnail->setForceOriginalAspectRatio($forceOriginalAspectRatio);
-					$thumbnail->parseToFile($setsFilesPath . '/backend/' . $set_id . '/' . $resolution['width'] . 'x' . $resolution['height'] . '_' . $resolution['method'] . '/' . $filename, BackendPhotogalleryModel::IMAGE_QUALITY);
+					$thumbnail->parseToFile($setsFilesPath . '/backend/' . $set_id . '/' . $resolution['width'] . 'x' . $resolution['height'] . $resolution['method'] . '/' . $filename, BackendPhotogalleryModel::IMAGE_QUALITY);
 				}
 
 				$image['id'] = BackendPhotogalleryModel::insertImage($image, $content, $metaData);
@@ -191,6 +191,7 @@ class BackendPhotogalleryAjaxUploadImage extends BackendBaseAJAXAction
 				else
 				{
 					// Move the original image
+					SpoonDirectory::create($setsFilesPath . '/original/' . $set_id);
 					move_uploaded_file($tempFile, $setsFilesPath . '/original/' . $set_id . '/' . $filename);
 				}
 			}

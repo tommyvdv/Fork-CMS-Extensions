@@ -30,7 +30,7 @@ class BackendPhotogalleryHelper
 	 */
 	public static function getPreviewHTML50x50_crop($set_id, $module, $filename)
 	{
-		$image = FRONTEND_FILES_URL . '/' . $module . '/sets/backend/' . $set_id . '/50x50_crop/' . $filename;
+		$image = FRONTEND_FILES_URL . '/' . $module . '/sets/backend/' . $set_id . '/50x50crop/' . $filename;
 		return '<img src="' . $image . '" width="50" height="50" />';
 	}
 
@@ -44,7 +44,7 @@ class BackendPhotogalleryHelper
 	 */
 	public static function getPreviewHTML128x128_crop($set_id, $module, $filename)
 	{
-		$image = FRONTEND_FILES_URL . '/' . $module . '/sets/backend/' . $set_id . '/128x128_crop/' . $filename;
+		$image = FRONTEND_FILES_URL . '/' . $module . '/sets/backend/' . $set_id . '/128x128crop/' . $filename;
 		return '<img src="' . $image . '" width="128" height="128" />';
 	}
 
@@ -69,7 +69,7 @@ class BackendPhotogalleryHelper
 		
 		if(empty($result)) return '';
 					
-		$image = FRONTEND_FILES_URL . '/' . $module . '/sets/backend/' . $result['set_id'] . '/50x50_crop/' . $result['filename'];
+		$image = FRONTEND_FILES_URL . '/' . $module . '/sets/backend/' . $result['set_id'] . '/50x50crop/' . $result['filename'];
 		return '<img src="' . $image . '" width="50" height="50" />';
 	}
 

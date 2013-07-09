@@ -4,7 +4,6 @@ jsBackend.uploadifive =
 {
 	init: function()
 	{		
-		console.log( jsBackend.current.language);
 		$('#images').uploadifive({
 				'auto'             : false,
 				'formData'         : {

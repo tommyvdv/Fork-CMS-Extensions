@@ -13,7 +13,7 @@
 class FrontendPhotogalleryModel implements FrontendTagsInterface
 {
 
-	const FANCYBOX_VERSION = '2.1.3';
+	const FANCYBOX_VERSION = '2.1.4';
 	const FLEXSLIDER_VERSION = '2.1';
 	
 	public static function buildCategoriesNavigation($parent_id = 0, $selectedUrl = null)
@@ -81,11 +81,12 @@ class FrontendPhotogalleryModel implements FrontendTagsInterface
 	{
 		return (int) FrontendModel::getContainer()->get('database')->getVar(
 			'SELECT category.id
-			FROM photogallery_categories AS category
+			FROM jeram_categories AS category
 				INNER JOIN meta AS meta ON meta.id = category.meta_id
-			WHERE meta.url = ?',
+			WHERE meta.url = ? AND category.language = ?',
 			array(
-				$url
+				$url,
+				FRONTEND_LANGUAGE
 			)
 		);
 	}

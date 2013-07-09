@@ -164,7 +164,7 @@ class BackendPhotogalleryAddImagesUploadZip extends BackendBaseActionAdd
 			$thumb->setAllowEnlargement($allowEnlargement);
 			$thumb->setForceOriginalAspectRatio($forceOriginalAspectRatio);
 			$thumb->parseToFile(
-				$setsFilesPath . '/backend/' . $set_id . '/' . $resolution['width'] . 'x' . $resolution['height'] . '_' . $resolution['method'] . '/' . $filename,
+				$setsFilesPath . '/backend/' . $set_id . '/' . $resolution['width'] . 'x' . $resolution['height'] . $resolution['method'] . '/' . $filename,
 				BackendPhotogalleryModel::IMAGE_QUALITY
 			);
 		}
