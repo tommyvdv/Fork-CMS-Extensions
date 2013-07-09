@@ -3,7 +3,13 @@
 .buildpath
 .settings
 .*.swp
-.DS_Store
+*.DS_Store
 backend/cache/navigation/
 vendor/
 app/config/parameters.yml
+
+# Ignore everything:
+*
+
+# Except for photogallery:
+!*/photogallery/*
