@@ -1,3 +1,4 @@
+# DEFAULT IGNORE
 .project
 .cache
 .buildpath
@@ -8,6 +9,7 @@ backend/cache/navigation/
 vendor/
 app/config/parameters.yml
 
+# IGNORE ALL...
 CHANGELOG.md
 LICENSE.md
 README.md
@@ -25,6 +27,7 @@ library
 tile.png
 tools
 
+# ...BUT THESE
 backend/*
 frontend/*
 !backend/modules/
