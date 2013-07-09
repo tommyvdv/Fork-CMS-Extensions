@@ -1,6 +1,9 @@
-# Ignore everything:
-*
-
-# Except for photogallery:
-!backend/modules/photogallery
-!frontend/modules/photogallery
+.project
+.cache
+.buildpath
+.settings
+.*.swp
+.DS_Store
+backend/cache/navigation/
+vendor/
+app/config/parameters.yml
