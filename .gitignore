@@ -30,5 +30,6 @@ frontend/*
 !backend/modules/
 !frontend/modules/
 backend/modules/*
+frontend/modules/*
 !backend/modules/photogallery/
 !frontend/modules/photogallery/
