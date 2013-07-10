@@ -44,6 +44,9 @@
 
 			{/iteration:modulePhotogalleryAlbums}
 			
+			{* pagination *}
+				{include:core/layout/templates/pagination.tpl}
+
 			{* RSS link *}
 				<p class="photogallery-rss"><a href="{$var|geturlforblock:'photogallery':'rss'}">{$lblSubscribeToTheRSSFeed|ucfirst}</a></p>
 				
