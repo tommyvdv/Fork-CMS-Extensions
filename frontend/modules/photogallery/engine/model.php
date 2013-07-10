@@ -618,6 +618,8 @@ class FrontendPhotogalleryModel implements FrontendTagsInterface
 	 */
 	public static function getAll($limit = 10, $offset = 0)
 	{
+		return self::getAllFor(false, $limit, $offset);
+		/*
 		$db = FrontendModel::getContainer()->get('database');
 		
 		$return =  (array) $db->getRecords(
@@ -678,6 +680,12 @@ class FrontendPhotogalleryModel implements FrontendTagsInterface
 		}
 
 		return $return;
+		*/
+	}
+
+	public static function getRandom($limit = 10)
+	{
+		return self::getAllForCategory(null, $limit, 0, false, null, null, true);
 	}
 	
 	/**
@@ -690,6 +698,8 @@ class FrontendPhotogalleryModel implements FrontendTagsInterface
 	 */
 	public static function getAllWithImages($limit = 10, $offset = 0)
 	{
+		return self::getAllFor(false, $limit, $offset, null, null, null, null, null, null, true);
+		/*
 		$db = FrontendModel::getContainer()->get('database');
 
 		$return =  (array) $db->getRecords(
@@ -768,6 +778,7 @@ class FrontendPhotogalleryModel implements FrontendTagsInterface
 		}
 
 		return $return;
+		*/
 	}
 
 	/**
@@ -858,10 +869,25 @@ class FrontendPhotogalleryModel implements FrontendTagsInterface
 	 */
 	public static function getAlbumsCount()
 	{
+		/*
+		$categoryURL = false,
+		$limit = 10,
+		$offset = 0,
+		$ignoreLimit = false,
+		$filter = null,
+		$includeAllSubcategoryResults = true,
+		$randomize = false,
+		$onlyWithImages = false,
+		$countOnly = false,
+		$includeAllImages = false
+		*/
+		return self::getAllFor(false, null, null, false, null, true, false, false, true, false);
+		/*
 		return (int) FrontendModel::getContainer()->get('database')->getVar('SELECT COUNT(i.id) AS count
 														FROM photogallery_albums AS i
 														WHERE i.language = ? AND i.hidden = ?  AND i.show_in_albums = ? AND i.publish_on <= ? AND i.num_images_not_hidden > ?',
 														array(FRONTEND_LANGUAGE, 'N', 'Y', FrontendModel::getUTCDate('Y-m-d H:i') . ':00', 0));
+														*/
 	}
 
 	/**
@@ -922,150 +948,240 @@ class FrontendPhotogalleryModel implements FrontendTagsInterface
 	 */
 	public static function getAllCategoriesWithImage()
 	{
-	  $return =  (array) FrontendModel::getContainer()->get('database')->getRecords('SELECT c.id, c.title AS label, m.url, img.filename, img.set_id,
-	                            m.keywords AS meta_keywords, m.keywords_overwrite AS meta_keywords_overwrite,
-	                            m.description AS meta_description, m.description_overwrite AS meta_description_overwrite,
-	                            m.title AS meta_title, m.title_overwrite AS meta_title_overwrite, m.data AS meta_data
-	                            FROM photogallery_categories AS c
-	                            INNER JOIN photogallery_categories_albums AS ca ON ca.category_id = c.id
+		$return = (array) FrontendModel::getContainer()->get('database')->getRecords('SELECT c.id, c.title AS label, m.url, img.filename, img.set_id,
+								m.keywords AS meta_keywords, m.keywords_overwrite AS meta_keywords_overwrite,
+								m.description AS meta_description, m.description_overwrite AS meta_description_overwrite,
+								m.title AS meta_title, m.title_overwrite AS meta_title_overwrite, m.data AS meta_data
+								FROM photogallery_categories AS c
+								INNER JOIN photogallery_categories_albums AS ca ON ca.category_id = c.id
 								INNER JOIN photogallery_albums AS i ON i.id = ca.album_id
-	                            INNER JOIN photogallery_sets_images AS img ON i.set_id = img.set_id
-	                            INNER JOIN meta AS m ON m.id = c.meta_id
-	                            WHERE c.language = ? AND i.hidden = ?  AND i.show_in_albums = ? AND i.publish_on <= ?  AND i.num_images > 0
-	                            ORDER BY i.sequence DESC, img.sequence ASC',
-	                            array(FRONTEND_LANGUAGE, 'N', 'Y', FrontendModel::getUTCDate('Y-m-d H:i') . ':00'), 'id');
-
-	  $categoryLink = FrontendNavigation::getURLForBlock('photogallery', 'category');
-
-	  foreach($return as &$row)
-	  {
-	    $row['full_url'] = $categoryLink . '/' . $row['url'];
-	    // unserialize
-	    if(isset($row['meta_data'])) $row['meta_data'] = @unserialize($row['meta_data']);
-	  }
-
-	  return $return;
-	}
-	
-	/*
-	public static function getAllCategoriesWithImage()
-	{
-		$return =  (array) FrontendModel::getContainer()->get('database')->getRecords('SELECT c.id, c.title AS label, m.url, COUNT(c.id) AS total,
-															m.keywords AS meta_keywords, m.keywords_overwrite AS meta_keywords_overwrite,
-															m.description AS meta_description, m.description_overwrite AS meta_description_overwrite,
-															m.title AS meta_title, m.title_overwrite AS meta_title_overwrite, m.data AS meta_data
-															FROM photogallery_categories AS c
-															INNER JOIN meta AS m ON m.id = c.meta_id
-															INNER JOIN photogallery_albums AS i ON c.id = i.category_id AND c.language = i.language
-															INNER JOIN photogallery_sets_images AS img ON i.set_id = img.set_id
-															WHERE c.language = ?
-															GROUP BY c.id ORDER BY c.sequence ASC',
-															array(FRONTEND_LANGUAGE), 'id');
-
-		if(empty($return)) return array();
+								INNER JOIN photogallery_sets_images AS img ON i.set_id = img.set_id
+								INNER JOIN meta AS m ON m.id = c.meta_id
+								WHERE c.language = ? AND i.hidden = ?  AND i.show_in_albums = ? AND i.publish_on <= ?  AND i.num_images > 0
+								ORDER BY i.sequence ASC, img.sequence ASC',
+								array(FRONTEND_LANGUAGE, 'N', 'Y', FrontendModel::getUTCDate('Y-m-d H:i') . ':00'), 'id');
 
 		$categoryLink = FrontendNavigation::getURLForBlock('photogallery', 'category');
 
 		foreach($return as &$row)
 		{
-			$row['full_url'] = $categoryLink . '/' . $row['url'];
-
-			// unserialize
-			if(isset($row['meta_data'])) $row['meta_data'] = @unserialize($row['meta_data']);
-
-			$row['album'] = (array) FrontendModel::getContainer()->get('database')->getRecord('SELECT *
-															FROM photogallery_albums
-															WHERE category_id = ? AND hidden = ? AND publish_on <= ?
-															ORDER BY sequence ASC LIMIT 1', array($row['id'], 'N', FrontendModel::getUTCDate('Y-m-d H:i') . ':00'));
-
-			$row['image'] = (array) FrontendModel::getContainer()->get('database')->getRecord('SELECT *
-															FROM photogallery_sets_images
-															WHERE set_id = ?
-															ORDER BY sequence ASC LIMIT 1', array($row['album']['set_id']));
+		$row['full_url'] = $categoryLink . '/' . $row['url'];
+		// unserialize
+		if(isset($row['meta_data'])) $row['meta_data'] = @unserialize($row['meta_data']);
 		}
-		
+
 		return $return;
 	}
-	*/
-	
-	/**
-	 * Get the number of items in a given category
-	 *
-	 * @param string $URL The URL for the category.
-	 * @return int
-	 */
-	public static function getAllForCategoryCount($categoryURL)
-	{
-		return (int) FrontendModel::getContainer()->get('database')->getVar(
-			'SELECT COUNT(DISTINCT i.id) AS count
-			FROM photogallery_albums AS i
-				INNER JOIN photogallery_categories_albums AS a ON i.id = a.album_id
-				INNER JOIN photogallery_categories AS c ON a.category_id = c.id
-				INNER JOIN meta AS m ON m.id = c.meta_id
-			WHERE i.language = ?
-				AND i.hidden = ?  AND i.show_in_albums = ?
-				AND i.publish_on <= ?
-				AND m.url = ?
-				AND i.num_images > 0',
-			array(
-				FRONTEND_LANGUAGE,
-				'N', 'Y',
-				FrontendModel::getUTCDate('Y-m-d H:i') . ':00',
-				(string) $categoryURL
-			)
-		);
-	}
 
-	/**
-	 * Get all items in a category (at least a chunk)
-	 *
-	 * @param string $categoryURL The URL of the category to retrieve the posts for.
-	 * @param int[optional] $limit The number of items to get.
-	 * @param int[optional] $offset The offset.
-	 * @return array
-	 */
-	public static function getAllForCategory($categoryURL, $limit = 10, $offset = 0, $ignoreLimit = false)
+	public static function getAllFor(
+		$categoryURL = false,
+		$limit = 10,
+		$offset = 0,
+		$ignoreLimit = false,
+		$filter = null,
+		$includeAllSubcategoryResults = true,
+		$randomize = false,
+		$onlyWithImages = false,
+		$countOnly = false,
+		$includeAllImages = false
+	)
 	{
+		// get db
 		$db = FrontendModel::getContainer()->get('database');
-		
-		// get the items
-		$return = (array) $db->getRecords(
-			'SELECT i.id, i.language, i.title, i.introduction, i.text, i.num_images, i.set_id, 
-			c.title AS category_title, cm.url AS category_url,
-			UNIX_TIMESTAMP(i.publish_on) AS publish_on,
-			m.url, GROUP_CONCAT(ab.category_id) AS category_ids
-			FROM photogallery_albums AS i
-			INNER JOIN photogallery_categories_albums AS a ON i.id = a.album_id
-			LEFT OUTER JOIN photogallery_categories_albums AS ab ON i.id = ab.album_id
-			INNER JOIN photogallery_categories AS c ON a.category_id = c.id
-			INNER JOIN meta AS m ON i.meta_id = m.id
-			INNER JOIN meta AS cm ON cm.id = c.meta_id
-			WHERE  i.language = ? AND i.hidden = ?  AND i.show_in_albums = ? AND i.publish_on <= ? AND cm.url = ?  AND i.num_images > 0
-			GROUP BY i.id
-			ORDER BY i.sequence ASC' .
-			($ignoreLimit ? '/* LIMIT ?, ? */' : ' LIMIT ?, ?'),
-			array(
-				FRONTEND_LANGUAGE,
-				'N', 'Y',
-				FrontendModel::getUTCDate('Y-m-d H:i') . ':00',
-				(string) $categoryURL,
-				(int) $offset,
-				(int) $limit
-			),
-			'id'
+
+		// include albums from subcategories
+		if($includeAllSubcategoryResults && $categoryURL)
+		{
+			$categoryURLS = self::getSubcategoriesByUrl($categoryURL);
+		}
+
+		// construct the query in the controller instead of the model as an allowed exception for data grid usage
+
+		if($countOnly)
+			$query = 'SELECT COUNT(DISTINCT i.id) AS count
+				FROM photogallery_albums AS i
+					INNER JOIN photogallery_categories_albums AS a ON i.id = a.album_id
+					LEFT OUTER JOIN photogallery_categories_albums AS ab ON i.id = ab.album_id
+					INNER JOIN photogallery_categories AS c ON a.category_id = c.id
+					INNER JOIN meta AS m ON i.meta_id = m.id
+					INNER JOIN meta AS cm ON cm.id = c.meta_id
+				WHERE  i.language = ?
+					AND i.hidden = ?
+					AND i.show_in_albums = ?
+					AND i.publish_on <= ?';
+		else
+			$query = 'SELECT i.id, i.text, i.introduction, i.title, i.set_id, UNIX_TIMESTAMP(i.publish_on) AS publish_on, UNIX_TIMESTAMP(i.new_from) AS new_from, UNIX_TIMESTAMP(i.new_until) AS new_until, m.url,
+					c.title AS category_title, cm.url AS category_url,
+					UNIX_TIMESTAMP(i.publish_on) AS publish_on,
+					GROUP_CONCAT(ab.category_id) AS category_ids
+				FROM photogallery_albums AS i
+					INNER JOIN meta AS m ON i.meta_id = m.id
+					LEFT JOIN photogallery_categories_albums AS a ON i.id = a.album_id
+					LEFT OUTER JOIN photogallery_categories_albums AS ab ON i.id = ab.album_id
+					LEFT JOIN photogallery_categories AS c ON a.category_id = c.id
+					LEFT JOIN meta AS cm ON cm.id = c.meta_id
+				WHERE  i.language = ?
+					AND i.hidden = ?
+					AND i.show_in_albums = ?
+					AND i.publish_on <= ?';
+
+		// init params
+		$parameters = array(
+			FRONTEND_LANGUAGE,
+			'N',
+			'Y',
+			FrontendModel::getUTCDate('Y-m-d H:i') . ':00'
 		);
+
+		if($randomize)
+		{
+			$random_query = 'SELECT GROUP_CONCAT(id SEPARATOR ", ")
+				FROM (
+						SELECT @cnt := COUNT(*) + 1,
+							@lim := ?
+						FROM photogallery_albums
+					) vars
+				STRAIGHT_JOIN
+					(
+						SELECT r.id,
+							@lim := @lim - 1
+						FROM photogallery_albums r
+						WHERE (@cnt := @cnt - 1)
+							AND RAND(?) < @lim / @cnt
+					) i';
+			$random_ids = $db->getVar($random_query, array($limit, FrontendModel::getUTCDate('Hi', strtotime('now'))));
+		}
+
+		if($randomize)
+		{
+			$query.= ' AND i.id IN(' . $random_ids . ')'; /* DONT USE SPOON PARAMS! */
+		}
+
+		// only get albums with images
+		if($onlyWithImages)
+		{
+			$query = ' AND i.num_images > ?';
+			$parameters[] = 0;
+		}
+
+		// if more than one category
+		if(isset($categoryURLS))
+		{
+			$query.= ' AND cm.url REGEXP ?';
+			$parameters[] = (string) implode('|', $categoryURLS);
+		} else if($categoryURL) {
+			$query.= ' AND cm.url = ?';
+			$parameters[] = (string) $categoryURL;
+		}
+
+/*
+		if(isset($filter['city']) && $filter['city'])
+		{
+			$query.= ' AND building.city LIKE ?';
+			$parameters[] = '%' . $filter['city'] . '%';
+		}
+
+		if(isset($filter['rooms']) && $filter['rooms'])
+		{
+			$query.= ' AND type.num_rooms >= ?';
+			$parameters[] = $filter['rooms'];
+		}
+
+		if(isset($filter['minRentalPrice']) && $filter['minRentalPrice'])
+		{
+			$query.= ' AND type.rental_price >= ?';
+			$parameters[] = $filter['minRentalPrice'];
+		}
+
+		if(isset($filter['maxRentalPrice']) && $filter['maxRentalPrice'])
+		{
+			$query.= ' AND type.rental_price <= ?';
+			$parameters[] = $filter['maxRentalPrice'];
+		}
+
+		if(isset($filter['availableFrom']) && $filter['availableFrom'])
+		{
+			$date = strtotime(str_replace('/', '-', urldecode($filter['availableFrom'])) . ' 12:00:00');
+			$timestamp = FrontendModel::getUTCDate('Y-m-d', $date);
+
+			$query.= ' AND date(i.available_from) <= ?';
+			$parameters[] = $timestamp;
+		}
+*/
+
+		if(!$countOnly) $query.= ' GROUP BY i.id';
+		if(!$randomize) $query.= ' ORDER BY i.sequence ASC';
 		
+		if(!is_null($limit) && !$randomize && !$countOnly)
+		{
+			$query.= ($ignoreLimit ? '/* LIMIT ?, ? */' : ' LIMIT ?, ?');
+			$parameters[] = (int) $offset;
+			$parameters[] = (int) $limit;
+		}
 		
+		// get the count as a number
+		if($countOnly) return (int) FrontendModel::getContainer()->get('database')->getVar($query, $parameters);
+
+		// get the records
+		$return = (array) $db->getRecords($query, $parameters, 'id');
+
 		// no results?
 		if(empty($return)) return array();
 
-		// init var
-		$albumLink = FrontendNavigation::getURLForBlock('photogallery', 'detail');
+		// add some data
+		$detailLink = FrontendNavigation::getURLForBlock('photogallery', 'detail');
+		//$albumLink = FrontendNavigation::getURLForBlock('photogallery', 'detail');
 		$categoryLink = FrontendNavigation::getURLForBlock('photogallery', 'category');
-
-		// loop
-		foreach($return as &$row)
+		$imageLink = FrontendNavigation::getURLForBlock('photogallery', 'image');
+		foreach($return as $key => $row)
 		{
+			$return[$key]['full_url'] = $detailLink . '/' . $row['url'];
+			$return[$key]['is_new'] = ($row['new_from'] <= time() && time() <= $row['new_until']);
+			$return[$key]['image'] =  (array) $db->getRecord('SELECT i.filename, m.url, c.title, c.text, i.set_id, c.data
+														FROM photogallery_sets_images AS i
+															INNER JOIN photogallery_sets_images_content AS c ON i.id = c.set_image_id
+															INNER JOIN meta AS m ON m.id = c.meta_id
+														WHERE i.set_id = ? AND c.language = ? AND i.hidden = ?
+														ORDER BY sequence DESC LIMIT 1',
+														array((int) $row['set_id'], FRONTEND_LANGUAGE, 'N'));
+
+			$return[$key]['image']['data'] = $return[$key]['image']['data'] != null ? unserialize($return[$key]['image']['data']) : null;
+			$row['category_ids'] = ($row['category_ids'] != '') ? (array) explode(',', $row['category_ids']) : null;
+
+			if($row['category_ids'] !== null)
+			{
+				$return[$key]['categories'] = (array) $db->getRecords('SELECT i.title, i.id, m.url
+																FROM photogallery_categories as i
+																INNER JOIN meta as m ON m.id = i.meta_id
+																WHERE i.id IN (' . implode(', ', $row['category_ids']) . ')
+															');
+
+				foreach($return[$key]['categories']as $cat_key => $category)
+				{
+					$return[$key]['categories'][$cat_key]['full_url'] = $categoryLink . '/' . $category['url'];
+				}
+			}
+
+			if($includeAllImages)
+			{
+				// get images
+				$return[$key]['images'] =  (array) $db->getRecords('SELECT i.id, i.filename, m.url, c.title, c.text, i.set_id, c.data
+																	FROM  photogallery_sets_images AS i
+																		INNER JOIN photogallery_sets_images_content AS c ON i.id = c.set_image_id
+																		INNER JOIN meta AS m ON m.id = c.meta_id
+																	WHERE i.set_id = ? AND c.language = ? AND i.hidden = ?
+																	ORDER BY sequence ASC',
+																	array((int) $row['set_id'], FRONTEND_LANGUAGE, 'N'));
+
+				// loop
+				foreach($return[$key]['images'] as $image_key => $image)
+				{
+					$return[$key]['images'][$image_key]['full_url'] = $imageLink . '/' . $image['url'];
+					$return[$key]['images'][$image_key]['data'] = $image['data'] != null ? unserialize($image['data']) : null;
+				}
+			}
+
+			/*
 			// URLs
 			$row['full_url'] = $albumLink . '/' . $row['url'];
 			$row['image'] =  (array) $db->getRecord('SELECT i.filename, m.url, c.title, c.text, i.set_id, c.data
@@ -1076,6 +1192,7 @@ class FrontendPhotogalleryModel implements FrontendTagsInterface
 														ORDER BY sequence DESC LIMIT 1',
 														array((int) $row['set_id'], FRONTEND_LANGUAGE, 'N'));
 
+			// categories
 			$row['category_ids'] = ($row['category_ids'] != '') ? (array) explode(',', $row['category_ids']) : null;
 
 			if($row['category_ids'] !== null)
@@ -1092,10 +1209,104 @@ class FrontendPhotogalleryModel implements FrontendTagsInterface
 					$category['full_url'] = $categoryLink . '/' . $category['url'];
 				}
 			}
+			*/
 		}
-		
-		// return
+
+		// get all tags
+		$tags = FrontendTagsModel::getForMultipleItems('photogallery', array_keys($return));
+
+		// loop tags and add to correct item
+		foreach($tags as $id => $tags)
+		{
+			if(isset($return[$id])) $return[$id]['tags'] = $tags;
+		}
+
+		// spit it
 		return $return;
+	}
+
+	public static function getSubcategoriesByUrl($categoryURL, $depth = 0, $recursive = true, $includeParent = true)
+	{
+		$category_id = self::getCategoryIdByUrl($categoryURL);
+		
+		$db = FrontendModel::getContainer()->get('database');
+
+		$subcategories = $db->getRecords(
+			'SELECT subcat.id, subcat.title, m.url
+			FROM photogallery_categories AS subcat
+				JOIN meta AS m ON m.id = subcat.meta_id
+			WHERE subcat.parent_id = ?',
+			array(
+				$category_id
+			)
+		);
+
+		$return = array();
+		
+		if($includeParent && $depth == 0) $return[] = $categoryURL;
+
+		if(!empty($subcategories))
+			foreach($subcategories AS $id => $subcategory)
+			{
+				$return[] = $subcategory['url'];
+				if($recursive)
+				{
+					$subcategoriesForSubcategory = self::getSubcategoriesByUrl($subcategory['url'], $depth + 1, $recursive);
+					if(!empty($subcategoriesForSubcategory)) $return = array_merge($return, $subcategoriesForSubcategory);
+				}
+			}
+
+		return $return;
+	}
+	
+	/**
+	 * Get the number of items in a given category
+	 *
+	 * @param string $URL The URL for the category.
+	 * @return int
+	 */
+	public static function getAllForCategoryCount(
+		$categoryURL = null,
+		$filter = null
+	)
+	{
+		/*
+		$categoryURL = false,
+		$limit = 10,
+		$offset = 0,
+		$ignoreLimit = false,
+		$filter = null,
+		$includeAllSubcategoryResults = true,
+		$randomize = false,
+		$onlyWithImages = false,
+		$countOnly = false,
+		$includeAllImages = false
+		*/
+		return self::getAllFor($categoryURL, null, null, false, $filter, true, false, false, true);
+	}
+
+	/**
+	 * Get all items in a category (at least a chunk)
+	 *
+	 * @param string $categoryURL The URL of the category to retrieve the posts for.
+	 * @param int[optional] $limit The number of items to get.
+	 * @param int[optional] $offset The offset.
+	 * @return array
+	 */
+	public static function getAllForCategory(
+		$categoryURL = false,
+		$limit = 10,
+		$offset = 0,
+		$ignoreLimit = false,
+		$filter = null,
+		$includeAllSubcategoryResults = true,
+		$randomize = false,
+		$onlyWithImages = false,
+		$countOnly = false,
+		$includeAllImages = false
+	)
+	{
+		return self::getAllFor($categoryURL, $limit, $offset, $ignoreLimit, $filter, $includeAllSubcategoryResults, $randomize, $onlyWithImages, $countOnly, $includeAllImages);
 	}
 
 	/**
