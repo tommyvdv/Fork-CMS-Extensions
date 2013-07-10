@@ -89,7 +89,7 @@ class BackendPhotogalleryCategories extends BackendBaseActionIndex
 			(
 				count($this->breadcrumbs) <= BackendModel::getModuleSetting('photogallery', 'categories_depth', 0) &&
 				!is_null(BackendModel::getModuleSetting('photogallery', 'categories_depth'))
-			) || BackendModel::getModuleSetting('photogallery', 'categories_depth') === 0
+			) || (int) BackendModel::getModuleSetting('photogallery', 'categories_depth') === 0
 		)
 		{
 			// add children column

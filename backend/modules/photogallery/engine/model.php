@@ -819,7 +819,7 @@ class BackendPhotogalleryModel
 
 		$categories = (array) $db->getPairs(
 			'SELECT i.id, i.title
-			FROM jeram_categories AS i
+			FROM photogallery_categories AS i
 			WHERE i.language = ? AND i.parent_id = ?
 			ORDER BY i.sequence ASC',
 			array(

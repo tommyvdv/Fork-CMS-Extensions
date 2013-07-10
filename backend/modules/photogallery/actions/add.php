@@ -51,7 +51,14 @@ class BackendPhotogalleryAdd extends BackendBaseActionAdd
 		$today = mktime(00, 00, 00);
 
 		//$this->categories = BackendPhotogalleryModel::getCategoriesForDropdown(true);
-		$this->categories = BackendPhotogalleryModel::getCategoriesForDropdown(BackendModel::getModuleSetting('photogallery', 'categories_depth', 0));
+		$allowedDepth = BackendModel::getModuleSetting('photogallery', 'categories_depth', 0);
+		$allowedDepthStart = BackendModel::getModuleSetting('photogallery', 'categories_depth_start', 0);
+		$this->categories = BackendPhotogalleryModel::getCategoriesForDropdown(
+			array(
+				$allowedDepthStart,
+				$allowedDepth == 0 ? 0 : $allowedDepth + 1
+			)
+		);
 
 		// create elements
 		$this->frm->addText('title', null, null, 'inputText title', 'inputTextError title');
