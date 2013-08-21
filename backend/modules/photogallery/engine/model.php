@@ -1766,4 +1766,155 @@ class BackendPhotogalleryModel
 	}
 
 
+	public static $copyCategories = array(); 
+
+	public static function copyCategories($from, $to, $parent = 0, $new_parent = 0)
+	{
+		// get db
+		$db = BackendModel::getContainer()->get('database');
+
+		$categories = (array) $db->getRecords('SELECT * FROM photogallery_categories WHERE language = ? AND parent_id = ?', array($from, $parent));
+
+		foreach($categories as $category)
+		{
+			// get and build meta
+			$meta = $db->getRecord(
+				'SELECT *
+				 FROM meta
+				 WHERE id = ?',
+				array($category['meta_id'])
+			);
+
+			unset($meta['id']);
+
+			$category['language'] = $to;
+			$category['meta_id'] = (int) $db->insert('meta', $meta);
+			$category['parent_id'] = $new_parent;
+
+			$parent = $category['id'];
+
+			unset($category['id']);
+
+			$id = $db->insert('photogallery_categories', $category);
+
+			BackendPhotogalleryModel::$copyCategories[$parent] = $id;
+
+			BackendPhotogalleryModel::copyCategories($from, $to, $parent, $id);
+		}
+	}
+
+
+
+
+	public static function copy($from, $to)
+	{
+		// get db
+		$db = BackendModel::getContainer()->get('database');
+
+		$albums_ids = (array) $db->getColumn('SELECT id FROM photogallery_albums WHERE language = ?', array($from));
+
+		$extras = (array) $db->getRecords('SELECT * FROM photogallery_extras WHERE kind = ?', array('widget'));
+
+		BackendPhotogalleryModel::copyCategories($from, $to);
+
+		foreach($albums_ids as $album_id)
+		{
+			
+			$sourceData = BackendPhotogalleryModel::getAlbum($album_id);
+
+			// get and build meta
+			$meta = $db->getRecord(
+				'SELECT *
+				 FROM meta
+				 WHERE id = ?',
+				array($sourceData['meta_id'])
+			);
+
+			// remove id
+			unset($meta['id']);
+			unset($sourceData['id']);
+			unset($sourceData['category_ids']);
+			unset($sourceData['url']);
+
+			$sourceData['meta_id'] = (int) $db->insert('meta', $meta);
+			$sourceData['publish_on'] = BackendModel::getUTCDate();
+			$sourceData['created_on'] = BackendModel::getUTCDate();
+			$sourceData['edited_on'] = BackendModel::getUTCDate();
+			$sourceData['language'] = $to;
+			$sourceData['new_from'] = $sourceData['new_from'] == null ? null : BackendModel::getUTCDate(null, $sourceData['new_from']);
+			$sourceData['new_until'] = $sourceData['new_until'] == null ? null : BackendModel::getUTCDate(null, $sourceData['new_until']);
+
+			$new_album_id = BackendPhotogalleryModel::insertAlbum($sourceData);
+
+
+			$categories = (array) $db->getRecords('SELECT * FROM photogallery_categories_albums WHERE album_id = ?', array($album_id));
+
+			
+			foreach($categories as $category)
+			{
+				$category['album_id'] = $new_album_id;
+				$category['category_id'] = BackendPhotogalleryModel::$copyCategories[$category['category_id']];
+				$db->insert('photogallery_categories_albums', $category);
+			}
+
+
+			// images
+			$images_ids = (array)  $db->getColumn('SELECT id FROM photogallery_sets_images_content WHERE language = ? AND album_id = ?', array($from, $album_id));
+
+
+			foreach($images_ids as $image_id){
+
+				$image = $db->getRecord('SELECT * FROM photogallery_sets_images_content WHERE id = ?', array($image_id));
+
+				// get and build meta
+				$meta = $db->getRecord(
+					'SELECT *
+					 FROM meta
+					 WHERE id = ?',
+					array($image['meta_id'])
+				);
+				
+				unset($meta['id']);
+				unset($image['id']);
+
+				$image['language'] = $to;
+				$image['album_id'] = $new_album_id;
+				$image['meta_id'] = (int) $db->insert('meta', $meta);
+
+				// insert
+				$db->insert('photogallery_sets_images_content', $image);
+			}
+
+			// extras
+			foreach($extras as $extra)
+			{
+				$resolutionsLabel = BackendPhotogalleryHelper::getResolutionsForExtraLabel($extra['id']);
+
+				$label = $sourceData['title'] . ' | ' . BackendTemplateModifiers::toLabel($extra['action']) . ' | ' . $resolutionsLabel;
+				
+				$new_extra['module'] = 'photogallery';
+				$new_extra['label'] = $extra['action'];
+				$new_extra['action'] = $extra['action'];
+				$new_extra['data'] = serialize(
+									array(
+										'id' => $new_album_id,
+										'extra_label' => $label,
+										'extra_id' => $extra['id'],
+										'language' => $to,
+										'edit_url' => BackendModel::createURLForAction('edit') . '&id=' . $new_album_id
+									)
+								);
+				
+				$extraId = BackendPhotogalleryModel::insertModulesExtraWidget($new_extra);
+
+
+				BackendPhotogalleryModel::insertExtraId(array(
+					'album_id' => $new_album_id,
+					'extra_id' => $extra['id'],
+					'modules_extra_id' => $extraId
+				));
+			}
+		}
+	}
+
 }

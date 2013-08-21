@@ -88,7 +88,7 @@ class BackendPhotogalleryEditModule extends BackendBaseActionEdit
 
 		$this->frm->addText('album_overview_thumbnail_width', $this->album_overview_thumbnail['width']);
 		$this->frm->addText('album_overview_thumbnail_height', $this->album_overview_thumbnail['height']);
-		$this->frm->addDropdown('album_overview_thumbnail_method', array('crop' => BL::getLabel('Crop'), 'resize' => BL::getLabel('Resize')), $this->album_detail_overview_thumbnail['method'])->setDefaultElement(SpoonFilter::ucfirst(BL::getLabel('ChooseAResizeMethod')));
+		$this->frm->addDropdown('album_overview_thumbnail_method', array('crop' => BL::getLabel('Crop'), 'resize' => BL::getLabel('Resize')), $this->album_overview_thumbnail['method'])->setDefaultElement(SpoonFilter::ucfirst(BL::getLabel('ChooseAResizeMethod')));
 
 		$this->frm->addText('large_width', $this->large['width']);
 		$this->frm->addText('large_height', $this->large['height']);
