@@ -31,7 +31,7 @@
 		var show_overlay = lightboxSettings.show_overlay == 'true';
 		var overlay_color = lightboxSettings.overlay_color;
 
-		var fancybox = $(this).find('a');
+		var fancybox = $('a.js-photogallery-lightbox-' + lightboxId);
 
 		var h = {};
 
