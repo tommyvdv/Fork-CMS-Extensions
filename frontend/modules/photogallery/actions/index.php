@@ -20,6 +20,13 @@ class FrontendPhotogalleryIndex extends FrontendBaseBlock
 	private $items;
 
 	/**
+	 * The filter array
+	 *
+	 * @var array
+	 */
+	private $filter;
+
+	/**
 	 * The pagination array
 	 * It will hold all needed parameters, some of them need initialization.
 	 *
@@ -36,6 +43,8 @@ class FrontendPhotogalleryIndex extends FrontendBaseBlock
 	{		
 		// call the parent
 		parent::execute();
+		
+		$this->setFilter();
 
 		// load template
 		$this->loadTemplate();
@@ -45,6 +54,24 @@ class FrontendPhotogalleryIndex extends FrontendBaseBlock
 
 		// parse
 		$this->parse();
+	}
+
+	/**
+	 * Sets the filter based on the $_GET array.
+	 */
+	private function setFilter()
+	{
+		Spoon::dump($this->URL->getParameter('categories'));
+
+		$this->filter['tags'] = $this->URL->getParameter('tags');
+		$this->filter['categories'] = $this->URL->getParameter('categories');
+		$this->filter['title'] = $this->URL->getParameter('title');
+		$this->filter['images'] = $this->URL->getParameter('images');
+		$this->filter['publishedBefore'] = $this->URL->getParameter('publishedBefore');
+		$this->filter['publishedAfter'] = $this->URL->getParameter('publishedAfter');
+
+		// build query for filter
+		$this->filterQuery = '&' . http_build_query($this->filter);
 	}
 
 	/**
@@ -69,7 +96,7 @@ class FrontendPhotogalleryIndex extends FrontendBaseBlock
 			$this->pagination['limit'] = FrontendModel::getModuleSetting('photogallery', 'overview_albums_number_of_items', 10);
 
 			// populate count fields in pagination
-			$this->pagination['num_items'] = FrontendPhotogalleryModel::getAlbumsCount();
+			$this->pagination['num_items'] = FrontendPhotogalleryModel::getAlbumsCount($this->filter);
 			$this->pagination['num_pages'] = (int) ceil($this->pagination['num_items'] / $this->pagination['limit']);
 
 			// num pages is always equal to at least 1
@@ -83,7 +110,7 @@ class FrontendPhotogalleryIndex extends FrontendBaseBlock
 			$this->pagination['offset'] = ($this->pagination['requested_page'] * $this->pagination['limit']) - $this->pagination['limit'];
 
 			// get articles
-			$this->items = FrontendPhotogalleryModel::getAll($this->pagination['limit'], $this->pagination['offset']);
+			$this->items = FrontendPhotogalleryModel::getAll($this->pagination['limit'], $this->pagination['offset'], $this->filter);
 
 			// assign
 			$this->tpl->assign('modulePhotogalleryAlbums', $this->items);

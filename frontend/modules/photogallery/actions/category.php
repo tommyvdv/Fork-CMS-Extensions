@@ -27,6 +27,13 @@ class FrontendPhotogalleryCategory extends FrontendBaseBlock
 	private $category;
 
 	/**
+	 * The filter array
+	 *
+	 * @var array
+	 */
+	private $filter;
+
+	/**
 	 * The pagination array
 	 * It will hold all needed parameters, some of them need initialization
 	 *
@@ -46,6 +53,8 @@ class FrontendPhotogalleryCategory extends FrontendBaseBlock
 
 		// hide contenTitle, in the template the title is wrapped with an inverse-option
 		$this->tpl->assign('hideContentTitle', true);
+		
+		$this->setFilter();
 
 		// load template
 		$this->loadTemplate();
@@ -55,6 +64,22 @@ class FrontendPhotogalleryCategory extends FrontendBaseBlock
 
 		// parse
 		$this->parse();
+	}
+
+	/**
+	 * Sets the filter based on the $_GET array.
+	 */
+	private function setFilter()
+	{
+		$this->filter['tags'] = $this->URL->getParameter('tags');
+		$this->filter['categories'] = $this->URL->getParameter('categories');
+		$this->filter['title'] = $this->URL->getParameter('title');
+		$this->filter['images'] = $this->URL->getParameter('images');
+		$this->filter['publishedBefore'] = $this->URL->getParameter('publishedBefore');
+		$this->filter['publishedAfter'] = $this->URL->getParameter('publishedAfter');
+
+		// build query for filter
+		$this->filterQuery = '&' . http_build_query($this->filter);
 	}
 
 	/**

@@ -616,9 +616,21 @@ class FrontendPhotogalleryModel implements FrontendTagsInterface
 	 * @param int $extra_id The extra id from the module data
 	 * @return array
 	 */
-	public static function getAll($limit = 10, $offset = 0)
+	public static function getAll($limit = 10, $offset = 0, $filter = null)
 	{
-		return self::getAllFor(false, $limit, $offset);
+		/*
+		$categoryURL = false,
+		$limit = 10,
+		$offset = 0,
+		$ignoreLimit = false,
+		$filter = null,
+		$includeAllSubcategoryResults = true,
+		$randomize = false,
+		$onlyWithImages = false,
+		$countOnly = false,
+		$includeAllImages = false
+		*/
+		return self::getAllFor(false, $limit, $offset, false, $filter);
 		/*
 		$db = FrontendModel::getContainer()->get('database');
 		
@@ -867,7 +879,7 @@ class FrontendPhotogalleryModel implements FrontendTagsInterface
 	 *
 	 * @return int
 	 */
-	public static function getAlbumsCount()
+	public static function getAlbumsCount($filter = null)
 	{
 		/*
 		$categoryURL = false,
@@ -881,7 +893,7 @@ class FrontendPhotogalleryModel implements FrontendTagsInterface
 		$countOnly = false,
 		$includeAllImages = false
 		*/
-		return self::getAllFor(false, null, null, false, null, true, false, false, true, false);
+		return self::getAllFor(false, null, null, false, $filter, true, false, false, true, false);
 		/*
 		return (int) FrontendModel::getContainer()->get('database')->getVar('SELECT COUNT(i.id) AS count
 														FROM photogallery_albums AS i
@@ -998,39 +1010,49 @@ class FrontendPhotogalleryModel implements FrontendTagsInterface
 		// construct the query in the controller instead of the model as an allowed exception for data grid usage
 
 		if($countOnly)
-			$query = 'SELECT COUNT(DISTINCT i.id) AS count
+			$query = 'SELECT COUNT(DISTINCT i.id) AS count,
+					GROUP_CONCAT(DISTINCT a.category_id) AS category_ids,
+					GROUP_CONCAT(DISTINCT tag.tag SEPARATOR ", ") AS concat_tags
 				FROM photogallery_albums AS i
 					INNER JOIN photogallery_categories_albums AS a ON i.id = a.album_id
-					LEFT OUTER JOIN photogallery_categories_albums AS ab ON i.id = ab.album_id
 					INNER JOIN photogallery_categories AS c ON a.category_id = c.id
 					INNER JOIN meta AS m ON i.meta_id = m.id
 					INNER JOIN meta AS cm ON cm.id = c.meta_id
+
+					LEFT JOIN modules_tags AS mt ON mt.other_id = i.id
+					LEFT JOIN tags AS tag ON tag.id = mt.tag_id
 				WHERE  i.language = ?
 					AND i.hidden = ?
 					AND i.show_in_albums = ?
-					AND i.publish_on <= ?';
+					AND i.publish_on <= ?
+					AND mt.module = ?';
 		else
 			$query = 'SELECT i.id, i.text, i.introduction, i.title, i.set_id, UNIX_TIMESTAMP(i.publish_on) AS publish_on, UNIX_TIMESTAMP(i.new_from) AS new_from, UNIX_TIMESTAMP(i.new_until) AS new_until, m.url,
 					c.title AS category_title, cm.url AS category_url,
 					UNIX_TIMESTAMP(i.publish_on) AS publish_on,
-					GROUP_CONCAT(ab.category_id) AS category_ids
+					GROUP_CONCAT(DISTINCT a.category_id) AS category_ids,
+					GROUP_CONCAT(DISTINCT tag.tag SEPARATOR ", ") AS concat_tags
 				FROM photogallery_albums AS i
 					INNER JOIN meta AS m ON i.meta_id = m.id
 					LEFT JOIN photogallery_categories_albums AS a ON i.id = a.album_id
-					LEFT OUTER JOIN photogallery_categories_albums AS ab ON i.id = ab.album_id
 					LEFT JOIN photogallery_categories AS c ON a.category_id = c.id
 					LEFT JOIN meta AS cm ON cm.id = c.meta_id
-				WHERE  i.language = ?
+
+					LEFT JOIN modules_tags AS mt ON mt.other_id = i.id
+					LEFT JOIN tags AS tag ON tag.id = mt.tag_id
+				WHERE i.language = ?
 					AND i.hidden = ?
 					AND i.show_in_albums = ?
-					AND i.publish_on <= ?';
+					AND i.publish_on <= ?
+					AND mt.module = ?';
 
 		// init params
 		$parameters = array(
 			FRONTEND_LANGUAGE,
 			'N',
 			'Y',
-			FrontendModel::getUTCDate('Y-m-d H:i') . ':00'
+			FrontendModel::getUTCDate('Y-m-d H:i') . ':00',
+			'photogallery'
 		);
 
 		if($randomize)
@@ -1058,9 +1080,13 @@ class FrontendPhotogalleryModel implements FrontendTagsInterface
 		}
 
 		// only get albums with images
-		if($onlyWithImages)
+		if(
+			$onlyWithImages
+			||
+			(isset($filter['images']) && $filter['images'])
+		)
 		{
-			$query = ' AND i.num_images > ?';
+			$query.= ' AND i.num_images > ?';
 			$parameters[] = 0;
 		}
 
@@ -1074,13 +1100,46 @@ class FrontendPhotogalleryModel implements FrontendTagsInterface
 			$parameters[] = (string) $categoryURL;
 		}
 
-/*
-		if(isset($filter['city']) && $filter['city'])
+		// filter: categories
+		if(isset($filter['categories']) && $filter['categories'])
 		{
-			$query.= ' AND building.city LIKE ?';
-			$parameters[] = '%' . $filter['city'] . '%';
+			$categories = $filter['categories'];
+			Spoon::dump($categories);
+			$query.= ' AND i.title LIKE ?';
+			$parameters[] = '%' . $filter['title'] . '%';
 		}
 
+		// filter: title
+		if(isset($filter['title']) && $filter['title'])
+		{
+			$query.= ' AND i.title LIKE ?';
+			$parameters[] = '%' . $filter['title'] . '%';
+		}
+
+		// filter: images
+		// see #1072
+
+		// filter: publishedBefore
+		if(isset($filter['publishedBefore']) && $filter['publishedBefore'])
+		{
+			$date = strtotime(str_replace('/', '-', urldecode($filter['publishedBefore'])) . ' 12:00:00');
+			$timestamp = FrontendModel::getUTCDate('Y-m-d', $date);
+
+			$query.= ' AND date(i.publish_on) <= ?';
+			$parameters[] = $timestamp;
+		}
+
+		// filter: publishedAfter
+		if(isset($filter['publishedAfter']) && $filter['publishedAfter'])
+		{
+			$date = strtotime(str_replace('/', '-', urldecode($filter['publishedAfter'])) . ' 12:00:00');
+			$timestamp = FrontendModel::getUTCDate('Y-m-d', $date);
+
+			$query.= ' AND date(i.publish_on) >= ?';
+			$parameters[] = $timestamp;
+		}
+
+/*
 		if(isset($filter['rooms']) && $filter['rooms'])
 		{
 			$query.= ' AND type.num_rooms >= ?';
@@ -1109,7 +1168,23 @@ class FrontendPhotogalleryModel implements FrontendTagsInterface
 		}
 */
 
-		if(!$countOnly) $query.= ' GROUP BY i.id';
+		/*if(!$countOnly) */$query.= ' GROUP BY i.id';
+
+		// filter: tags
+		if(isset($filter['tags']) && $filter['tags'])
+		{
+			$tags = urldecode($filter['tags']);
+			$tags = explode(',', $tags);
+			$having = ' HAVING';
+			foreach ($tags as $tag)
+			{
+				$having.= ' concat_tags LIKE ? OR';
+				$parameters[] = '%' . trim($tag) . '%';
+			}
+			$having = substr($having, 0, -3);
+			$query.= $having;
+		}
+		
 		if(!$randomize) $query.= ' ORDER BY i.sequence ASC';
 		
 		if(!is_null($limit) && !$randomize && !$countOnly)
@@ -1145,7 +1220,7 @@ class FrontendPhotogalleryModel implements FrontendTagsInterface
 														ORDER BY sequence DESC LIMIT 1',
 														array((int) $row['set_id'], FRONTEND_LANGUAGE, 'N'));
 
-			$return[$key]['image']['data'] = $return[$key]['image']['data'] != null ? unserialize($return[$key]['image']['data']) : null;
+			if(isset($return[$key]['image']['data'])) $return[$key]['image']['data'] = $return[$key]['image']['data'] != null ? unserialize($return[$key]['image']['data']) : null;
 			$row['category_ids'] = ($row['category_ids'] != '') ? (array) explode(',', $row['category_ids']) : null;
 
 			if($row['category_ids'] !== null)
@@ -1545,5 +1620,57 @@ class FrontendPhotogalleryModel implements FrontendTagsInterface
 		}
 		
 		return $related;
+	}
+
+	/**
+	 * Get all categories
+	 *
+	 * @param bool[optional] $includeCount Include the count?
+	 * @return array
+	 */
+	public static function getCategoriesForDropdown($allowedDepth = null, $includeCount = false, $parent_id = 0, $depth = 0, $parent = null, $seperator = '&rsaquo;', $space = ' ')
+	{
+		if(is_array($allowedDepth))
+		{
+			$startAllowedDepth = $allowedDepth[0];
+			$allowedDepth = $allowedDepth[1];
+		}
+
+		$db = FrontendModel::getContainer()->get('database');
+
+		$categories = (array) $db->getPairs(
+			'SELECT i.id, i.title
+			FROM photogallery_categories AS i
+			WHERE i.language = ? AND i.parent_id = ?
+			ORDER BY i.sequence ASC',
+			array(
+				FRONTEND_LANGUAGE,
+				$parent_id
+			)
+		);
+
+		if(
+			(
+				$depth < $allowedDepth ||
+				(int) $allowedDepth === 0
+			) && !is_null($allowedDepth)
+		)
+		{
+			foreach($categories as $key => $value)
+			{
+				if(
+					!isset($startAllowedDepth) ||
+					$depth >= $startAllowedDepth
+				) $output[$key] =  $value;
+				
+				$children = self::getCategoriesForDropdown($allowedDepth, $includeCount, $key, $depth + 1, $value);
+				foreach($children as $c_key => $c_value)
+				{
+					$output[$c_key] = $value . $space . $seperator . $space . $c_value;
+				}
+			}
+		}
+
+		return empty($output) ? array() : $output;
 	}
 }
