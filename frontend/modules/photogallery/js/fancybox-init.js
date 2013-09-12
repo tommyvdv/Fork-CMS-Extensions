@@ -96,7 +96,7 @@
 				// Get rich titles
 				var currentElement = this.element;
 				var next = $(currentElement).next();
-				if(next.length && next.hasClass('photogallery-lighbox-caption')) this.title = next.html();
+				if(next.length && next.hasClass('photogallery-lightbox-caption')) this.title = next.html();
 
 				// Disable right click
 				$.fancybox.wrap.bind("contextmenu", function (e) {
