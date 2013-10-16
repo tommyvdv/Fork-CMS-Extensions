@@ -10,6 +10,12 @@
 		<div class="heading">
 			<h3>{$lblInterface|ucfirst}</h3>
 		</div>
+ 
+        <div class="options">
+            <label for="categoriesDepthStart">{$lblCategoriesDepthStart|ucfirst}</label>
+            {$ddmCategoriesDepthStart}
+            {$ddmCategoriesDepthStartError}
+        </div>
 
 		<div class="options">
 			<label for="categoriesDepth">{$lblCategoriesDepth|ucfirst}</label>
