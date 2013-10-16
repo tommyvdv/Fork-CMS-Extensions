@@ -267,6 +267,11 @@
 				<translation language="en"><![CDATA[By unchecking this, the album will not show up in the album overview.]]></translation>
 			</item>
 
+			<item type="label" name="ShowInAlbums">
+				<translation language="nl"><![CDATA[toon in albums]]></translation>
+				<translation language="en"><![CDATA[show in albums]]></translation>
+			</item>
+
 			<item type="label" name="Embed">
 				<translation language="nl"><![CDATA[embed code]]></translation>
 				<translation language="en"><![CDATA[embed code]]></translation>
