@@ -86,15 +86,13 @@ class BackendPhotogalleryCategories extends BackendBaseActionIndex
 
 		// add subcategories button (if depth is not greater than…)
 		if(
-            (
-                count($this->breadcrumbs) <= BackendModel::getModuleSetting('photogallery', 'categories_depth', 0) &&
-                !is_null(BackendModel::getModuleSetting('photogallery', 'categories_depth'))
-            ) || (
-            	(int) BackendModel::getModuleSetting('photogallery', 'categories_depth') === 0 &&
-            	!is_null(BackendModel::getModuleSetting('photogallery', 'categories_depth'))
-            )
-        )
-        {
+			!is_null(BackendModel::getModuleSetting('photogallery', 'categories_depth')) &&
+			(
+				count($this->breadcrumbs) <= BackendModel::getModuleSetting('photogallery', 'categories_depth', 0) ||
+				(int) BackendModel::getModuleSetting('photogallery', 'categories_depth') === 0
+			)
+		)
+		{
 			// add children column
 			$this->dataGrid->addColumn('children', null);
 			$this->dataGrid->setColumnFunction(create_function('$num_children,$id','return $num_children = $num_children ? "<a href=\"" . BackendModel::createURLForAction("categories") . "&amp;category_id=" . $id . "\">" . BL::lbl("ViewSubcategories") . "</a>" : BL::lbl("NoSubcategories");'),array('[num_children]', '[id]'),'children',true);
@@ -111,7 +109,7 @@ class BackendPhotogalleryCategories extends BackendBaseActionIndex
 		}
 
 		// disable paging
-		$this->dataGrid->setPaging(false);		
+		$this->dataGrid->setPaging(false);      
 		
 		$this->dataGrid->setAttributes(array('data-action' => "category_sequence"));
 
