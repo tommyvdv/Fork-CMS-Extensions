@@ -137,7 +137,7 @@ class BackendPhotogalleryEditCategory extends BackendBaseActionEdit
 
 				// everything is saved, so redirect to the overview
 				//$this->redirect(BackendModel::createURLForAction('categories') . '&report=edited-category&var=' . urlencode($item['title']));
-				$this->redirect(BackendModel::createURLForAction('categories') . ($this->category_id ? '&category_id=' . $this->category_id : '') . '&report=edited-category&var=' . urlencode($item['title']));
+				$this->redirect(BackendModel::createURLForAction('categories') . ($this->category_id ? '&category_id=' . $this->category_id : '') . '&highlight=row-' . $this->id . '&report=edited-category&var=' . urlencode($item['title']));
 			}
 		}
 	}
