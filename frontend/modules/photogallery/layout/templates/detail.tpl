@@ -45,7 +45,7 @@
 				{iteration:blockPhotogalleryAlbum.images}
 				<li>
 					{option:!blockPhotogalleryAlbum.images.data.external_link}
-						<a data-image-id="{$blockPhotogalleryAlbum.images.id}" href="{$var|createimagephotogallery:{$blockPhotogalleryAlbum.images.set_id}:{$blockPhotogalleryAlbum.images.filename}:{$modulePhotogalleryDetailLargeResolution.width}:{$modulePhotogalleryDetailLargeResolution.height}:{$modulePhotogalleryDetailLargeResolution.method}}" rel="{$blockPhotogalleryAlbum.id}" class="linkedImage linkOverlay" title="{$blockPhotogalleryAlbum.title}">
+						<a data-image-id="{$blockPhotogalleryAlbum.images.id}" href="{$var|createimagephotogallery:{$blockPhotogalleryAlbum.images.set_id}:{$blockPhotogalleryAlbum.images.filename}:{$modulePhotogalleryDetailLargeResolution.width}:{$modulePhotogalleryDetailLargeResolution.height}:{$modulePhotogalleryDetailLargeResolution.method}}" rel="{$blockPhotogalleryAlbum.id}" class="linkedImage linkOverlay js-photogallery-lightbox-{$blockPhotogalleryAlbum.data.extra_id}" title="{$blockPhotogalleryAlbum.title}">
 					{/option:!blockPhotogalleryAlbum.images.data.external_link}
 					{option:blockPhotogalleryAlbum.images.data.external_link}
 						<a data-image-id="{$blockPhotogalleryAlbum.images.id}" href="{$blockPhotogalleryAlbum.images.data.external_link.url}" rel="{$blockPhotogalleryAlbum.id}" class="linkedImage linkOverlay" title="{$blockPhotogalleryAlbum.title}">
