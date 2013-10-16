@@ -51,6 +51,7 @@ class BackendPhotogalleryAddCategory extends BackendBaseActionAdd
 		$this->tpl->assign('category', $this->category);
 		$this->tpl->assign('categories', $this->categories);
 		$this->tpl->assign('categories_depth', is_null(BackendModel::getModuleSetting('photogallery', 'categories_depth')) ? false : true);
+		$this->tpl->assign('categoriesCount', $this->categoriesCount);
 	}
 
 	/**
@@ -62,8 +63,19 @@ class BackendPhotogalleryAddCategory extends BackendBaseActionAdd
 		$this->frm = new BackendForm('addCategory');
 
 		// get categories
+		/*
 		$this->categories = BackendPhotogalleryModel::getCategoriesForDropdown(
 			BackendModel::getModuleSetting('photogallery', 'categories_depth')
+		);
+		*/
+		$allowedDepth = BackendModel::getModuleSetting('photogallery', 'categories_depth', 0);
+		$allowedDepthStart = BackendModel::getModuleSetting('photogallery', 'categories_depth_start', 0);
+		$this->categoriesCount = BackendPhotogalleryModel::getCategoriesCount();
+		$this->categories = BackendPhotogalleryModel::getCategoriesForDropdown(
+			array(
+				$allowedDepthStart,
+				$allowedDepth == 0 ? 0 : $allowedDepth
+			)
 		);
 
 		// create elements
@@ -107,20 +119,15 @@ class BackendPhotogalleryAddCategory extends BackendBaseActionAdd
 				$item['id'] = BackendPhotogalleryModel::insertCategory($item);
 
 				// everything is saved, so redirect to the overview
-				//$this->redirect(BackendModel::createURLForAction('categories') . '&report=added-category&var=' . urlencode($item['title']) . '&highlight=row-' . $item['id']);
-				//$this->redirect(BackendModel::createURLForAction('categories') . '&report=added-category&var=' . urlencode($item['title']) . '&highlight=row-' . $item['id'] . '&category_id=' . $item['parent_id']);
 				$this->redirect(
 					BackendModel::createURLForAction(
 						'categories',
 						'photogallery',
-						BL::getWorkingLanguage(),
-						array(
-							'report' => 'added-category',
-							'var' => urlencode($item['title']),
-							'highlight' => 'row-' . $item['id'],
-							'category_id' => $item['parent_id']
-						)
-					)
+						BL::getWorkingLanguage()
+					) . '&report=added-category' .
+					'&var=' . urlencode($item['title']) .
+					'&highlight=row-' . $item['id'] .
+					'&category_id=' . $item['parent_id']
 				);
 			}
 		}

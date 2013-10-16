@@ -832,8 +832,30 @@ class BackendPhotogalleryModel
 		);
 	}
 	*/
+	
+	/**
+	 * Get all categories
+	 *
+	 * @param bool[optional] $includeCount Include the count?
+	 * @return array
+	 */
+	public static function getCategoriesCount()
+	{
+		return (int) BackendModel::getContainer()->get('database')->getVar(
+			'SELECT count(i.id)
+			FROM photogallery_categories AS i
+			WHERE i.language = ?',
+			array(BL::getWorkingLanguage())
+		);
+	}
 	public static function getCategoriesForDropdown($allowedDepth = null, $includeCount = false, $parent_id = 0, $depth = 0, $parent = null, $seperator = '&rsaquo;', $space = ' ')
 	{
+		if(is_array($allowedDepth))
+		{
+			$startAllowedDepth = (int) $allowedDepth[0];
+			$allowedDepth = (int) $allowedDepth[1];
+		}
+
 		$db = BackendModel::getContainer()->get('database');
 
 		$categories = (array) $db->getPairs(
@@ -850,14 +872,18 @@ class BackendPhotogalleryModel
 		if(
 			(
 				$depth < $allowedDepth ||
-				(int) $allowedDepth === 0
+				$allowedDepth === 0
 			) && !is_null($allowedDepth)
 		)
 		{
 			foreach($categories as $key => $value)
 			{
-				$output[$key] =  $value;
-				$children = self::getCategoriesForDropdown($allowedDepth, $includeCount, $key, $depth + 1, $value);
+				if(
+					!isset($startAllowedDepth) ||
+					$depth >= $startAllowedDepth
+				) $output[$key] =  $value;
+				
+				$children = self::getCategoriesForDropdown(isset($startAllowedDepth) && $startAllowedDepth ? array($startAllowedDepth, $allowedDepth) : $allowedDepth, $includeCount, $key, $depth + 1, $value);
 				foreach($children as $c_key => $c_value)
 				{
 					$output[$c_key] = $value . $space . $seperator . $space . $c_value;

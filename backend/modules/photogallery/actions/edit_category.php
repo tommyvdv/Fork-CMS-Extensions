@@ -68,9 +68,20 @@ class BackendPhotogalleryEditCategory extends BackendBaseActionEdit
 		$this->frm = new BackendForm('editCategory');
 
 		// get categories
+		/*
 		$this->categories = BackendPhotogalleryModel::getCategoriesForDropdown(
 			BackendModel::getModuleSetting('photogallery', 'categories_depth'),
 			false
+		);
+		*/
+		$allowedDepth = BackendModel::getModuleSetting('photogallery', 'categories_depth', 0);
+		$allowedDepthStart = BackendModel::getModuleSetting('photogallery', 'categories_depth_start', 0);
+		$this->categoriesCount = BackendPhotogalleryModel::getCategoriesCount();
+		$this->categories = BackendPhotogalleryModel::getCategoriesForDropdown(
+			array(
+				$allowedDepthStart,
+				$allowedDepth == 0 ? 0 : $allowedDepth
+			)
 		);
 
 		// create elements
@@ -98,6 +109,7 @@ class BackendPhotogalleryEditCategory extends BackendBaseActionEdit
 		$this->tpl->assign('category', $this->record);
 		$this->tpl->assign('categories', $this->categories);
 		$this->tpl->assign('categories_depth', is_null(BackendModel::getModuleSetting('photogallery', 'categories_depth')) ? false : true);
+		$this->tpl->assign('categoriesCount', $this->categoriesCount);
 
 		// delete allowed?
 		$this->tpl->assign('deleteAllowed', BackendPhotogalleryModel::deleteCategoryAllowed($this->id));
@@ -137,7 +149,7 @@ class BackendPhotogalleryEditCategory extends BackendBaseActionEdit
 
 				// everything is saved, so redirect to the overview
 				//$this->redirect(BackendModel::createURLForAction('categories') . '&report=edited-category&var=' . urlencode($item['title']));
-				$this->redirect(BackendModel::createURLForAction('categories') . ($this->category_id ? '&category_id=' . $this->category_id : '') . '&report=edited-category&var=' . urlencode($item['title']));
+				$this->redirect(BackendModel::createURLForAction('categories') . ($this->category_id ? '&category_id=' . $this->category_id : '') . '&highlight=row-' . $this->id . '&report=edited-category&var=' . urlencode($item['title']));
 			}
 		}
 	}

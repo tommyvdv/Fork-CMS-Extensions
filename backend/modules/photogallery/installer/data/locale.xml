@@ -73,8 +73,6 @@
 			</item>
 		</core>
 		<photogallery>
-
-
 			<item type="label" name="ShowCloseButton">
 				<translation language="nl"><![CDATA[toon sluit knop]]></translation>
 				<translation language="en"><![CDATA[show close button]]></translation>
@@ -326,9 +324,13 @@
 				<translation language="en"><![CDATA[animation speed]]></translation>
 				<translation language="nl"><![CDATA[animatie snelheid]]></translation>
 			</item>
-			<item type="message" name="NoCategoriesSelected">
-				<translation language="en"><![CDATA[No category has been selected.]]></translation>
-				<translation language="nl"><![CDATA[Er is nog geen categorie geselecteerd.]]></translation>
+			<item type="message" name="AddedCategory">
+				<translation language="en"><![CDATA[Category "%1$s" was added.]]></translation>
+				<translation language="nl"><![CDATA[Categorie "%1$s" werd toegevoegd.]]></translation>
+			</item>
+			<item type="message" name="EditedCategory">
+				<translation language="en"><![CDATA[Category "%1$s" was saved.]]></translation>
+				<translation language="nl"><![CDATA[Categorie "%1$s" werd opgeslagen.]]></translation>
 			</item>
 			
 			<item type="error" name="RSSDescription">
@@ -368,7 +370,11 @@
 
 			<item type="message" name="NoParents">
 				<translation language="nl"><![CDATA[No parents available. Add one <a href="%1$s">here</a>]]></translation>
-				<translation language="en"><![CDATA[Geen hoofdcategorieën beschikbaar. Voer er <a href="%1$s">hier</a> één toe. ]]></translation>
+				<translation language="en"><![CDATA[Geen hoofdcategorieën beschikbaar. Voeg er <a href="%1$s">hier</a> één toe. ]]></translation>
+			</item>
+			<item type="message" name="HasParentsButNotAllowed">
+				<translation language="nl"><![CDATA[No categories available as parent.]]></translation>
+				<translation language="en"><![CDATA[Geen hoofdcategorieën beschikbaar als ouder. ]]></translation>
 			</item>
 
 			<item type="message" name="HelpPingServices">
@@ -387,11 +393,19 @@
 				<translation language="en"><![CDATA[subcategories]]></translation>
 				<translation language="nl"><![CDATA[subcategorieën]]></translation>
 			</item>
-			
 			<item type="label" name="ViewSubcategories">
 				<translation language="en"><![CDATA[view subcategories]]></translation>
 				<translation language="nl"><![CDATA[bekijk subcategorieën]]></translation>
 			</item>
+			<item type="label" name="NoSubcategories">
+				<translation language="en"><![CDATA[no subcategories]]></translation>
+				<translation language="nl"><![CDATA[geen subcategorieën]]></translation>
+			</item>
+			<item type="label" name="AddSubCategory">
+				<translation language="en"><![CDATA[add subcategory]]></translation>
+				<translation language="nl"><![CDATA[subcategorie toevoegen]]></translation>
+			</item>
+
 			
 			<item type="label" name="Root">
 				<translation language="en"><![CDATA[&bull;]]></translation>
@@ -720,6 +734,10 @@
 			<item type="label" name="CategoriesDepth">
 				<translation language="en"><![CDATA[allowed depth for subcategories]]></translation>
 				<translation language="nl"><![CDATA[toegelaten diepte voor subcategorieën]]></translation>
+			</item>
+			<item type="label" name="CategoriesDepthStart">
+				<translation language="en"><![CDATA[allowed starting depth for subcategories]]></translation>
+				<translation language="nl"><![CDATA[toegelaten startdiepte voor subcategorieën]]></translation>
 			</item>
 			<item type="label" name="Yes">
 				<translation language="en"><![CDATA[yes]]></translation>
