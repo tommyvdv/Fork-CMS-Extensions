@@ -86,14 +86,16 @@ class BackendPhotogalleryCategories extends BackendBaseActionIndex
 
 		// add subcategories button (if depth is not greater than…)
 		if(
-			(
-				count($this->breadcrumbs) <= BackendModel::getModuleSetting('photogallery', 'categories_depth', 0) &&
-				!is_null(BackendModel::getModuleSetting('photogallery', 'categories_depth'))
-			) || BackendModel::getModuleSetting('photogallery', 'categories_depth') === 0
-		)
-		{
+            (
+                count($this->breadcrumbs) <= BackendModel::getModuleSetting('photogallery', 'categories_depth', 0) &&
+                !is_null(BackendModel::getModuleSetting('photogallery', 'categories_depth'))
+            ) || (int) BackendModel::getModuleSetting('photogallery', 'categories_depth') === 0
+        )
+        {
 			// add children column
-			$this->dataGrid->addColumn('children', null, sprintf(BL::lbl('ViewSubcategories'), '[num_children]'), BackendModel::createURLForAction('categories') . '&amp;category_id=[id]', BL::getLabel('msgCategoriesForParent'));
+			$this->dataGrid->addColumn('children', null);
+			$this->dataGrid->setColumnFunction(create_function('$num_children','return $num_children = $num_children ? "<a href=\"" . BackendModel::createURLForAction("categories") . "&amp;category_id=[id]" . "\">" . BL::lbl("ViewSubcategories") . "</a>" : BL::lbl("NoSubcategories");'),array('[num_children]'),'children',true);
+
 			$this->dataGrid->addColumn('add_subcategory', null, sprintf(BL::lbl('AddSubCategory')), BackendModel::createURLForAction('add_category') . '&amp;category_id=[id]', BL::getLabel('msgCategoriesForParent'));
 			$column_sequence = array(
 				'dragAndDropHandle',
