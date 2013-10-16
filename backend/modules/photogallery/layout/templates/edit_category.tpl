@@ -27,7 +27,12 @@
 									{$ddmParentId} {$ddmParentIdError}
 								{/option:categories}
 								{option:!categories}
-									{$msgNoParents|sprintf:{$var|geturl:'add_category'}}
+									{option:categoriesCount}
+										{$msgHasParentsButNotAllowed}
+									{/option:categoriesCount}
+									{option:!categoriesCount}
+										{$msgNoParents|sprintf:{$var|geturl:'add_category'}}
+									{/option:!categoriesCount}
 								{/option:!categories}
 							</div>
 						{/option:categories_depth}

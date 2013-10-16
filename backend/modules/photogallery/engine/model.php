@@ -839,6 +839,15 @@ class BackendPhotogalleryModel
 	 * @param bool[optional] $includeCount Include the count?
 	 * @return array
 	 */
+	public static function getCategoriesCount()
+	{
+		return (int) BackendModel::getContainer()->get('database')->getVar(
+			'SELECT count(i.id)
+			FROM photogallery_categories AS i
+			WHERE i.language = ?',
+			array(BL::getWorkingLanguage())
+		);
+	}
 	public static function getCategoriesForDropdown($allowedDepth = null, $includeCount = false, $parent_id = 0, $depth = 0, $parent = null, $seperator = '&rsaquo;', $space = ' ')
 	{
 		if(is_array($allowedDepth))
