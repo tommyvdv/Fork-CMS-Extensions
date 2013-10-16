@@ -107,20 +107,15 @@ class BackendPhotogalleryAddCategory extends BackendBaseActionAdd
 				$item['id'] = BackendPhotogalleryModel::insertCategory($item);
 
 				// everything is saved, so redirect to the overview
-				//$this->redirect(BackendModel::createURLForAction('categories') . '&report=added-category&var=' . urlencode($item['title']) . '&highlight=row-' . $item['id']);
-				//$this->redirect(BackendModel::createURLForAction('categories') . '&report=added-category&var=' . urlencode($item['title']) . '&highlight=row-' . $item['id'] . '&category_id=' . $item['parent_id']);
 				$this->redirect(
 					BackendModel::createURLForAction(
 						'categories',
 						'photogallery',
-						BL::getWorkingLanguage(),
-						array(
-							'report' => 'added-category',
-							'var' => urlencode($item['title']),
-							'highlight' => 'row-' . $item['id'],
-							'category_id' => $item['parent_id']
-						)
-					)
+						BL::getWorkingLanguage()
+					) . '&report=added-category' .
+					'&var=' . urlencode($item['title']) .
+					'&highlight=row-' . $item['id'] .
+					'&category_id=' . $item['parent_id']
 				);
 			}
 		}

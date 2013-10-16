@@ -94,12 +94,14 @@ class BackendPhotogalleryCategories extends BackendBaseActionIndex
 		{
 			// add children column
 			$this->dataGrid->addColumn('children', null, sprintf(BL::lbl('ViewSubcategories'), '[num_children]'), BackendModel::createURLForAction('categories') . '&amp;category_id=[id]', BL::getLabel('msgCategoriesForParent'));
+			$this->dataGrid->addColumn('add_subcategory', null, sprintf(BL::lbl('AddSubCategory')), BackendModel::createURLForAction('add_category') . '&amp;category_id=[id]', BL::getLabel('msgCategoriesForParent'));
 			$column_sequence = array(
 				'dragAndDropHandle',
 				'title',
 				'num_children',
 				'num_albums',
 				'children',
+				'add_subcategory',
 				'edit'
 			);
 		}
