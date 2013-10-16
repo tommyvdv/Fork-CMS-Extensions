@@ -372,7 +372,7 @@
 				<translation language="nl"><![CDATA[No parents available. Add one <a href="%1$s">here</a>]]></translation>
 				<translation language="en"><![CDATA[Geen hoofdcategorieën beschikbaar. Voeg er <a href="%1$s">hier</a> één toe. ]]></translation>
 			</item>
-			<item type="message" name="msgHasParentsButNotAllowed">
+			<item type="message" name="HasParentsButNotAllowed">
 				<translation language="nl"><![CDATA[No categories available as parent.]]></translation>
 				<translation language="en"><![CDATA[Geen hoofdcategorieën beschikbaar als ouder. ]]></translation>
 			</item>
