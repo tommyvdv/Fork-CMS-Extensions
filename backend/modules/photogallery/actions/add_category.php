@@ -62,8 +62,18 @@ class BackendPhotogalleryAddCategory extends BackendBaseActionAdd
 		$this->frm = new BackendForm('addCategory');
 
 		// get categories
+		/*
 		$this->categories = BackendPhotogalleryModel::getCategoriesForDropdown(
 			BackendModel::getModuleSetting('photogallery', 'categories_depth')
+		);
+		*/
+		$allowedDepth = BackendModel::getModuleSetting('photogallery', 'categories_depth', 0);
+		$allowedDepthStart = BackendModel::getModuleSetting('photogallery', 'categories_depth_start', 0);
+		$this->categories = BackendPhotogalleryModel::getCategoriesForDropdown(
+			array(
+				$allowedDepthStart,
+				$allowedDepth == 0 ? 0 : $allowedDepth
+			)
 		);
 
 		// create elements
