@@ -6,6 +6,16 @@
 </div>
 
 {form:addCategory}
+	<label for="title">{$lblTitle|ucfirst}<abbr title="{$lblRequiredField}">*</abbr></label>
+	{$txtTitle} {$txtTitleError}
+
+	<div id="pageUrl">
+		<div class="oneLiner">
+			{option:detailURL}<p><span><a href="{$detailURL}">{$detailURL}/<span id="generatedUrl"></span></a></span></p>{/option:detailURL}
+			{option:!detailURL}<p class="infoMessage">{$errNoModuleLinked}</p>{/option:!detailURL}
+		</div>
+	</div>
+
 	<div class="tabs">
 		<ul>
 			<li><a href="#tabContent">{$lblContent|ucfirst}</a></li>
@@ -16,10 +26,6 @@
 			<table border="0" cellspacing="0" cellpadding="0" width="100%">
 				<tr>
 					<td id="leftColumn">
-						<p>
-							<label for="title">{$lblTitle|ucfirst}<abbr title="{$lblRequiredField}">*</abbr></label>
-							{$txtTitle} {$txtTitleError}
-						</p>
 						{option:categories_depth}
 							<div class="options">
 								{option:categories}

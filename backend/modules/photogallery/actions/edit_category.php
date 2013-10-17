@@ -85,7 +85,7 @@ class BackendPhotogalleryEditCategory extends BackendBaseActionEdit
 		);
 
 		// create elements
-		$this->frm->addText('title', $this->record['title']);
+		$this->frm->addText('title', $this->record['title'], 255, 'inputText title', 'inputTextError title');
 		$this->frm->addDropdown('parent_id', $this->categories, $this->record['parent_id'])->setDefaultElement('');
 		$this->tpl->assign('deleteAllowed', BackendPhotogalleryModel::deleteCategoryAllowed($this->id));
 
@@ -101,11 +101,21 @@ class BackendPhotogalleryEditCategory extends BackendBaseActionEdit
 	 */
 	protected function parse()
 	{
+		// get url
+		$url = BackendModel::getURLForBlock($this->URL->getModule(), 'category');
+		$url404 = BackendModel::getURL(404);
+
+		// parse additional variables
+		if($url404 != $url) $this->tpl->assign('detailURL', SITE_URL . $url);
+
+		// fetch proper slug
+		$this->record['url'] = $this->meta->getURL();
+
 		// call parent
 		parent::parse();
 
 		// assign
-		$this->tpl->assign('item', $this->record);
+		$this->tpl->assign('record', $this->record);
 		$this->tpl->assign('category', $this->record);
 		$this->tpl->assign('categories', $this->categories);
 		$this->tpl->assign('categories_depth', is_null(BackendModel::getModuleSetting('photogallery', 'categories_depth')) ? false : true);

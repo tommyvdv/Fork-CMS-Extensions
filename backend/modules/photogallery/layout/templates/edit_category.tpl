@@ -2,10 +2,20 @@
 {include:{$BACKEND_CORE_PATH}/layout/templates/structure_start_module.tpl}
 
 <div class="pageTitle">
-	<h2>{$lblPhotogallery|ucfirst}: {$msgEditCategory|sprintf:{$item.title}}</h2>
+	<h2>{$lblPhotogallery|ucfirst}: {$msgEditCategory|sprintf:{$record.title}}</h2>
 </div>
 
 {form:editCategory}
+	<label for="title">{$lblTitle|ucfirst}<abbr title="{$lblRequiredField}">*</abbr></label>
+	{$txtTitle} {$txtTitleError}
+
+	<div id="pageUrl">
+		<div class="oneLiner">
+			{option:detailURL}<p><span><a href="{$detailURL}/{$record.url}">{$detailURL}/<span id="generatedUrl">{$record.url}</span></a></span></p>{/option:detailURL}
+			{option:!detailURL}<p class="infoMessage">{$errNoModuleLinked}</p>{/option:!detailURL}
+		</div>
+	</div>
+
 	<div class="tabs">
 		<ul>
 			<li><a href="#tabContent">{$lblContent|ucfirst}</a></li>
@@ -16,10 +26,6 @@
 			<table border="0" cellspacing="0" cellpadding="0" width="100%">
 				<tr>
 					<td id="leftColumn">
-						<p>
-							<label for="title">{$lblTitle|ucfirst}<abbr title="{$lblRequiredField}">*</abbr></label>
-							{$txtTitle} {$txtTitleError}
-						</p>
 						{option:categories_depth}
 							<div class="options">
 								{option:categories}
@@ -48,12 +54,12 @@
 
 	<div class="fullwidthOptions">
 		{option:deleteAllowed}
-			<a href="{$var|geturl:'delete_category'}&amp;id={$item.id}" data-message-id="confirmDelete" class="askConfirmation button linkButton icon iconDelete">
+			<a href="{$var|geturl:'delete_category'}&amp;id={$record.id}" data-message-id="confirmDelete" class="askConfirmation button linkButton icon iconDelete">
 				<span>{$lblDelete|ucfirst}</span>
 			</a>
 			<div id="confirmDelete" title="{$lblDelete|ucfirst}?" style="display: none;">
 				<p>
-					{$msgConfirmDeleteCategory|sprintf:{$item.title}}
+					{$msgConfirmDeleteCategory|sprintf:{$record.title}}
 				</p>
 			</div>
 		{/option:deleteAllowed}
