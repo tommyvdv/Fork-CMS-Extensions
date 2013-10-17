@@ -46,6 +46,17 @@ class BackendPhotogalleryCategories extends BackendBaseActionIndex
 	{
 		// get parent, parents parent, etc…
 		$this->breadcrumbs = array_reverse(BackendPhotogalleryModel::getBreadcrumbsForCategory($this->category_id));
+		$this->depth = count($this->breadcrumbs) - 1;
+
+		$this->allowChildSubCategoryCreation = (bool) (
+			$this->depth >= (int) BackendModel::getModuleSetting('photogallery', 'categories_depth_start') &&
+			$this->depth < (int) BackendModel::getModuleSetting('photogallery', 'categories_depth')
+		);
+
+		$this->allowChildCategoryCreation = (bool) (
+			$this->depth >= (int) BackendModel::getModuleSetting('photogallery', 'categories_depth_start') &&
+			$this->depth < (int) BackendModel::getModuleSetting('photogallery', 'categories_depth')
+		);
 	}
 
 	/**
@@ -85,6 +96,10 @@ class BackendPhotogalleryCategories extends BackendBaseActionIndex
 		$this->dataGrid->setColumnsHidden(array('sequence'));
 
 		// add subcategories button (if depth is not greater than…)
+		//Spoon::dump($this->depth > (int) BackendModel::getModuleSetting('photogallery', 'categories_depth_start'));
+		//Spoon::dump((int) BackendModel::getModuleSetting('photogallery', 'categories_depth_start'));
+		//Spoon::dump((int) BackendModel::getModuleSetting('photogallery', 'categories_depth'));
+		//Spoon::dump($this->depth);
 		if(
 			!is_null(BackendModel::getModuleSetting('photogallery', 'categories_depth')) &&
 			(
@@ -93,19 +108,28 @@ class BackendPhotogalleryCategories extends BackendBaseActionIndex
 			)
 		)
 		{
-			// add children column
-			$this->dataGrid->addColumn('children', null);
-			$this->dataGrid->setColumnFunction(create_function('$num_children,$id','return $num_children = $num_children ? "<a href=\"" . BackendModel::createURLForAction("categories") . "&amp;category_id=" . $id . "\">" . BL::lbl("ViewSubcategories") . "</a>" : BL::lbl("NoSubcategories");'),array('[num_children]', '[id]'),'children',true);
-			$this->dataGrid->addColumn('add_subcategory', null, sprintf(BL::lbl('AddSubCategory')), BackendModel::createURLForAction('add_category') . '&amp;category_id=[id]', BL::getLabel('msgCategoriesForParent'));
+			// build sequence
 			$column_sequence = array(
 				'dragAndDropHandle',
 				'title',
 				'num_children',
 				'num_albums',
-				'children',
-				'add_subcategory',
-				'edit'
+				'children'
 			);
+
+			// add children column
+			$this->dataGrid->addColumn('children', null);
+			$this->dataGrid->setColumnFunction(create_function('$num_children,$id','return $num_children = $num_children ? "<a href=\"" . BackendModel::createURLForAction("categories") . "&amp;category_id=" . $id . "\">" . BL::lbl("ViewSubcategories") . "</a>" : BL::lbl("NoSubcategories");'),array('[num_children]', '[id]'),'children',true);
+			
+			// add add button
+			if($this->allowChildSubCategoryCreation)
+			{
+				$this->dataGrid->addColumn('add_subcategory', null, sprintf(BL::lbl('AddSubCategory')), BackendModel::createURLForAction('add_category') . '&amp;category_id=[id]', BL::getLabel('msgCategoriesForParent'));
+				$column_sequence[] = 'add_subcategory';
+			}
+			
+			// add edit to sequence
+			$column_sequence[] = 'edit';
 		}
 
 		// disable paging
@@ -127,6 +151,8 @@ class BackendPhotogalleryCategories extends BackendBaseActionIndex
 		$this->tpl->assign('category', $this->category);
 		$this->tpl->assign('dataGrid', ($this->dataGrid->getNumResults() != 0) ? $this->dataGrid->getContent() : false);
 		$this->tpl->assign('breadcrumbs', $this->breadcrumbs);
+		$this->tpl->assign('allowChildSubCategoryCreation', $this->allowChildSubCategoryCreation);
+		$this->tpl->assign('allowChildCategoryCreation', $this->allowChildCategoryCreation);
 	}
 
 }

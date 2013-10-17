@@ -10,7 +10,9 @@
 	{/option:!category}
 	<div class="buttonHolderRight">
 		{option:category}
-			<a href="{$addToParentURL}" class="button icon iconAdd"><span>{$lblAddCategoryToParent|sprintf:{$category.title}|ucfirst}</span></a>
+			{option:allowChildCategoryCreation}
+				<a href="{$addToParentURL}" class="button icon iconAdd"><span>{$lblAddCategoryToParent|sprintf:{$category.title}|ucfirst}</span></a>
+			{/option:allowChildCategoryCreation}
 		{/option:category}
 		{option:!category}
 			<a href="{$var|geturl:'add_category'}" class="button icon iconAdd"><span>{$lblAddCategory|ucfirst}</span></a>
