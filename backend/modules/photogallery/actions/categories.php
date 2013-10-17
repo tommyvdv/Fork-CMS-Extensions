@@ -60,7 +60,7 @@ class BackendPhotogalleryCategories extends BackendBaseActionIndex
 		$this->allowedForLimit =
 			$this->depth < (int) BackendModel::getModuleSetting('photogallery', 'categories_depth') ||
 			!is_null(BackendModel::getModuleSetting('photogallery', 'categories_depth'));
-		$this->allowChildCategoryCreation = (bool) $this->allowedForStart && (bool) $this->allowedForLimit;;
+		$this->allowChildCategoryCreation = (bool) $this->allowedForStart && (bool) $this->allowedForLimit;
 	}
 
 	/**
