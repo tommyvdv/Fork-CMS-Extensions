@@ -45,5 +45,15 @@
 	{/option:!category}
 {/option:!dataGrid}
 
+{option:debug}
+	depth: {$depth|dump}<br/>
+	allowedForStart: {$allowedForStart|dump}<br/>
+	allowedForLimit: {$allowedForLimit|dump}<br/>
+	allowed_depth: {$allowed_depth|dump}<br/>
+	allowed_depth_start: {$allowed_depth_start|dump}<br/>
+	allowChildCategoryCreation: {$allowChildCategoryCreation|dump}<br/>
+	allowChildSubCategoryCreation: {$allowChildSubCategoryCreation|dump}
+{/option:debug}
+
 {include:{$BACKEND_CORE_PATH}/layout/templates/structure_end_module.tpl}
 {include:{$BACKEND_CORE_PATH}/layout/templates/footer.tpl}

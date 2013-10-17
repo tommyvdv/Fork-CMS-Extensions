@@ -46,17 +46,21 @@ class BackendPhotogalleryCategories extends BackendBaseActionIndex
 	{
 		// get parent, parents parent, etc…
 		$this->breadcrumbs = array_reverse(BackendPhotogalleryModel::getBreadcrumbsForCategory($this->category_id));
-		$this->depth = count($this->breadcrumbs) - 1;
+		$this->depth = count($this->breadcrumbs)-1 > 0 ? count($this->breadcrumbs)-1 : 0;
+		
+		$this->allowedForStart =
+			$this->depth >= (int) BackendModel::getModuleSetting('photogallery', 'categories_depth_start');
+		$this->allowedForLimit =
+			$this->depth <= (int) BackendModel::getModuleSetting('photogallery', 'categories_depth') ||
+			!is_null(BackendModel::getModuleSetting('photogallery', 'categories_depth'));
+		$this->allowChildSubCategoryCreation = (bool) $this->allowedForStart && (bool) $this->allowedForLimit;
 
-		$this->allowChildSubCategoryCreation = (bool) (
-			$this->depth >= (int) BackendModel::getModuleSetting('photogallery', 'categories_depth_start') &&
-			$this->depth < (int) BackendModel::getModuleSetting('photogallery', 'categories_depth')
-		);
-
-		$this->allowChildCategoryCreation = (bool) (
-			$this->depth >= (int) BackendModel::getModuleSetting('photogallery', 'categories_depth_start') &&
-			$this->depth < (int) BackendModel::getModuleSetting('photogallery', 'categories_depth')
-		);
+		$this->allowedForStart =
+			$this->depth > (int) BackendModel::getModuleSetting('photogallery', 'categories_depth_start');
+		$this->allowedForLimit =
+			$this->depth < (int) BackendModel::getModuleSetting('photogallery', 'categories_depth') ||
+			!is_null(BackendModel::getModuleSetting('photogallery', 'categories_depth'));
+		$this->allowChildCategoryCreation = (bool) $this->allowedForStart && (bool) $this->allowedForLimit;;
 	}
 
 	/**
@@ -96,10 +100,6 @@ class BackendPhotogalleryCategories extends BackendBaseActionIndex
 		$this->dataGrid->setColumnsHidden(array('sequence'));
 
 		// add subcategories button (if depth is not greater than…)
-		//Spoon::dump($this->depth > (int) BackendModel::getModuleSetting('photogallery', 'categories_depth_start'));
-		//Spoon::dump((int) BackendModel::getModuleSetting('photogallery', 'categories_depth_start'));
-		//Spoon::dump((int) BackendModel::getModuleSetting('photogallery', 'categories_depth'));
-		//Spoon::dump($this->depth);
 		if(
 			!is_null(BackendModel::getModuleSetting('photogallery', 'categories_depth')) &&
 			(
@@ -151,6 +151,13 @@ class BackendPhotogalleryCategories extends BackendBaseActionIndex
 		$this->tpl->assign('category', $this->category);
 		$this->tpl->assign('dataGrid', ($this->dataGrid->getNumResults() != 0) ? $this->dataGrid->getContent() : false);
 		$this->tpl->assign('breadcrumbs', $this->breadcrumbs);
+		
+		$this->tpl->assign('depth', $this->depth);
+		$this->tpl->assign('allowed_depth_start', BackendModel::getModuleSetting('photogallery', 'categories_depth_start'));
+		$this->tpl->assign('allowed_depth', BackendModel::getModuleSetting('photogallery', 'categories_depth', 'null'));
+		$this->tpl->assign('allowedForStart', $this->allowedForStart);
+		$this->tpl->assign('allowedForLimit', $this->allowedForLimit);
+		
 		$this->tpl->assign('allowChildSubCategoryCreation', $this->allowChildSubCategoryCreation);
 		$this->tpl->assign('allowChildCategoryCreation', $this->allowChildCategoryCreation);
 	}
