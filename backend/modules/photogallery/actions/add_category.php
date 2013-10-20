@@ -44,6 +44,13 @@ class BackendPhotogalleryAddCategory extends BackendBaseActionAdd
 	 */
 	protected function parse()
 	{
+		// get url
+		$url = BackendModel::getURLForBlock($this->URL->getModule(), 'category');
+		$url404 = BackendModel::getURL(404);
+
+		// parse additional variables
+		if($url404 != $url) $this->tpl->assign('detailURL', SITE_URL . $url);
+
 		// call parent
 		parent::parse();
 
@@ -79,7 +86,7 @@ class BackendPhotogalleryAddCategory extends BackendBaseActionAdd
 		);
 
 		// create elements
-		$this->frm->addText('title', null, 255);
+		$this->frm->addText('title', null, 255, 'inputText title', 'inputTextError title');
 		$this->frm->addDropdown('parent_id', $this->categories, SpoonFilter::getGetValue('category_id', null, null, 'int'))->setDefaultElement('');
 
 		// meta

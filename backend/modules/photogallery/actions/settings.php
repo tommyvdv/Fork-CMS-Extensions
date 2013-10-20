@@ -39,9 +39,11 @@ class BackendPhotogallerySettings extends BackendBaseActionEdit
 			array_combine(range(1, 5), range(1, 5))
 		);
 
-		// add fields for pagination
+		// add fields for categories
 		$this->frm->addDropdown('categories_depth_start', array_combine(range(0, 5), range(0, 5)), BackendModel::getModuleSetting($this->URL->getModule(), 'categories_depth_start'));
 		$this->frm->addDropdown('categories_depth', $depths, BackendModel::getModuleSetting($this->URL->getModule(), 'categories_depth'));
+
+		// add fields for pagination
 		$this->frm->addDropdown('overview_albums_number_of_items', array_combine(range(1, 30), range(1, 30)), BackendModel::getModuleSetting($this->URL->getModule(), 'overview_albums_number_of_items', 10));
 		$this->frm->addDropdown('overview_categories_number_of_items', array_combine(range(1, 30), range(1, 30)), BackendModel::getModuleSetting($this->URL->getModule(), 'overview_categories_number_of_items', 10));
 		$this->frm->addDropdown('related_list_categories_number_of_items', array_combine(range(1, 30), range(1, 30)), BackendModel::getModuleSetting($this->URL->getModule(), 'related_list_categories_number_of_items', 10));

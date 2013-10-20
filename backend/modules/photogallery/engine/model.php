@@ -774,10 +774,14 @@ class BackendPhotogalleryModel
 	public static function getCategory($id)
 	{
 		return (array) BackendModel::getContainer()->get('database')->getRecord(
-			'SELECT i.*
-			 FROM photogallery_categories AS i
-			 WHERE i.id = ? AND i.language = ?',
-			array((int) $id, BL::getWorkingLanguage())
+			'SELECT i.*, m.url
+			FROM photogallery_categories AS i
+				JOIN meta AS m ON m.id = i.meta_id
+			WHERE i.id = ? AND i.language = ?',
+			array(
+				(int) $id,
+				BL::getWorkingLanguage()
+			)
 		);
 	}
 
