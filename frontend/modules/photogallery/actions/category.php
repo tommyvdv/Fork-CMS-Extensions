@@ -169,17 +169,21 @@ class FrontendPhotogalleryCategory extends FrontendBaseBlock
 	 */
 	private function parse()
 	{
+		$hasChildren = FrontendPhotogalleryModel::hasChildren($this->category['id'], FrontendModel::getModuleSetting('photogallery', 'show_empty_categories', 'Y') == 'Y');
+
 		// add into breadcrumb
 		if($this->category)
 		{
 			$this->breadcrumb->addElement(SpoonFilter::ucfirst(FL::getLabel('Category')), FrontendNavigation::getURLForBlock('photogallery', 'category'));
-			//$this->breadcrumb->addElement($this->category['label']);
 
 			// get parent, parents parent, etc…
 			$this->breadcrumbs = array_reverse(FrontendPhotogalleryModel::getBreadcrumbsForCategory($this->category['id']));
 			
 			// add breadcrumbs one by one
 			foreach($this->breadcrumbs as $breadcrumb) $this->breadcrumb->addElement($breadcrumb['title'], FrontendNavigation::getURLForBlock('photogallery', 'category') . '/' . $breadcrumb['url']);
+
+			// add all child categories
+			if($hasChildren && FrontendModel::getModuleSetting('photogallery', 'show_all_categories', 'N') == 'Y') $this->breadcrumb->addElement(FL::lbl('AllChildCategories'));
 		}
 		else
 		{

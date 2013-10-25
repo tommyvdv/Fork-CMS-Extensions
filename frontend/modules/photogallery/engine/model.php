@@ -1267,8 +1267,25 @@ class FrontendPhotogalleryModel implements FrontendTagsInterface
 		
 		if($category['parent_id']) $output = array_merge($output, self::getBreadcrumbsForCategory($category['parent_id'], $depth + 1));
 		//else $output[] = array("root" => true, "title" => Spoonfilter::ucfirst(FL::lbl('CategoryRoot')), "beforeSelected" => isset($category['selected']) && $category['selected'] ? true : false);
-		
+
 		return $output;
+	}
+
+	public static function hasChildren($id, $show_empty_categories = true)
+	{
+		$query = 'SELECT COUNT(c.id) AS total_subcats,
+				COUNT(i.id) AS total_albums
+			FROM photogallery_categories AS c
+				LEFT JOIN photogallery_categories_albums AS a ON c.id = a.category_id
+				LEFT JOIN photogallery_albums AS i ON a.album_id = i.id AND c.language = i.language
+				INNER JOIN meta AS m ON m.id = c.meta_id
+			WHERE c.parent_id = ?';
+		$parameters[] = $id;
+		
+		$count = BackendModel::getContainer()->get('database')->getRecord($query, $parameters);
+
+		if($show_empty_categories) return (bool) ((int) $count['total_subcats']);
+		return (bool) ((int) $count['total_subcats'] && (int) $count['total_albums']);
 	}
 
 	/**
