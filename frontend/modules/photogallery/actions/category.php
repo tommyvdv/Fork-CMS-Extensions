@@ -149,7 +149,11 @@ class FrontendPhotogalleryCategory extends FrontendBaseBlock
 			$this->pagination['offset'] = ($this->pagination['requested_page'] * $this->pagination['limit']) - $this->pagination['limit'];
 
 			// get articles
-			$this->items = FrontendPhotogalleryModel::getAllForCategory($requestedCategory, $this->pagination['limit'], $this->pagination['offset']);
+			$this->items = FrontendPhotogalleryModel::getAllForCategory(
+				$requestedCategory,
+				$this->pagination['limit'],
+				$this->pagination['offset']
+			);
 			
 			foreach($this->items as &$row)
 			{

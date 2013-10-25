@@ -119,7 +119,7 @@ class BackendPhotogalleryCategories extends BackendBaseActionIndex
 
 			// add children column
 			$this->dataGrid->addColumn('children', null);
-			$this->dataGrid->setColumnFunction(create_function('$num_children,$id','return $num_children = $num_children ? "<a href=\"" . BackendModel::createURLForAction("categories") . "&amp;category_id=" . $id . "\">" . BL::lbl("ViewSubcategories") . "</a>" : BL::lbl("NoSubcategories");'),array('[num_children]', '[id]'),'children',true);
+			$this->dataGrid->setColumnFunction(create_function('$num_children,$id','return $num_children = $num_children ? "<a href=\"" . BackendModel::createURLForAction("categories") . "&amp;category_id=" . $id . "\">" . vsprintf(BL::lbl("ViewSubcategories"), $num_children) . "</a>" : BL::lbl("NoSubcategories");'),array('[num_children]', '[id]'),'children',true);
 			
 			// add add button
 			if($this->allowChildSubCategoryCreation)

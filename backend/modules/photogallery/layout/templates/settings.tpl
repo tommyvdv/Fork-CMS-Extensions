@@ -22,6 +22,24 @@
 			{$ddmCategoriesDepth}
 			{$ddmCategoriesDepthError}
 		</div>
+
+		<div class="options">
+			<label for="default_category">{$lblDefaultCategory|ucfirst}</label>
+			{$ddmDefaultCategory}
+			{$ddmDefaultCategoryError}
+		</div>
+
+		<div class="options">
+			<label for="show_empty_categories">{$lblShowEmptyCategories|ucfirst}</label>
+			{$ddmShowEmptyCategories}
+			{$ddmShowEmptyCategoriesError}
+		</div>
+
+		<div class="options">
+			<label for="show_all_categories">{$lblShowAllCategories|ucfirst}</label>
+			{$ddmShowAllCategories}
+			{$ddmShowAllCategoriesError}
+		</div>
 	</div>
 	
 	<div class="box">

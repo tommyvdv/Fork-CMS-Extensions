@@ -63,9 +63,12 @@ class BackendPhotogalleryIndex extends BackendBaseActionIndex
 		$parameters = array();
 
 		// basic query
-		$query = 'SELECT l.id, l.sequence, l.title, l.num_images, l.hidden as is_hidden, UNIX_TIMESTAMP(l.publish_on) as publish_on, l.num_images_not_hidden
-				FROM photogallery_albums AS l
-				WHERE 1';
+		$query = 'SELECT l.id, l.sequence, l.title, l.num_images, l.hidden as is_hidden, UNIX_TIMESTAMP(l.publish_on) as publish_on, l.num_images_not_hidden,
+				GROUP_CONCAT(DISTINCT c.title SEPARATOR ", ") AS categories
+			FROM photogallery_albums AS l
+				LEFT JOIN photogallery_categories_albums AS ca ON ca.album_id = l.id
+				LEFT JOIN photogallery_categories AS c ON c.id = ca.category_id
+			WHERE 1';
 
 		// add title
 		if($this->filter['title'] !== null)
@@ -83,6 +86,10 @@ class BackendPhotogalleryIndex extends BackendBaseActionIndex
 
 		$query .= ' AND l.language = ?';
 		$parameters[] = BL::getWorkingLanguage();
+
+		// grouping & sorting
+		$query .= ' GROUP BY l.id';
+
 		// query + parameters
 		return array($query, $parameters);
 	}

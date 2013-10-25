@@ -34,14 +34,32 @@ class BackendPhotogallerySettings extends BackendBaseActionEdit
 	{
 		$this->frm = new BackendForm('settings');
 
+		// add depth fields for categories
 		$depths = array_merge(
 			array(null => BL::lbl('NotAllowed'), 0 => BL::lbl('infinity')),
 			array_combine(range(1, 5), range(1, 5))
 		);
-
-		// add fields for categories
 		$this->frm->addDropdown('categories_depth_start', array_combine(range(0, 5), range(0, 5)), BackendModel::getModuleSetting($this->URL->getModule(), 'categories_depth_start'));
 		$this->frm->addDropdown('categories_depth', $depths, BackendModel::getModuleSetting($this->URL->getModule(), 'categories_depth'));
+
+		// default category
+		$allowedDepth = BackendModel::getModuleSetting('photogallery', 'categories_depth', 0);
+		$allowedDepthStart = BackendModel::getModuleSetting('photogallery', 'categories_depth_start', 0);
+		$this->categories = BackendPhotogalleryModel::getCategoriesForDropdown(
+			array(
+				$allowedDepthStart,
+				$allowedDepth == 0 ? 0 : $allowedDepth + 1
+			)
+		);
+		$this->frm->addDropdown('default_category', $this->categories, BackendModel::getModuleSetting('photogallery', 'default_category_' . BL::getWorkingLanguage()))->setDefaultElement(null);
+
+		// show empty categories
+		$this->boolVals = array(
+			'Y' => BL::lbl('Yes'),
+			'N' => BL::lbl('No')
+		);
+		$this->frm->addDropdown('show_empty_categories', $this->boolVals, BackendModel::getModuleSetting('photogallery', 'show_empty_categories', 'N'));
+		$this->frm->addDropdown('show_all_categories', $this->boolVals, BackendModel::getModuleSetting('photogallery', 'show_all_categories', 'N'));
 
 		// add fields for pagination
 		$this->frm->addDropdown('overview_albums_number_of_items', array_combine(range(1, 30), range(1, 30)), BackendModel::getModuleSetting($this->URL->getModule(), 'overview_albums_number_of_items', 10));
@@ -114,6 +132,9 @@ class BackendPhotogallerySettings extends BackendBaseActionEdit
 				$selected_depth = $this->frm->getField('categories_depth')->getValue() != null ? $this->frm->getField('categories_depth')->getValue() : null;
 				BackendModel::setModuleSetting($this->URL->getModule(), 'categories_depth_start', $this->frm->getField('categories_depth_start')->getValue());
 				BackendModel::setModuleSetting($this->URL->getModule(), 'categories_depth', $selected_depth);
+				BackendModel::setModuleSetting($this->URL->getModule(), 'default_category_' . BL::getWorkingLanguage(), $this->frm->getField('default_category')->getValue());
+				BackendModel::setModuleSetting($this->URL->getModule(), 'show_empty_categories', $this->frm->getField('show_empty_categories')->getValue());
+				BackendModel::setModuleSetting($this->URL->getModule(), 'show_all_categories', $this->frm->getField('show_all_categories')->getValue());
 				BackendModel::setModuleSetting($this->URL->getModule(), 'overview_albums_number_of_items', (int) $this->frm->getField('overview_albums_number_of_items')->getValue());
 				BackendModel::setModuleSetting($this->URL->getModule(), 'overview_categories_number_of_items', (int) $this->frm->getField('overview_categories_number_of_items')->getValue());
 				BackendModel::setModuleSetting($this->URL->getModule(), 'related_list_categories_number_of_items', (int) $this->frm->getField('related_list_categories_number_of_items')->getValue());
