@@ -66,6 +66,11 @@
 	{option:blockPhotogalleryCategoryView}
 	
 		<h1>{$lblOnCategory|sprintf:{$blockPhotogalleryCategory.label}|ucfirst}</h1>
+		
+		{option:!blockPhotogalleryCategoryAlbums}
+			<p>{$lblNoItems}</p>
+		{/option:!blockPhotogalleryCategoryAlbums}
+		
 		{option:blockPhotogalleryCategoryAlbums}
 			{iteration:blockPhotogalleryCategoryAlbums}
 			

@@ -15,6 +15,14 @@ class FrontendPhotogalleryModel implements FrontendTagsInterface
 
 	const FANCYBOX_VERSION = '2.1.4';
 	const FLEXSLIDER_VERSION = '2.1';
+
+	public static function getSettings()
+	{
+		$settings = array();
+			$settings['show_album_count'] = FrontendModel::getModuleSetting('photogallery', 'show_album_count', 'N') == 'Y';
+		
+		return $settings;
+	}
 	
 	public static function buildCategoriesNavigation($parent_id = 0, $selectedUrl = null)
 	{
@@ -34,6 +42,9 @@ class FrontendPhotogalleryModel implements FrontendTagsInterface
 
 		// create template
 		$categoriesTpl = new FrontendTemplate(false);
+
+		// pass settings
+		$categoriesTpl->assign('settings', self::getSettings());
 
 		// assign data to template
 		$categoriesTpl->assign('navigation', $categories);
@@ -65,6 +76,9 @@ class FrontendPhotogalleryModel implements FrontendTagsInterface
 				// assign data to template
 				$categoriesTpl->assign('navigation', $categories[$key]['categories']);
 
+				// pass settings
+				$categoriesTpl->assign('settings', self::getSettings());
+
 				// return parsed content
 				$categories[$key]['children'] =  $categoriesTpl->getContent($tpl, true, true);
 			}
@@ -81,7 +95,7 @@ class FrontendPhotogalleryModel implements FrontendTagsInterface
 	{
 		return (int) FrontendModel::getContainer()->get('database')->getVar(
 			'SELECT category.id
-			FROM content_categories AS category
+			FROM photogallery_categories AS category
 				INNER JOIN meta AS meta ON meta.id = category.meta_id
 			WHERE meta.url = ? AND category.language = ?',
 			array(
@@ -91,17 +105,194 @@ class FrontendPhotogalleryModel implements FrontendTagsInterface
 		);
 	}
 
+	public static function getCategoryUrlById($id)
+	{
+		return FrontendModel::getContainer()->get('database')->getVar(
+			'SELECT meta.url
+			FROM photogallery_categories AS category
+				INNER JOIN meta AS meta ON meta.id = category.meta_id
+			WHERE category.id = ?',
+			array(
+				$id
+			)
+		);
+	}
+
+	/**
+	 * Take list of categories and recurse.
+	 *
+	 * @param int $parent_id Get all (sub)categories containing this parent id.
+	 * @param int $selectedId Selected (sub)category id. Selects the (sub)category and selection will be recursed upwards from there.
+	 * @return array
+	 */
 	public static function getAllCategoriesRecursive($parent_id = 0, $selectedId = null)
 	{
 		$categories = self::getAllCategories(null, $selectedId);
 
 		$categories = self::selectByProxy($categories, $selectedId);
 
-		$categories = self::hierarchise($categories);
+		$categories = self::hierarchise($categories, null);
+
+		// count the albums
+		$categories = self::countByProxy($categories);
+
+		// remove empty cats
+		if(FrontendModel::getModuleSetting('photogallery', 'show_empty_categories', 'Y') == 'N')
+			$categories = self::removeEmptyCategories($categories);
+
+		// add faux categories if needed
+		if(FrontendModel::getModuleSetting('photogallery', 'show_all_categories', 'Y') == 'Y')
+			$categories = self::addAllChildrenFaux($categories);
 
 		return $categories;
 	}
 
+	public static function addAllChildrenFaux($categories, $selectedId = null)
+	{
+		foreach($categories as $id => $category)
+		{
+			if(isset($category['categories']) && $category['categories'])
+			{
+				$categories[$id]['categories'] = self::addAllChildrenFaux($category['categories']);
+			}
+
+			$categories[$id] = self::addAllChildrenFauxRecurse($categories[$id]);
+		}
+
+		return $categories;
+	}
+
+	public static function addAllChildrenFauxRecurse($category)
+	{
+		if(isset($category['categories']) && $category['categories'] && count($category['categories']) > 1)
+		{
+			$temp = array();
+			$temp[0] = $category;
+			unset($temp[0]['categories']);
+			$temp[0]['label'] = FL::lbl('AllChildCategories');
+			$temp[0]['ignore_in_hierarchy'] = true;
+			$temp[0]['delete_if_alone'] = true;
+			$temp[0]['selected_by_proxy'] = false;
+
+			// merge it
+			$category['categories'] = array_merge($temp, $category['categories']);
+		}
+
+		return $category;
+	}
+
+	public static function countByProxy($categories)
+	{
+		// add album_ids
+		list($returned_categories, $counter) = self::countByProxyRecurse($categories);
+		$categories = $returned_categories;
+
+		//Spoon::dump($categories);
+		return $categories;
+	}
+
+	public static function removeEmptyCategories($categories)
+	{
+		foreach($categories as $id => $category)
+		{
+			if(isset($category['categories']) && $category['categories'])
+			{
+				$categories[$id]['categories'] = self::removeEmptyCategories($category['categories']);
+			}
+
+			if(
+				(!isset($categories[$id]['categories']) || !$categories[$id]['categories']) &&
+				(!$categories[$id]['album_ids'])
+			)
+				unset($categories[$id]);
+		}
+
+		return $categories;
+	}
+
+	public static function countByProxyRecurse($categories, $depth = 0, $counter = 0)
+	{
+		foreach($categories as $id => $category)
+		{
+			if(isset($category['categories']) && $category['categories'])
+			{
+				list($returned_categories, $counter) = self::countByProxyRecurse($category['categories'], $depth + 1, $counter);
+				$categories[$id]['categories'] = $returned_categories;
+			}
+			//Spoon::dump($categories[$id]);
+			$categories[$id] = self::countByProxyRecurseIndividual($categories[$id], $counter);
+			$counter += 1;
+
+			// get the album ids
+			if(isset($category['categories']) && $category['categories'])
+				$categories[$id]['album_ids'] = self::combineAlbumIds($categories[$id]['categories']);
+
+			//Spoon::dump(array_filter($categories[$id]['album_ids'], 'strlen'));
+
+			// count the album ids
+			$categories[$id]['total_albums'] = count($categories[$id]['album_ids']);
+			
+		}
+		return array($categories, $counter);
+	}
+
+	public static function combineAlbumIds($categories)
+	{
+		$combined_ids = array();
+		foreach($categories as $row)
+			$combined_ids = array_merge($row['album_ids'], $combined_ids);
+		
+		if(FrontendModel::getModuleSetting('photogallery', 'album_count_unique', 'Y') == 'Y')
+			$combined_ids = array_unique($combined_ids);
+		else
+			$combined_ids = ($combined_ids);
+
+		return $combined_ids;
+	}
+
+	public static function countByProxyRecurseIndividual($category, $counter = 0)
+	{
+
+		//echo '<pre>' . $counter . '</pre>';
+			
+		$category['counter'] = $counter;
+		/*
+		unset($category['url']);
+		unset($category['total']);
+		unset($category['parent_id']);
+		unset($category['meta_keywords']);
+		unset($category['meta_keywords_overwrite']);
+		unset($category['meta_title']);
+		unset($category['meta_title_overwrite']);
+		unset($category['meta_data']);
+		unset($category['total_albums']);
+		unset($category['full_url']);
+		unset($category['selected']);
+		unset($category['has_albums']);
+		unset($category['selected_by_proxy']);
+		if(isset($category['categories']) && $category['categories'])
+		{
+			$temp = $category['categories'];
+			unset($category['categories']);
+			$category['categories'] = $temp;
+		}
+		*/
+
+		if($category['album_ids'])
+		{
+			//Spoon::dump($category['album_ids']);
+		}
+
+		return $category;
+	}
+
+	/**
+	 * Select upwards from selected child
+	 *
+	 * @param array $categories The list of categories.
+	 * @param int $selectedId Selected (sub)category id.
+	 * @return array
+	 */
 	public static function selectByProxy($categories, $selectedId = null)
 	{
 		$categories = $categories;
@@ -118,6 +309,14 @@ class FrontendPhotogalleryModel implements FrontendTagsInterface
 		return $categories;
 	}
 
+	/**
+	 * Build parent child relation
+	 *
+	 * @param array $categories The list of categories.
+	 * @param array $parents The remaining parents (recursive).
+	 * @param boolean $show_all_categories Add a faux category to indicate all subcategory results.
+	 * @return array
+	 */
 	public static function hierarchise($categories, $parents = null)
 	{
 		$categories = $categories;
@@ -126,20 +325,45 @@ class FrontendPhotogalleryModel implements FrontendTagsInterface
 		foreach($categories as $id => $category)
 		{
 			$children = null;
-			foreach($parents as $child_key => $child)
+			if(!isset($category['ignore_in_hierarchy']) || !$category['ignore_in_hierarchy'])
 			{
-				if(isset($child['parent_id']) && $child['parent_id'] == (int) $category['id'])
+				// set the children	
+				foreach($parents as $child_key => $child)
 				{
-					$children[$child_key] = $child;
-					unset($categories[$child_key]);
-
+					if(isset($child['parent_id']) && $child['parent_id'] == (int) $category['id'])
+					{
+						$children[$child_key] = $child;
+						unset($categories[$child_key]);
+					}
 				}
-			}
 
-			if($children && isset($categories[$id]['id'])) $categories[$id]['categories'] = self::hierarchise($children, $parents);
+				// get the children of those children
+				if($children && isset($categories[$id]['id']))
+				{
+					$hierarchised = self::hierarchise($children, $parents);
+
+					//$parents[$id]['has_albums_by_proxy'] = $categories[$id]['has_albums_by_proxy'] = (bool) ((int) $categories[$id]['total_albums'] + (int) self::getAlbumTotalForParentCategory($hierarchised));
+					$categories[$id]['categories'] = $hierarchised;
+
+					//Spoon::dump($categories);
+				}
+
+				//Spoon::dump($categories);
+				//if($depth == 2) Spoon::dump($categories);
+			}
 		}
 
+		//if($depth == 0) Spoon::dump($parents);
+		//Spoon::dump($categories);
+
 		return $categories;
+	}
+
+	public static function getAlbumTotalForParentCategory($categories)
+	{
+		$count = 0;
+		foreach($categories as $row) $count += $row['total_albums'];
+		return $count;
 	}
 
 	public static function getCategoryNavigationHTML($tpl = 'navigation.tpl')
@@ -871,30 +1095,44 @@ class FrontendPhotogalleryModel implements FrontendTagsInterface
 	 */
 	public static function getAllCategories($parent_id = null, $selectedId = null)
 	{
-		$parameters[] = FRONTEND_LANGUAGE;
-		$parameters[] = 'N';
-		$parameters[] = FrontendModel::getUTCDate('Y-m-d H:i') . ':00';
-		if(!is_null($parent_id)) $parameters[] = $parent_id;
-		
-		$return =  (array) FrontendModel::getContainer()->get('database')->getRecords(
-			'SELECT c.id, c.title AS label, m.url, COUNT(c.id) AS total, c.parent_id,
+		// build query
+		$query = 'SELECT c.id, c.title AS label, m.url, COUNT(c.id) AS total, c.parent_id,
 				m.keywords AS meta_keywords, m.keywords_overwrite AS meta_keywords_overwrite,
 				m.description AS meta_description, m.description_overwrite AS meta_description_overwrite,
-				m.title AS meta_title, m.title_overwrite AS meta_title_overwrite, m.data AS meta_data
+				m.title AS meta_title, m.title_overwrite AS meta_title_overwrite, m.data AS meta_data,
+				COUNT(i.id) AS total_albums,
+				(
+					SELECT GROUP_CONCAT(album_id)
+					FROM photogallery_categories_albums AS link
+						JOIN photogallery_albums AS album ON album.id = link.album_id
+					WHERE link.category_id = c.id
+						AND album.hidden = "N"
+						AND album.show_in_albums = "Y"
+						# eventueel aandikken met andere WHERE - nachecken bij fred
+				) AS album_ids
 			FROM photogallery_categories AS c
-				/*INNER JOIN photogallery_categories_albums AS a ON c.id = a.category_id*/
-				/*INNER JOIN photogallery_albums AS i ON a.album_id = i.id AND c.language = i.language*/
+				LEFT JOIN photogallery_categories_albums AS a ON c.id = a.category_id
+				LEFT JOIN photogallery_albums AS i ON a.album_id = i.id AND c.language = i.language
 				INNER JOIN meta AS m ON m.id = c.meta_id
-			WHERE c.language = ?
-				/*AND i.hidden = ?*/
-				/*AND i.publish_on <= ?*/
-				/*AND i.num_images > 0*/' .
-				(is_null($parent_id) ? '' : ' AND c.parent_id = ?') . '
-			GROUP BY c.id
-			ORDER BY c.sequence ASC',
-			$parameters,
-			'id'
-		);
+			WHERE 1';
+
+		// where
+		$query .= ' AND c.language = ?';
+		$parameters[] = FRONTEND_LANGUAGE;
+		
+		if(!is_null($parent_id))
+		{
+			$query .= ' AND c.parent_id = ?';
+			$parameters[] = $parent_id;
+		}
+
+		// group
+		$query .= ' GROUP BY c.id';
+
+		// order
+		$query .= ' ORDER BY c.sequence ASC';
+		
+		$return =  (array) FrontendModel::getContainer()->get('database')->getRecords($query, $parameters, 'id');
 		
 		$categoryLink = FrontendNavigation::getURLForBlock('photogallery', 'category');
 
@@ -906,6 +1144,14 @@ class FrontendPhotogalleryModel implements FrontendTagsInterface
 			
 			// selected
 			$row['selected'] = $row['id'] == $selectedId ? true : false;
+
+			// hide by setting
+			$row['has_albums'] = $row['total_albums'] > 0 ? true : false;
+			$row['total_albums'] = (int) $row['total_albums'];
+			$row['total'] = (int) $row['total'];
+
+			// get album ids full
+			$row['album_ids'] = $row['album_ids'] ? explode(',', $row['album_ids']) : array();
 
 			// unserialize
 			if(isset($row['meta_data'])) $row['meta_data'] = @unserialize($row['meta_data']);
@@ -1027,34 +1273,64 @@ class FrontendPhotogalleryModel implements FrontendTagsInterface
 	public static function getAllForCategory($categoryURL, $limit = 10, $offset = 0, $ignoreLimit = false)
 	{
 		$db = FrontendModel::getContainer()->get('database');
+
+		// include subcat results?
+		$show_all_categories = FrontendModel::getModuleSetting('photogallery', 'show_children_albums', 'N') == 'Y';
 		
-		// get the items
-		$return = (array) $db->getRecords(
-			'SELECT i.id, i.language, i.title, i.introduction, i.text, i.num_images, i.set_id, 
+		// get subcats if needed
+		if($show_all_categories)
+			$categoryURLS = self::getSubcategoriesByUrl($categoryURL);
+
+		$query = 'SELECT i.id, i.language, i.title, i.introduction, i.text, i.num_images, i.set_id, 
 			c.title AS category_title, cm.url AS category_url,
 			UNIX_TIMESTAMP(i.publish_on) AS publish_on,
 			m.url, GROUP_CONCAT(ab.category_id) AS category_ids
-			FROM photogallery_albums AS i
+		FROM photogallery_albums AS i
 			INNER JOIN photogallery_categories_albums AS a ON i.id = a.album_id
 			LEFT OUTER JOIN photogallery_categories_albums AS ab ON i.id = ab.album_id
 			INNER JOIN photogallery_categories AS c ON a.category_id = c.id
 			INNER JOIN meta AS m ON i.meta_id = m.id
 			INNER JOIN meta AS cm ON cm.id = c.meta_id
-			WHERE  i.language = ? AND i.hidden = ?  AND i.show_in_albums = ? AND i.publish_on <= ? AND cm.url = ?  AND i.num_images > 0
-			GROUP BY i.id
-			ORDER BY i.sequence ASC' .
-			($ignoreLimit ? '/* LIMIT ?, ? */' : ' LIMIT ?, ?'),
-			array(
-				FRONTEND_LANGUAGE,
-				'N', 'Y',
-				FrontendModel::getUTCDate('Y-m-d H:i') . ':00',
-				(string) $categoryURL,
-				(int) $offset,
-				(int) $limit
-			),
-			'id'
-		);
-		
+		WHERE 1';
+
+		// default parameters
+		$query .= ' AND i.language = ?';
+		$parameters[] = FRONTEND_LANGUAGE;
+		$query .= ' AND i.hidden = ?';
+		$parameters[] = 'N';
+		$query .= ' AND i.show_in_albums = ?';
+		$parameters[] = 'Y';
+		$query .= ' AND i.publish_on <= ?';
+		$parameters[] = FrontendModel::getUTCDate('Y-m-d H:i') . ':00';
+		//$query .= ' AND cm.url = ?';
+		//$parameters[] = (string) $categoryURL;
+		$query .= ' AND i.num_images > ?';
+		$parameters[] = 0;
+
+		// if more than one category
+		if(isset($categoryURLS))
+		{
+			$query.= ' AND cm.url REGEXP ?';
+			$parameters[] = (string) implode('|', $categoryURLS);
+		} else if($categoryURL) {
+			$query.= ' AND cm.url = ?';
+			$parameters[] = (string) $categoryURL;
+		}
+
+		// query order parameters
+		$query .= ' GROUP BY i.id';
+		$query .= ' ORDER BY i.sequence ASC';
+
+		// query limit parameters
+		if(!$ignoreLimit)
+		{
+			$query .= ' LIMIT ?, ?';
+			$parameters[] = (int) $offset;
+			$parameters[] = (int) $limit;
+		}
+
+		// get the items
+		$return = (array) $db->getRecords($query, $parameters, 'id');
 		
 		// no results?
 		if(empty($return)) return array();
@@ -1068,24 +1344,30 @@ class FrontendPhotogalleryModel implements FrontendTagsInterface
 		{
 			// URLs
 			$row['full_url'] = $albumLink . '/' . $row['url'];
-			$row['image'] =  (array) $db->getRecord('SELECT i.filename, m.url, c.title, c.text, i.set_id, c.data
-														FROM  photogallery_sets_images AS i
-														INNER JOIN photogallery_sets_images_content AS c ON i.id = c.set_image_id
-														INNER JOIN meta AS m ON m.id = c.meta_id
-														WHERE i.set_id = ? AND c.language = ? AND i.hidden = ?
-														ORDER BY sequence DESC LIMIT 1',
-														array((int) $row['set_id'], FRONTEND_LANGUAGE, 'N'));
+			$row['image'] =  (array) $db->getRecord(
+				'SELECT i.filename, m.url, c.title, c.text, i.set_id, c.data
+				FROM  photogallery_sets_images AS i
+				INNER JOIN photogallery_sets_images_content AS c ON i.id = c.set_image_id
+				INNER JOIN meta AS m ON m.id = c.meta_id
+				WHERE i.set_id = ? AND c.language = ? AND i.hidden = ?
+				ORDER BY sequence DESC LIMIT 1',
+				array(
+					(int) $row['set_id'],
+					FRONTEND_LANGUAGE,
+					'N'
+				)
+			);
 
 			$row['category_ids'] = ($row['category_ids'] != '') ? (array) explode(',', $row['category_ids']) : null;
 
 			if($row['category_ids'] !== null)
 			{
-				$row['categories'] = (array) $db->getRecords('SELECT i.title, i.id, m.url
-																FROM photogallery_categories as i
-																INNER JOIN meta as m ON m.id = i.meta_id
-																WHERE i.id IN (' . implode(', ', $row['category_ids']) . ')
-																ORDER BY i.sequence ASC
-															');
+				$row['categories'] = (array) $db->getRecords(
+					'SELECT i.title, i.id, m.url
+					FROM photogallery_categories as i
+					INNER JOIN meta as m ON m.id = i.meta_id
+					WHERE i.id IN (' . implode(', ', $row['category_ids']) . ')
+					ORDER BY i.sequence ASC');
 
 				foreach($row['categories']as &$category)
 				{
@@ -1095,6 +1377,40 @@ class FrontendPhotogalleryModel implements FrontendTagsInterface
 		}
 		
 		// return
+		return $return;
+	}
+
+	public static function getSubcategoriesByUrl($categoryURL, $depth = 0, $recursive = false, $includeParent = true)
+	{
+		$category_id = self::getCategoryIdByUrl($categoryURL);
+		
+		$db = FrontendModel::getContainer()->get('database');
+
+		$subcategories = $db->getRecords(
+			'SELECT subcat.id, subcat.title, m.url
+			FROM photogallery_categories AS subcat
+				JOIN meta AS m ON m.id = subcat.meta_id
+			WHERE subcat.parent_id = ?',
+			array(
+				$category_id
+			)
+		);
+
+		$return = array();
+		
+		if($includeParent && $depth == 0) $return[] = $categoryURL;
+
+		if(!empty($subcategories))
+			foreach($subcategories AS $id => $subcategory)
+			{
+				$return[] = $subcategory['url'];
+				if($recursive)
+				{
+					$subcategoriesForSubcategory = self::getSubcategoriesByUrl($subcategory['url'], $depth + 1, $recursive);
+					if(!empty($subcategoriesForSubcategory)) $return = array_merge($return, $subcategoriesForSubcategory);
+				}
+			}
+
 		return $return;
 	}
 
@@ -1120,8 +1436,30 @@ class FrontendPhotogalleryModel implements FrontendTagsInterface
 		
 		if($category['parent_id']) $output = array_merge($output, self::getBreadcrumbsForCategory($category['parent_id'], $depth + 1));
 		//else $output[] = array("root" => true, "title" => Spoonfilter::ucfirst(FL::lbl('CategoryRoot')), "beforeSelected" => isset($category['selected']) && $category['selected'] ? true : false);
-		
+
 		return $output;
+	}
+
+	public static function hasChildren($id, $show_empty_categories = true)
+	{
+		$query = 'SELECT c.id,
+				COUNT(i.id) AS total_albums
+			FROM photogallery_categories AS c
+				INNER JOIN photogallery_categories_albums AS a ON c.id = a.category_id
+				LEFT JOIN photogallery_albums AS i ON a.album_id = i.id AND c.language = i.language
+				INNER JOIN meta AS m ON m.id = c.meta_id
+			WHERE c.parent_id = ?
+			GROUP BY c.id
+			HAVING total_albums > ?';
+		$parameters[] = $id;
+		$parameters[] = 0;
+		
+		$count = (int) count(BackendModel::getContainer()->get('database')->getRecords($query, $parameters));
+
+		return $count > 1 ? true : false;
+
+		//if($show_empty_categories) return (bool) ((int) $count['total_subcats']);
+		//return (bool) ((int) $count['total_subcats'] && (int) $count['total_albums']);
 	}
 
 	/**

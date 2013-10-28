@@ -85,7 +85,11 @@ class FrontendPhotogalleryCategory extends FrontendBaseBlock
    		$this->tpl->assign('modulePhotogalleryCategoryThumbnailResolution', $thumbnail_resolution);
 
 		// validate category
-		if($requestedCategory == 'false')
+		if($requestedCategory == 'false' && FrontendModel::getModuleSetting('photogallery', 'force_default_category_category', false) && FrontendModel::getModuleSetting('photogallery', 'default_category'))
+		{
+			$this->redirect(SITE_URL . FrontendNavigation::getURLForBlock('photogallery', 'category') . '/' . FrontendPhotogalleryModel::getCategoryUrlById(FrontendModel::getModuleSetting('photogallery', 'default_category')));
+		}
+		elseif($requestedCategory == 'false')
 		{
 			$this->categories_view = true;
 
@@ -149,7 +153,11 @@ class FrontendPhotogalleryCategory extends FrontendBaseBlock
 			$this->pagination['offset'] = ($this->pagination['requested_page'] * $this->pagination['limit']) - $this->pagination['limit'];
 
 			// get articles
-			$this->items = FrontendPhotogalleryModel::getAllForCategory($requestedCategory, $this->pagination['limit'], $this->pagination['offset']);
+			$this->items = FrontendPhotogalleryModel::getAllForCategory(
+				$requestedCategory,
+				$this->pagination['limit'],
+				$this->pagination['offset']
+			);
 			
 			foreach($this->items as &$row)
 			{
@@ -165,17 +173,21 @@ class FrontendPhotogalleryCategory extends FrontendBaseBlock
 	 */
 	private function parse()
 	{
+		$hasChildren = FrontendPhotogalleryModel::hasChildren($this->category['id'], FrontendModel::getModuleSetting('photogallery', 'show_empty_categories', 'Y') == 'Y');
+
 		// add into breadcrumb
 		if($this->category)
 		{
 			$this->breadcrumb->addElement(SpoonFilter::ucfirst(FL::getLabel('Category')), FrontendNavigation::getURLForBlock('photogallery', 'category'));
-			//$this->breadcrumb->addElement($this->category['label']);
 
 			// get parent, parents parent, etc…
 			$this->breadcrumbs = array_reverse(FrontendPhotogalleryModel::getBreadcrumbsForCategory($this->category['id']));
 			
 			// add breadcrumbs one by one
 			foreach($this->breadcrumbs as $breadcrumb) $this->breadcrumb->addElement($breadcrumb['title'], FrontendNavigation::getURLForBlock('photogallery', 'category') . '/' . $breadcrumb['url']);
+
+			// add all child categories
+			if($hasChildren && FrontendModel::getModuleSetting('photogallery', 'show_all_categories', 'N') == 'Y') $this->breadcrumb->addElement(FL::lbl('AllChildCategories'));
 		}
 		else
 		{

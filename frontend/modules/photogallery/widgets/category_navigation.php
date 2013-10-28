@@ -52,6 +52,5 @@ class FrontendPhotogalleryWidgetCategoryNavigation extends FrontendBaseWidget
 	{
 		$this->tpl->assign('widgetPhotogalleryCategoryNavigation', $this->navigation);
 		$this->tpl->assign('isRoot', !isset($this->data['id']) ? true : false);
-		
 	}
 }
