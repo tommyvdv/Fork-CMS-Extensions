@@ -104,13 +104,18 @@ class FrontendPhotogalleryModel implements FrontendTagsInterface
 
 		$categories = self::selectByProxy($categories, $selectedId);
 
-		$categories = self::hierarchise($categories, null, FrontendModel::getModuleSetting('photogallery', 'show_all_categories', 'N') == 'Y', FrontendModel::getModuleSetting('photogallery', 'show_empty_categories', 'Y') == 'Y');
+		$categories = self::hierarchise($categories, null);
 
 		// count the albums
 		$categories = self::countByProxy($categories);
 
+		// remove empty cats
+		if(FrontendModel::getModuleSetting('photogallery', 'show_empty_categories', 'Y') == 'N')
+			$categories = self::removeEmptyCategories($categories);
+
 		// add faux categories if needed
-		$categories = self::addAllChildrenFaux($categories);
+		if(FrontendModel::getModuleSetting('photogallery', 'show_all_categories', 'Y') == 'Y')
+			$categories = self::addAllChildrenFaux($categories);
 
 		return $categories;
 	}
@@ -154,9 +159,6 @@ class FrontendPhotogalleryModel implements FrontendTagsInterface
 		// add album_ids
 		list($returned_categories, $counter) = self::countByProxyRecurse($categories);
 		$categories = $returned_categories;
-
-		// remove empty cats
-		$categories = self::removeEmptyCategories($categories);
 
 		//Spoon::dump($categories);
 		return $categories;
@@ -284,7 +286,7 @@ class FrontendPhotogalleryModel implements FrontendTagsInterface
 	 * @param boolean $show_all_categories Add a faux category to indicate all subcategory results.
 	 * @return array
 	 */
-	public static function hierarchise($categories, $parents = null, $show_all_categories = false, $show_empty_categories = true, $depth = 0)
+	public static function hierarchise($categories, $parents = null)
 	{
 		$categories = $categories;
 		$parents = $parents ? $parents : $categories;
@@ -303,92 +305,17 @@ class FrontendPhotogalleryModel implements FrontendTagsInterface
 						unset($categories[$child_key]);
 					}
 				}
-/*
-				// add self as child category with different label
-				if($show_all_categories && $children)
-				{
-					$temp = array();
-					$temp[$id] = $category;
-					$temp[$id]['label'] = FL::lbl('AllChildCategories');
-					//unset($temp[$id]['children']);
-					$temp[$id]['ignore_in_hierarchy'] = true;
-					$temp[$id]['delete_if_alone'] = true;
-					$temp[$id]['selected_by_proxy'] = false;
 
-					// merge it
-					$children = array_merge($temp, $children);
-				}
-*/
 				// get the children of those children
 				if($children && isset($categories[$id]['id']))
 				{
-					$hierarchised = self::hierarchise($children, $parents, $show_all_categories, $show_empty_categories, $depth + 1);
+					$hierarchised = self::hierarchise($children, $parents);
 
 					//$parents[$id]['has_albums_by_proxy'] = $categories[$id]['has_albums_by_proxy'] = (bool) ((int) $categories[$id]['total_albums'] + (int) self::getAlbumTotalForParentCategory($hierarchised));
 					$categories[$id]['categories'] = $hierarchised;
 
 					//Spoon::dump($categories);
 				}
-
-				//if($depth == 3) Spoon::dump($categories);
-/*
-				// has children? if not, has albums? if not: hide
-				if(!$show_empty_categories)
-				{
-					foreach($categories as $id => $category)
-					{
-						$categories[$id]['keepit'] = true;
-
-						// set a var
-						$keepit = false;
-
-						//Spoon::dump($parents);
-						
-						// if the category is not a faux one
-						if(!isset($category['delete_if_alone']))
-						{
-							//if($depth == 2) Spoon::dump($category);
-							//if($id == 7) Spoon::dump($parents[$id]);
-							
-							// do it's children have albums?
-							if(isset($parents[$id]['has_albums_by_proxy']) && $parents[$id]['has_albums_by_proxy'])
-								$keepit = true;
-
-//if($id == "7") Spoon::dump($keepit);
-
-							// does the category itself have albums?
-							if($parents[$id]['has_albums'])
-								$keepit = true;
-					
-							//Spoon::dump($category);
-
-							$categories[$id]['keepit'] = $keepit;
-
-							//if(!$keepit) unset($categories[$id]);
-							if(!$categories[$id]['keepit']) $categories[$id]['deleted'] = true;
-							if(!$categories[$id]['keepit']) echo "<pre>" . $id . " " . $categories[$id]['label'] . " was deleted</pre>";
-						}
-
-						//if($depth == 2) Spoon::dump($categories);
-					}
-
-					// has children? if not, has albums? if not: hide
-					foreach($categories as $id => $category)
-					{
-						// if the category is not a faux one
-						if(isset($category['delete_if_alone']) && count($categories) == 1)
-						{
-							$temp = end($categories);
-							//if(isset($temp['delete_if_alone']) && $temp['delete_if_alone']) unset($categories[0]);
-							$categories[$id]['keepit'] = false;
-							//if(isset($temp['delete_if_alone']) && $temp['delete_if_alone']) unset($categories[0]);
-							if(!$categories[$id]['keepit']) $categories[$id]['deleted'] = true;
-						}
-
-						//if($depth == 2) Spoon::dump($categories);
-					}
-				}
-				*/
 
 				//Spoon::dump($categories);
 				//if($depth == 2) Spoon::dump($categories);
@@ -1317,7 +1244,7 @@ class FrontendPhotogalleryModel implements FrontendTagsInterface
 		$db = FrontendModel::getContainer()->get('database');
 
 		// include subcat results?
-		$show_all_categories = FrontendModel::getModuleSetting('photogallery', 'show_all_categories', 'N');
+		$show_all_categories = FrontendModel::getModuleSetting('photogallery', 'show_children_albums', 'N') == 'Y';
 		
 		// get subcats if needed
 		if($show_all_categories)

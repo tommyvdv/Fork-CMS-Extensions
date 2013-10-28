@@ -40,6 +40,12 @@
 			{$ddmShowAllCategories}
 			{$ddmShowAllCategoriesError}
 		</div>
+
+		<div class="options">
+			<label for="show_children_albums">{$lblShowChildrenAlbums|ucfirst}</label>
+			{$ddmShowChildrenAlbums}
+			{$ddmShowChildrenAlbumsError}
+		</div>
 	</div>
 	
 	<div class="box">
