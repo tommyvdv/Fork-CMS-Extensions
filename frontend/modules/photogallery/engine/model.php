@@ -229,6 +229,7 @@ class FrontendPhotogalleryModel implements FrontendTagsInterface
 		foreach($categories as $row)
 			$combined_ids = array_merge($row['album_ids'], $combined_ids);
 		$combined_ids = array_unique($combined_ids);
+		//$combined_ids = ($combined_ids);
 
 		return $combined_ids;
 	}
