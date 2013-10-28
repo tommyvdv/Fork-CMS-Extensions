@@ -105,6 +105,19 @@ class FrontendPhotogalleryModel implements FrontendTagsInterface
 		);
 	}
 
+	public static function getCategoryUrlById($id)
+	{
+		return FrontendModel::getContainer()->get('database')->getVar(
+			'SELECT meta.url
+			FROM photogallery_categories AS category
+				INNER JOIN meta AS meta ON meta.id = category.meta_id
+			WHERE category.id = ?',
+			array(
+				$id
+			)
+		);
+	}
+
 	/**
 	 * Take list of categories and recurse.
 	 *
@@ -228,8 +241,11 @@ class FrontendPhotogalleryModel implements FrontendTagsInterface
 		$combined_ids = array();
 		foreach($categories as $row)
 			$combined_ids = array_merge($row['album_ids'], $combined_ids);
-		$combined_ids = array_unique($combined_ids);
-		//$combined_ids = ($combined_ids);
+		
+		if(FrontendModel::getModuleSetting('photogallery', 'album_count_unique', 'Y') == 'Y')
+			$combined_ids = array_unique($combined_ids);
+		else
+			$combined_ids = ($combined_ids);
 
 		return $combined_ids;
 	}

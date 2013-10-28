@@ -739,6 +739,42 @@
 				<translation language="en"><![CDATA[allowed starting depth for subcategories]]></translation>
 				<translation language="nl"><![CDATA[toegelaten startdiepte voor subcategorieën]]></translation>
 			</item>
+			<item type="label" name="DefaultCategory">
+				<translation language="en"><![CDATA[default category]]></translation>
+				<translation language="nl"><![CDATA[standaard categorie]]></translation>
+			</item>
+			<item type="label" name="ShowEmptyCategories">
+				<translation language="en"><![CDATA[show empty categories]]></translation>
+				<translation language="nl"><![CDATA[toon lege categorieën]]></translation>
+			</item>
+			<item type="label" name="ShowAllCategories">
+				<translation language="en"><![CDATA[show "AllChildCategories" label for parents with more than one subcategory]]></translation>
+				<translation language="nl"><![CDATA[toon "AllChildCategories" label voor hoofdcategorieën met meer dan één subcategorie]]></translation>
+			</item>
+			<item type="message" name="HelpForceDefaultCategory">
+				<translation language="en"><![CDATA[Prevent the default action and force the default category]]></translation>
+				<translation language="nl"><![CDATA[Voorkom de standaard actie en forceer de standaard categorie]]></translation>
+			</item>
+			<item type="label" name="ForceDefaultCategoryCategory">
+				<translation language="en"><![CDATA[on the 'category' action]]></translation>
+				<translation language="nl"><![CDATA[op de 'categorie' actie]]></translation>
+			</item>
+			<item type="label" name="ForceDefaultCategoryIndex">
+				<translation language="en"><![CDATA[on the 'index' action]]></translation>
+				<translation language="nl"><![CDATA[op de 'index' actie]]></translation>
+			</item>
+			<item type="label" name="ShowChildrenAlbums">
+				<translation language="en"><![CDATA[parents will show results of children]]></translation>
+				<translation language="nl"><![CDATA[hoofdcategorie toont resultaten van zijn subcategorieën]]></translation>
+			</item>
+			<item type="label" name="ShowAlbumCount">
+				<translation language="en"><![CDATA[show count]]></translation>
+				<translation language="nl"><![CDATA[toon teller]]></translation>
+			</item>
+			<item type="label" name="AlbumCountUnique">
+				<translation language="en"><![CDATA[count unique]]></translation>
+				<translation language="nl"><![CDATA[tel uniek]]></translation>
+			</item>
 			<item type="label" name="Yes">
 				<translation language="en"><![CDATA[yes]]></translation>
 				<translation language="nl"><![CDATA[ja]]></translation>

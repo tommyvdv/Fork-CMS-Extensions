@@ -30,6 +30,14 @@
 		</div>
 
 		<div class="options">
+			<p>{$msgHelpForceDefaultCategory}:</p>
+			<ul class="inputList p0">
+				<li><label for="force_default_category_category">{$chkForceDefaultCategoryCategory} {$lblForceDefaultCategoryCategory|ucfirst}</label></li>
+				<li><label for="force_default_category_index">{$chkForceDefaultCategoryIndex} {$lblForceDefaultCategoryIndex|ucfirst}</label></li>
+			</ul>
+		</div>
+
+		<div class="options">
 			<label for="show_empty_categories">{$lblShowEmptyCategories|ucfirst}</label>
 			{$ddmShowEmptyCategories}
 			{$ddmShowEmptyCategoriesError}
@@ -51,6 +59,12 @@
 			<label for="show_album_count">{$lblShowAlbumCount|ucfirst}</label>
 			{$ddmShowAlbumCount}
 			{$ddmShowAlbumCountError}
+		</div>
+
+		<div class="options">
+			<label for="album_count_unique">{$lblAlbumCountUnique|ucfirst}</label>
+			{$ddmAlbumCountUnique}
+			{$ddmAlbumCountUniqueError}
 		</div>
 	</div>
 	

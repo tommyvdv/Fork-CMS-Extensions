@@ -85,7 +85,11 @@ class FrontendPhotogalleryCategory extends FrontendBaseBlock
    		$this->tpl->assign('modulePhotogalleryCategoryThumbnailResolution', $thumbnail_resolution);
 
 		// validate category
-		if($requestedCategory == 'false')
+		if($requestedCategory == 'false' && FrontendModel::getModuleSetting('photogallery', 'force_default_category_category', false) && FrontendModel::getModuleSetting('photogallery', 'default_category'))
+		{
+			$this->redirect(SITE_URL . FrontendNavigation::getURLForBlock('photogallery', 'category') . '/' . FrontendPhotogalleryModel::getCategoryUrlById(FrontendModel::getModuleSetting('photogallery', 'default_category')));
+		}
+		elseif($requestedCategory == 'false')
 		{
 			$this->categories_view = true;
 

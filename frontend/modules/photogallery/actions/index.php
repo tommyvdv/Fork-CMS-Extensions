@@ -59,7 +59,11 @@ class FrontendPhotogalleryIndex extends FrontendBaseBlock
 		$this->tpl->assign('modulePhotogalleryIndexResolution', $thumbnail_resolution);
 
 
-		if($this->data['display'] == 'albums')
+		if(FrontendModel::getModuleSetting('photogallery', 'force_default_category_index', false) && FrontendModel::getModuleSetting('photogallery', 'default_category'))
+		{
+			$this->redirect(SITE_URL . FrontendNavigation::getURLForBlock('photogallery', 'category') . '/' . FrontendPhotogalleryModel::getCategoryUrlById(FrontendModel::getModuleSetting('photogallery', 'default_category')));
+		}
+		elseif($this->data['display'] == 'albums')
 		{
 			// requested page
 			$requestedPage = $this->URL->getParameter('page', 'int', 1);
