@@ -46,6 +46,12 @@
 			{$ddmShowChildrenAlbums}
 			{$ddmShowChildrenAlbumsError}
 		</div>
+
+		<div class="options">
+			<label for="show_album_count">{$lblShowAlbumCount|ucfirst}</label>
+			{$ddmShowAlbumCount}
+			{$ddmShowAlbumCountError}
+		</div>
 	</div>
 	
 	<div class="box">

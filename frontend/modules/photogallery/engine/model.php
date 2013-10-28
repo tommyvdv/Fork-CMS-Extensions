@@ -15,6 +15,14 @@ class FrontendPhotogalleryModel implements FrontendTagsInterface
 
 	const FANCYBOX_VERSION = '2.1.4';
 	const FLEXSLIDER_VERSION = '2.1';
+
+	public static function getSettings()
+	{
+		$settings = array();
+			$settings['show_album_count'] = FrontendModel::getModuleSetting('photogallery', 'show_album_count', 'N') == 'Y';
+		
+		return $settings;
+	}
 	
 	public static function buildCategoriesNavigation($parent_id = 0, $selectedUrl = null)
 	{
@@ -34,6 +42,9 @@ class FrontendPhotogalleryModel implements FrontendTagsInterface
 
 		// create template
 		$categoriesTpl = new FrontendTemplate(false);
+
+		// pass settings
+		$categoriesTpl->assign('settings', self::getSettings());
 
 		// assign data to template
 		$categoriesTpl->assign('navigation', $categories);
@@ -64,6 +75,9 @@ class FrontendPhotogalleryModel implements FrontendTagsInterface
 
 				// assign data to template
 				$categoriesTpl->assign('navigation', $categories[$key]['categories']);
+
+				// pass settings
+				$categoriesTpl->assign('settings', self::getSettings());
 
 				// return parsed content
 				$categories[$key]['children'] =  $categoriesTpl->getContent($tpl, true, true);

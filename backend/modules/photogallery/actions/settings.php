@@ -61,6 +61,7 @@ class BackendPhotogallerySettings extends BackendBaseActionEdit
 		$this->frm->addDropdown('show_empty_categories', $this->boolVals, BackendModel::getModuleSetting('photogallery', 'show_empty_categories', 'N'));
 		$this->frm->addDropdown('show_all_categories', $this->boolVals, BackendModel::getModuleSetting('photogallery', 'show_all_categories', 'N'));
 		$this->frm->addDropdown('show_children_albums', $this->boolVals, BackendModel::getModuleSetting('photogallery', 'show_children_albums', 'N'));
+		$this->frm->addDropdown('show_album_count', $this->boolVals, BackendModel::getModuleSetting('photogallery', 'show_album_count', 'N'));
 
 		// add fields for pagination
 		$this->frm->addDropdown('overview_albums_number_of_items', array_combine(range(1, 30), range(1, 30)), BackendModel::getModuleSetting($this->URL->getModule(), 'overview_albums_number_of_items', 10));
@@ -133,10 +134,15 @@ class BackendPhotogallerySettings extends BackendBaseActionEdit
 				$selected_depth = $this->frm->getField('categories_depth')->getValue() != null ? $this->frm->getField('categories_depth')->getValue() : null;
 				BackendModel::setModuleSetting($this->URL->getModule(), 'categories_depth_start', $this->frm->getField('categories_depth_start')->getValue());
 				BackendModel::setModuleSetting($this->URL->getModule(), 'categories_depth', $selected_depth);
+				
 				BackendModel::setModuleSetting($this->URL->getModule(), 'default_category_' . BL::getWorkingLanguage(), $this->frm->getField('default_category')->getValue());
+				
 				BackendModel::setModuleSetting($this->URL->getModule(), 'show_empty_categories', $this->frm->getField('show_empty_categories')->getValue());
 				BackendModel::setModuleSetting($this->URL->getModule(), 'show_all_categories', $this->frm->getField('show_all_categories')->getValue());
 				BackendModel::setModuleSetting($this->URL->getModule(), 'show_children_albums', $this->frm->getField('show_children_albums')->getValue());
+
+				BackendModel::setModuleSetting($this->URL->getModule(), 'show_album_count', $this->frm->getField('show_album_count')->getValue());
+				
 				BackendModel::setModuleSetting($this->URL->getModule(), 'overview_albums_number_of_items', (int) $this->frm->getField('overview_albums_number_of_items')->getValue());
 				BackendModel::setModuleSetting($this->URL->getModule(), 'overview_categories_number_of_items', (int) $this->frm->getField('overview_categories_number_of_items')->getValue());
 				BackendModel::setModuleSetting($this->URL->getModule(), 'related_list_categories_number_of_items', (int) $this->frm->getField('related_list_categories_number_of_items')->getValue());
