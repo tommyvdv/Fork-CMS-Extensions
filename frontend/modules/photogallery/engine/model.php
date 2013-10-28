@@ -106,7 +106,151 @@ class FrontendPhotogalleryModel implements FrontendTagsInterface
 
 		$categories = self::hierarchise($categories, null, FrontendModel::getModuleSetting('photogallery', 'show_all_categories', 'N') == 'Y', FrontendModel::getModuleSetting('photogallery', 'show_empty_categories', 'Y') == 'Y');
 
+		// count the albums
+		$categories = self::countByProxy($categories);
+
+		// add faux categories if needed
+		$categories = self::addAllChildrenFaux($categories);
+
 		return $categories;
+	}
+
+	public static function addAllChildrenFaux($categories, $selectedId = null)
+	{
+		foreach($categories as $id => $category)
+		{
+			if(isset($category['categories']) && $category['categories'])
+			{
+				$categories[$id]['categories'] = self::addAllChildrenFaux($category['categories']);
+			}
+
+			$categories[$id] = self::addAllChildrenFauxRecurse($categories[$id]);
+		}
+
+		return $categories;
+	}
+
+	public static function addAllChildrenFauxRecurse($category)
+	{
+		if(isset($category['categories']) && $category['categories'] && count($category['categories']) > 1)
+		{
+			$temp = array();
+			$temp[0] = $category;
+			unset($temp[0]['categories']);
+			$temp[0]['label'] = FL::lbl('AllChildCategories');
+			$temp[0]['ignore_in_hierarchy'] = true;
+			$temp[0]['delete_if_alone'] = true;
+			$temp[0]['selected_by_proxy'] = false;
+
+			// merge it
+			$category['categories'] = array_merge($temp, $category['categories']);
+		}
+
+		return $category;
+	}
+
+	public static function countByProxy($categories)
+	{
+		// add album_ids
+		list($returned_categories, $counter) = self::countByProxyRecurse($categories);
+		$categories = $returned_categories;
+
+		// remove empty cats
+		$categories = self::removeEmptyCategories($categories);
+
+		//Spoon::dump($categories);
+		return $categories;
+	}
+
+	public static function removeEmptyCategories($categories)
+	{
+		foreach($categories as $id => $category)
+		{
+			if(isset($category['categories']) && $category['categories'])
+			{
+				$categories[$id]['categories'] = self::removeEmptyCategories($category['categories']);
+			}
+
+			if(
+				(!isset($categories[$id]['categories']) || !$categories[$id]['categories']) &&
+				(!$categories[$id]['album_ids'])
+			)
+				unset($categories[$id]);
+		}
+
+		return $categories;
+	}
+
+	public static function countByProxyRecurse($categories, $depth = 0, $counter = 0)
+	{
+		foreach($categories as $id => $category)
+		{
+			if(isset($category['categories']) && $category['categories'])
+			{
+				list($returned_categories, $counter) = self::countByProxyRecurse($category['categories'], $depth + 1, $counter);
+				$categories[$id]['categories'] = $returned_categories;
+			}
+			//Spoon::dump($categories[$id]);
+			$categories[$id] = self::countByProxyRecurseIndividual($categories[$id], $counter);
+			$counter += 1;
+
+			// get the album ids
+			if(isset($category['categories']) && $category['categories'])
+				$categories[$id]['album_ids'] = self::combineAlbumIds($categories[$id]['categories']);
+
+			//Spoon::dump(array_filter($categories[$id]['album_ids'], 'strlen'));
+
+			// count the album ids
+			$categories[$id]['total_albums'] = count($categories[$id]['album_ids']);
+			
+		}
+		return array($categories, $counter);
+	}
+
+	public static function combineAlbumIds($categories)
+	{
+		$combined_ids = array();
+		foreach($categories as $row)
+			$combined_ids = array_merge($row['album_ids'], $combined_ids);
+		$combined_ids = array_unique($combined_ids);
+
+		return $combined_ids;
+	}
+
+	public static function countByProxyRecurseIndividual($category, $counter = 0)
+	{
+
+		//echo '<pre>' . $counter . '</pre>';
+			
+		$category['counter'] = $counter;
+		/*
+		unset($category['url']);
+		unset($category['total']);
+		unset($category['parent_id']);
+		unset($category['meta_keywords']);
+		unset($category['meta_keywords_overwrite']);
+		unset($category['meta_title']);
+		unset($category['meta_title_overwrite']);
+		unset($category['meta_data']);
+		unset($category['total_albums']);
+		unset($category['full_url']);
+		unset($category['selected']);
+		unset($category['has_albums']);
+		unset($category['selected_by_proxy']);
+		if(isset($category['categories']) && $category['categories'])
+		{
+			$temp = $category['categories'];
+			unset($category['categories']);
+			$category['categories'] = $temp;
+		}
+		*/
+
+		if($category['album_ids'])
+		{
+			//Spoon::dump($category['album_ids']);
+		}
+
+		return $category;
 	}
 
 	/**
@@ -159,7 +303,7 @@ class FrontendPhotogalleryModel implements FrontendTagsInterface
 						unset($categories[$child_key]);
 					}
 				}
-
+/*
 				// add self as child category with different label
 				if($show_all_categories && $children)
 				{
@@ -174,41 +318,94 @@ class FrontendPhotogalleryModel implements FrontendTagsInterface
 					// merge it
 					$children = array_merge($temp, $children);
 				}
-
+*/
 				// get the children of those children
-				if($children && isset($categories[$id]['id'])) $categories[$id]['categories'] = self::hierarchise($children, $parents, $show_all_categories, $show_empty_categories, $depth + 1);
-
-				// has children? if not, has albums? if not: hide
-				foreach($categories as $id => $category)
+				if($children && isset($categories[$id]['id']))
 				{
-					if(!$show_empty_categories && !$category['has_albums'] && !isset($category['categories']) && !isset($category['delete_if_alone']))
+					$hierarchised = self::hierarchise($children, $parents, $show_all_categories, $show_empty_categories, $depth + 1);
+
+					//$parents[$id]['has_albums_by_proxy'] = $categories[$id]['has_albums_by_proxy'] = (bool) ((int) $categories[$id]['total_albums'] + (int) self::getAlbumTotalForParentCategory($hierarchised));
+					$categories[$id]['categories'] = $hierarchised;
+
+					//Spoon::dump($categories);
+				}
+
+				//if($depth == 3) Spoon::dump($categories);
+/*
+				// has children? if not, has albums? if not: hide
+				if(!$show_empty_categories)
+				{
+					foreach($categories as $id => $category)
 					{
-						//if($depth == 3) Spoon::dump($category);
-						unset($categories[$id]);
+						$categories[$id]['keepit'] = true;
 
-						//Spoon::dump($category);
+						// set a var
+						$keepit = false;
 
-						//if(isset($category['delete_if_alone']) && $category['delete_if_alone'])
-						//	Spoon::dump($categories);
+						//Spoon::dump($parents);
 						
-						//if($show_all_categories && isset($category['delete_if_alone']) && $category['delete_if_alone'] && count($categories) == 1)
-							//Spoon::dump($categories);
+						// if the category is not a faux one
+						if(!isset($category['delete_if_alone']))
+						{
+							//if($depth == 2) Spoon::dump($category);
+							//if($id == 7) Spoon::dump($parents[$id]);
+							
+							// do it's children have albums?
+							if(isset($parents[$id]['has_albums_by_proxy']) && $parents[$id]['has_albums_by_proxy'])
+								$keepit = true;
+
+//if($id == "7") Spoon::dump($keepit);
+
+							// does the category itself have albums?
+							if($parents[$id]['has_albums'])
+								$keepit = true;
+					
+							//Spoon::dump($category);
+
+							$categories[$id]['keepit'] = $keepit;
+
+							//if(!$keepit) unset($categories[$id]);
+							if(!$categories[$id]['keepit']) $categories[$id]['deleted'] = true;
+							if(!$categories[$id]['keepit']) echo "<pre>" . $id . " " . $categories[$id]['label'] . " was deleted</pre>";
+						}
+
+						//if($depth == 2) Spoon::dump($categories);
+					}
+
+					// has children? if not, has albums? if not: hide
+					foreach($categories as $id => $category)
+					{
+						// if the category is not a faux one
+						if(isset($category['delete_if_alone']) && count($categories) == 1)
+						{
+							$temp = end($categories);
+							//if(isset($temp['delete_if_alone']) && $temp['delete_if_alone']) unset($categories[0]);
+							$categories[$id]['keepit'] = false;
+							//if(isset($temp['delete_if_alone']) && $temp['delete_if_alone']) unset($categories[0]);
+							if(!$categories[$id]['keepit']) $categories[$id]['deleted'] = true;
+						}
+
+						//if($depth == 2) Spoon::dump($categories);
 					}
 				}
+				*/
 
-				if($show_all_categories && count($categories) == 1)
-				{
-					$temp = end($categories);
-					if(isset($temp['delete_if_alone']) && $temp['delete_if_alone']) unset($categories[0]);
-				}
 				//Spoon::dump($categories);
 				//if($depth == 2) Spoon::dump($categories);
 			}
 		}
 
-		//if($depth == 0) Spoon::dump($categories);
+		//if($depth == 0) Spoon::dump($parents);
+		//Spoon::dump($categories);
 
 		return $categories;
+	}
+
+	public static function getAlbumTotalForParentCategory($categories)
+	{
+		$count = 0;
+		foreach($categories as $row) $count += $row['total_albums'];
+		return $count;
 	}
 
 	public static function getCategoryNavigationHTML($tpl = 'navigation.tpl')
@@ -945,7 +1142,16 @@ class FrontendPhotogalleryModel implements FrontendTagsInterface
 				m.keywords AS meta_keywords, m.keywords_overwrite AS meta_keywords_overwrite,
 				m.description AS meta_description, m.description_overwrite AS meta_description_overwrite,
 				m.title AS meta_title, m.title_overwrite AS meta_title_overwrite, m.data AS meta_data,
-				COUNT(i.id) AS total_albums
+				COUNT(i.id) AS total_albums,
+				(
+					SELECT GROUP_CONCAT(album_id)
+					FROM photogallery_categories_albums AS link
+						JOIN photogallery_albums AS album ON album.id = link.album_id
+					WHERE link.category_id = c.id
+						AND album.hidden = "N"
+						AND album.show_in_albums = "Y"
+						# eventueel aandikken met andere WHERE - nachecken bij fred
+				) AS album_ids
 			FROM photogallery_categories AS c
 				LEFT JOIN photogallery_categories_albums AS a ON c.id = a.category_id
 				LEFT JOIN photogallery_albums AS i ON a.album_id = i.id AND c.language = i.language
@@ -983,6 +1189,11 @@ class FrontendPhotogalleryModel implements FrontendTagsInterface
 
 			// hide by setting
 			$row['has_albums'] = $row['total_albums'] > 0 ? true : false;
+			$row['total_albums'] = (int) $row['total_albums'];
+			$row['total'] = (int) $row['total'];
+
+			// get album ids full
+			$row['album_ids'] = $row['album_ids'] ? explode(',', $row['album_ids']) : array();
 
 			// unserialize
 			if(isset($row['meta_data'])) $row['meta_data'] = @unserialize($row['meta_data']);
@@ -1273,19 +1484,24 @@ class FrontendPhotogalleryModel implements FrontendTagsInterface
 
 	public static function hasChildren($id, $show_empty_categories = true)
 	{
-		$query = 'SELECT COUNT(c.id) AS total_subcats,
+		$query = 'SELECT c.id,
 				COUNT(i.id) AS total_albums
 			FROM photogallery_categories AS c
-				LEFT JOIN photogallery_categories_albums AS a ON c.id = a.category_id
+				INNER JOIN photogallery_categories_albums AS a ON c.id = a.category_id
 				LEFT JOIN photogallery_albums AS i ON a.album_id = i.id AND c.language = i.language
 				INNER JOIN meta AS m ON m.id = c.meta_id
-			WHERE c.parent_id = ?';
+			WHERE c.parent_id = ?
+			GROUP BY c.id
+			HAVING total_albums > ?';
 		$parameters[] = $id;
+		$parameters[] = 0;
 		
-		$count = BackendModel::getContainer()->get('database')->getRecord($query, $parameters);
+		$count = (int) count(BackendModel::getContainer()->get('database')->getRecords($query, $parameters));
 
-		if($show_empty_categories) return (bool) ((int) $count['total_subcats']);
-		return (bool) ((int) $count['total_subcats'] && (int) $count['total_albums']);
+		return $count > 1 ? true : false;
+
+		//if($show_empty_categories) return (bool) ((int) $count['total_subcats']);
+		//return (bool) ((int) $count['total_subcats'] && (int) $count['total_albums']);
 	}
 
 	/**
