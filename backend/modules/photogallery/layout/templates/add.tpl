@@ -64,19 +64,27 @@
 								{$txtIntroduction} {$txtIntroductionError}
 							</div>
 						</div>
-					
+						
 						{* Categories *}
-						{option:categories}
-							<div class="box">
-								<div class="heading">
-									<h3>{$lblCategories|ucfirst}</h3>
-								</div>
-								<div class="options">
+						<div class="box">
+							<div class="heading">
+								<h3>{$lblCategories|ucfirst}</h3>
+							</div>
+							<div class="options">
+								{option:categories}
 								 	<label for="categoryId">{$lblCategory|ucfirst}</label>
 								 	{$ddmCategories} {$ddmCategoriesError}
-								 </div>
-							</div>
-						{/option:categories}
+							 	{/option:categories}
+							 	{option:!categories}
+									{option:categoriesCount}
+										{$msgHasParentsButNotAllowed}
+									{/option:categoriesCount}
+									{option:!categoriesCount}
+										{$msgNoParents|sprintf:{$var|geturl:'add_category'}}
+									{/option:!categoriesCount}
+								{/option:!categories}
+							 </div>
+						</div>
 						
 					</td>
 
