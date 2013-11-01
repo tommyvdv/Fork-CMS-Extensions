@@ -25,11 +25,11 @@
 							<ul>
 								<li>
 									{* Written on *}
-									{$blockPhotogalleryCategories.albums.publish_on|date:{$dateFormatLong}:{$LANGUAGE}}
+									{$lblPublishedOn} {$blockPhotogalleryCategories.albums.publish_on|date:{$dateFormatLong}:{$LANGUAGE}} {$lblAt} {$blockPhotogalleryCategories.albums.publish_on|date:{$timeFormat}:{$LANGUAGE}}
 
 									{* Category*}
 									{option:blockPhotogalleryCategories.albums.categories}
-										{$lblIn} {$lblThe} {$lblCategory} 
+										{$lblInTheCategory}
 										{iteration:blockPhotogalleryCategories.albums.categories}
 											<a href="{$blockPhotogalleryCategories.albums.categories.full_url}" rel="tag" title="{$blockPhotogalleryCategories.albums.categories.title}">{$blockPhotogalleryCategories.albums.categories.title}</a>{option:!blockPhotogalleryCategories.albums.categories.last}, {/option:!blockPhotogalleryCategories.albums.categories.last}{option:blockPhotogalleryCategories.albums.categories.last}.{/option:blockPhotogalleryCategories.albums.categories.last}
 										{/iteration:blockPhotogalleryCategories.albums.categories}
@@ -37,11 +37,9 @@
 
 									{* Tags*}
 									{option:blockPhotogalleryCategories.albums.tags}
-										{$lblWith} {$lblThe} {$lblTags}
+										{$lblWithTheTags}
 										{iteration:blockPhotogalleryCategories.albums.tags}
-											<a href="{$blockPhotogalleryCategories.albums.tags.full_url}" rel="tag" title="{$blockPhotogalleryCategories.albums.tags.name}">{$blockPhotogalleryCategories.albums.tags.name}</a>
-											{option:!blockPhotogalleryCategories.albums.tags.last}, {/option:!blockPhotogalleryCategories.albums.tags.last}
-											{option:blockPhotogalleryCategories.albums.tags.last}.{/option:blockPhotogalleryCategories.albums.tags.last}
+											<a href="{$blockPhotogalleryCategories.albums.tags.full_url}" rel="tag" title="{$blockPhotogalleryCategories.albums.tags.name}">{$blockPhotogalleryCategories.albums.tags.name}</a>{option:!blockPhotogalleryCategories.albums.tags.last}, {/option:!blockPhotogalleryCategories.albums.tags.last}{option:blockPhotogalleryCategories.albums.tags.last}.{/option:blockPhotogalleryCategories.albums.tags.last}
 										{/iteration:blockPhotogalleryCategories.albums.tags}
 									{/option:blockPhotogalleryCategories.albums.tags}
 								</li>
@@ -83,11 +81,12 @@
 					<ul>
 						<li>
 							{* Written on *}
-							{$blockPhotogalleryCategoryAlbums.publish_on|date:{$dateFormatLong}:{$LANGUAGE}}
+							{$lblPublishedOn|ucfirst} {$blockPhotogalleryCategoryAlbums.publish_on|date:{$dateFormatLong}:{$LANGUAGE}} {$lblAt} {$blockPhotogalleryCategoryAlbums.publish_on|date:{$timeFormat}:{$LANGUAGE}}
+
 
 							{* Category*}
 							{option:blockPhotogalleryCategoryAlbums.categories}
-								{$lblIn} {$lblThe} {$lblCategory} 
+								{$lblInTheCategory}
 								{iteration:blockPhotogalleryCategoryAlbums.categories}
 									<a href="{$blockPhotogalleryCategoryAlbums.categories.full_url}" rel="tag" title="{$blockPhotogalleryCategoryAlbums.categories.title}">{$blockPhotogalleryCategoryAlbums.categories.title}</a>{option:!blockPhotogalleryCategoryAlbums.categories.last}, {/option:!blockPhotogalleryCategoryAlbums.categories.last}{option:blockPhotogalleryCategoryAlbums.categories.last}.{/option:blockPhotogalleryCategoryAlbums.categories.last}
 								{/iteration:blockPhotogalleryCategoryAlbums.categories}
@@ -95,11 +94,9 @@
 
 							{* Tags*}
 							{option:blockPhotogalleryCategoryAlbums.tags}
-								{$lblWith} {$lblThe} {$lblTags}
+								{$lblWithTheTags}
 								{iteration:blockPhotogalleryCategoryAlbums.tags}
-									<a href="{$blockPhotogalleryCategoryAlbums.tags.full_url}" rel="tag" title="{$blockPhotogalleryCategoryAlbums.tags.name}">{$blockPhotogalleryCategoryAlbums.tags.name}</a>
-									{option:!blockPhotogalleryCategoryAlbums.tags.last}, {/option:!blockPhotogalleryCategoryAlbums.tags.last}
-									{option:blockPhotogalleryCategoryAlbums.tags.last}.{/option:blockPhotogalleryCategoryAlbums.tags.last}
+									<a href="{$blockPhotogalleryCategoryAlbums.tags.full_url}" rel="tag" title="{$blockPhotogalleryCategoryAlbums.tags.name}">{$blockPhotogalleryCategoryAlbums.tags.name}</a>{option:!blockPhotogalleryCategoryAlbums.tags.last}, {/option:!blockPhotogalleryCategoryAlbums.tags.last}{option:blockPhotogalleryCategoryAlbums.tags.last}.{/option:blockPhotogalleryCategoryAlbums.tags.last}
 								{/iteration:blockPhotogalleryCategoryAlbums.tags}
 							{/option:blockPhotogalleryCategoryAlbums.tags}
 						</li>

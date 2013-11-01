@@ -5,7 +5,7 @@
 	<ul>
 		<li>
 			{* Written on *}
-			{$blockPhotogalleryAlbum.publish_on|date:{$dateFormatLong}:{$LANGUAGE}}
+			{$lblPublishedOn|ucfirst} {$blockPhotogalleryAlbum.publish_on|date:{$dateFormatLong}:{$LANGUAGE}} {$lblAt} {$blockPhotogalleryAlbum.publish_on|date:{$timeFormat}:{$LANGUAGE}}
 			
 			{* Category*}
 			{option:blockPhotogalleryAlbum.categories}

@@ -49,6 +49,19 @@
 			<item type="action" name="LightboxImage">
 				<translation language="nl"><![CDATA[afbeelding]]></translation>
 				<translation language="en"><![CDATA[image]]></translation>
+				<translation language="fr"><![CDATA[image]]></translation>
+			</item>
+			<item type="label" name="PublishedOn">
+				<translation language="en"><![CDATA[published on]]></translation>
+				<translation language="fr"><![CDATA[publié le]]></translation>
+			</item>
+			<item type="label" name="At">
+				<translation language="en"><![at]]></translation>
+				<translation language="fr"><![CDATA[à]]></translation>
+			</item>
+			<item type="label" name="WithTheTags">
+				<translation language="en"><![with the tags]]></translation>
+				<translation language="fr"><![CDATA[avec les tags]]></translation>
 			</item>
 		</core>
 	</frontend>
