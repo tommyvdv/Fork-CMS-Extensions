@@ -52,8 +52,9 @@ class BackendPhotogalleryAdd extends BackendBaseActionAdd
 
 		//$this->categories = BackendPhotogalleryModel::getCategoriesForDropdown(true);
 		//$this->categories = BackendPhotogalleryModel::getCategoriesForDropdown(BackendModel::getModuleSetting('photogallery', 'categories_depth', 0));
-		$allowedDepth = BackendModel::getModuleSetting('photogallery', 'categories_depth', 0);
-		$allowedDepthStart = BackendModel::getModuleSetting('photogallery', 'categories_depth_start', 0);
+		$allowedDepth = BackendModel::getModuleSetting('photogallery', 'albums_categories_depth', 0);
+		$allowedDepthStart = BackendModel::getModuleSetting('photogallery', 'albums_categories_depth_start', 0);
+		$this->categoriesCount = BackendPhotogalleryModel::getCategoriesCount();
 		$this->categories = BackendPhotogalleryModel::getCategoriesForDropdown(
 			array(
 				$allowedDepthStart,
@@ -107,6 +108,8 @@ class BackendPhotogalleryAdd extends BackendBaseActionAdd
 		
 		// parse categories to template
 		$this->tpl->assign('categories', $this->categories);
+		$this->tpl->assign('categories_depth', is_null(BackendModel::getModuleSetting('photogallery', 'categories_depth')) ? false : true);
+		$this->tpl->assign('categoriesCount', $this->categoriesCount);
 	}
 
 	/**

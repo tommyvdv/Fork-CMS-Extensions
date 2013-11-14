@@ -42,6 +42,9 @@ class BackendPhotogallerySettings extends BackendBaseActionEdit
 		$this->frm->addDropdown('categories_depth_start', array_combine(range(0, 5), range(0, 5)), BackendModel::getModuleSetting($this->URL->getModule(), 'categories_depth_start'));
 		$this->frm->addDropdown('categories_depth', $depths, BackendModel::getModuleSetting($this->URL->getModule(), 'categories_depth'));
 
+		$this->frm->addDropdown('albums_categories_depth_start', array_combine(range(0, 5), range(0, 5)), BackendModel::getModuleSetting($this->URL->getModule(), 'albums_categories_depth_start'));
+		$this->frm->addDropdown('albums_categories_depth', $depths, BackendModel::getModuleSetting($this->URL->getModule(), 'albums_categories_depth'));
+
 		// default category
 		$allowedDepth = BackendModel::getModuleSetting('photogallery', 'categories_depth', 0);
 		$allowedDepthStart = BackendModel::getModuleSetting('photogallery', 'categories_depth_start', 0);
@@ -137,6 +140,10 @@ class BackendPhotogallerySettings extends BackendBaseActionEdit
 				$selected_depth = $this->frm->getField('categories_depth')->getValue() != null ? $this->frm->getField('categories_depth')->getValue() : null;
 				BackendModel::setModuleSetting($this->URL->getModule(), 'categories_depth_start', $this->frm->getField('categories_depth_start')->getValue());
 				BackendModel::setModuleSetting($this->URL->getModule(), 'categories_depth', $selected_depth);
+
+				$albums_selected_depth = $this->frm->getField('albums_categories_depth')->getValue() != null ? $this->frm->getField('albums_categories_depth')->getValue() : null;
+				BackendModel::setModuleSetting($this->URL->getModule(), 'albums_categories_depth_start', $this->frm->getField('albums_categories_depth_start')->getValue());
+				BackendModel::setModuleSetting($this->URL->getModule(), 'albums_categories_depth', $albums_selected_depth);
 				
 				BackendModel::setModuleSetting($this->URL->getModule(), 'default_category_' . BL::getWorkingLanguage(), $this->frm->getField('default_category')->getValue());
 				BackendModel::setModuleSetting($this->URL->getModule(), 'force_default_category_category', (bool) $this->frm->getField('force_default_category_category')->getValue());

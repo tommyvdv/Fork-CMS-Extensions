@@ -10,12 +10,12 @@
 		<div class="heading">
 			<h3>{$lblInterface|ucfirst}</h3>
 		</div>
- 
-        <div class="options">
-            <label for="categoriesDepthStart">{$lblCategoriesDepthStart|ucfirst}</label>
-            {$ddmCategoriesDepthStart}
-            {$ddmCategoriesDepthStartError}
-        </div>
+
+		<div class="options">
+			<label for="categoriesDepthStart">{$lblCategoriesDepthStart|ucfirst}</label>
+			{$ddmCategoriesDepthStart}
+			{$ddmCategoriesDepthStartError}
+		</div>
 
 		<div class="options">
 			<label for="categoriesDepth">{$lblCategoriesDepth|ucfirst}</label>
@@ -27,6 +27,18 @@
 			<label for="default_category">{$lblDefaultCategory|ucfirst}</label>
 			{$ddmDefaultCategory}
 			{$ddmDefaultCategoryError}
+		</div>
+
+		<div class="options">
+			<label for="albumsCategoriesDepthStart">{$lblAlbumsCategoriesDepthStart|ucfirst}</label>
+			{$ddmAlbumsCategoriesDepthStart}
+			{$ddmAlbumsCategoriesDepthStartError}
+		</div>
+
+		<div class="options">
+			<label for="albumsCategoriesDepth">{$lblAlbumsCategoriesDepth|ucfirst}</label>
+			{$ddmAlbumsCategoriesDepth}
+			{$ddmAlbumsCategoriesDepthError}
 		</div>
 
 		<div class="options">

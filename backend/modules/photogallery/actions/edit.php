@@ -78,8 +78,9 @@ class BackendPhotogalleryEdit extends BackendBaseActionEdit
 		
 		//$this->categories = BackendPhotogalleryModel::getCategoriesForDropdown(true);
 		//$this->categories = BackendPhotogalleryModel::getCategoriesForDropdown(BackendModel::getModuleSetting('photogallery', 'categories_depth', 0));
-		$allowedDepth = BackendModel::getModuleSetting('photogallery', 'categories_depth', 0);
-		$allowedDepthStart = BackendModel::getModuleSetting('photogallery', 'categories_depth_start', 0);
+		$allowedDepth = BackendModel::getModuleSetting('photogallery', 'albums_categories_depth', 0);
+		$allowedDepthStart = BackendModel::getModuleSetting('photogallery', 'albums_categories_depth_start', 0);
+		$this->categoriesCount = BackendPhotogalleryModel::getCategoriesCount();
 		$this->categories = BackendPhotogalleryModel::getCategoriesForDropdown(
 			array(
 				$allowedDepthStart,
@@ -197,6 +198,8 @@ class BackendPhotogalleryEdit extends BackendBaseActionEdit
 		$this->tpl->assign('record', $this->record);
 		
 		$this->tpl->assign('categories', $this->categories);
+		$this->tpl->assign('categories_depth', is_null(BackendModel::getModuleSetting('photogallery', 'categories_depth')) ? false : true);
+		$this->tpl->assign('categoriesCount', $this->categoriesCount);
 		
 		// parse dataGrid
 		$this->tpl->assign('dataGrid', ($this->dataGrid->getNumResults() != 0) ? $this->dataGrid->getContent() : false);

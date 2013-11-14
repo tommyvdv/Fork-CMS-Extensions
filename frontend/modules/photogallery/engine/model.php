@@ -850,11 +850,25 @@ class FrontendPhotogalleryModel implements FrontendTagsInterface
 			FROM photogallery_albums AS i
 			INNER JOIN meta AS m ON m.id = i.meta_id
 			LEFT OUTER JOIN photogallery_categories_albums AS c ON i.id = c.album_id
-			WHERE i.language = ? AND i.hidden = ? AND i.show_in_albums = ? AND i.num_images_not_hidden > ? AND i.publish_on <= ?
+			WHERE i.language = ?
+				AND i.hidden = ?
+				AND i.show_in_albums = ?
+				AND i.num_images_not_hidden > ?
+				AND i.publish_on <= ?
 			GROUP BY i.id 
 			ORDER BY i.sequence DESC
 			LIMIT ?, ? ',
-			array(FRONTEND_LANGUAGE, 'N', 'Y', 0, FrontendModel::getUTCDate('Y-m-d H:i') . ':00', (int) $offset, (int) $limit), 'id');
+			array(
+				FRONTEND_LANGUAGE,
+				'N',
+				'Y',
+				0,
+				FrontendModel::getUTCDate('Y-m-d H:i') . ':00',
+				(int) $offset,
+				(int) $limit
+			),
+			'id'
+		);
 		
 		if(empty($return)) return array();
 
@@ -1106,15 +1120,24 @@ class FrontendPhotogalleryModel implements FrontendTagsInterface
 					FROM photogallery_categories_albums AS link
 						JOIN photogallery_albums AS album ON album.id = link.album_id
 					WHERE link.category_id = c.id
-						AND album.hidden = "N"
-						AND album.show_in_albums = "Y"
-						# eventueel aandikken met andere WHERE - nachecken bij fred
+						AND album.language = ?
+						AND album.hidden = ?
+						AND album.show_in_albums = ?
+						AND i.num_images_not_hidden > ?
+						AND i.publish_on <= ?
 				) AS album_ids
 			FROM photogallery_categories AS c
 				LEFT JOIN photogallery_categories_albums AS a ON c.id = a.category_id
 				LEFT JOIN photogallery_albums AS i ON a.album_id = i.id AND c.language = i.language
 				INNER JOIN meta AS m ON m.id = c.meta_id
 			WHERE 1';
+
+		// parameters for subquery
+		$parameters[] = FRONTEND_LANGUAGE; // album language
+		$parameters[] = 'N'; // album hidden
+		$parameters[] = 'Y'; // album show_in_albums
+		$parameters[] = 0; // album num_images_not_hidden
+		$parameters[] = FrontendModel::getUTCDate('Y-m-d H:i') . ':00'; // publish on
 
 		// where
 		$query .= ' AND c.language = ?';
