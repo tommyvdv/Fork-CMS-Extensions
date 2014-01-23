@@ -5,8 +5,8 @@
 		var opts = $.extend(true, {
 			a: {
 				css:{
-					'position': 'relative',
-					'display': 'inline-block'
+					'position': 'relative'
+					//'display': 'inline-block'
 				}
 			},
 			container:{ 
@@ -46,7 +46,7 @@
 			elContainer.width(image.width()).height(image.height());
 
 			// Styling
-			$this.css(opts.a.css);
+			//$this.css(opts.a.css);
 			elContainer.css(opts.container.css);
 			elBackground.css(opts.background.css);
 			elIcon.css(opts.icon.css);
