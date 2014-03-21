@@ -132,7 +132,7 @@ class BackendPhotogalleryIndex extends BackendBaseActionIndex
 
 		$this->dataGrid->setColumnAttributes('num_images', array('class' => 'small'));
 
-		$this->dataGrid->setColumnsSequence(array('dragAndDropHandle','checkbox','preview','num_images','title','publish_on','is_hidden','edit'));
+		$this->dataGrid->setColumnsSequence(array('dragAndDropHandle','checkbox','preview','num_images','title','publish_on','is_hidden','categories','edit'));
 
 		// add mass action dropdown
 		$ddmMassAction = new SpoonFormDropdown('action', array('delete' => BL::getLabel('Delete'), 'hide' => BL::getLabel('Hide'), 'publish' => BL::getLabel('Publish')), 'delete');

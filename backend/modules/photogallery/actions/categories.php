@@ -153,7 +153,7 @@ class BackendPhotogalleryCategories extends BackendBaseActionIndex
 		$this->tpl->assign('breadcrumbs', $this->breadcrumbs);
 		
 		$this->tpl->assign('depth', $this->depth);
-		$this->tpl->assign('allowed_depth_start', BackendModel::getModuleSetting('photogallery', 'categories_depth_start'));
+		$this->tpl->assign('allowed_depth_start', BackendModel::getModuleSetting('photogallery', 'categories_depth_start', 0));
 		$this->tpl->assign('allowed_depth', BackendModel::getModuleSetting('photogallery', 'categories_depth', 'null'));
 		$this->tpl->assign('allowedForStart', $this->allowedForStart);
 		$this->tpl->assign('allowedForLimit', $this->allowedForLimit);
