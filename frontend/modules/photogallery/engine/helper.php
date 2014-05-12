@@ -53,23 +53,27 @@ class FrontendPhotogalleryHelper
 		return '/frontend/modules/' . $module . '/layout/css' . $file;
 	}
 
-	/**
-	 * Get the url for an image
-	 *
-	 * @param string $path The path.
-	 * @return string
-	 */
-	public static function getImageURL($module, $image, $resolution)
+	public static function getImagePath($set_id, $filename, $resolution)
 	{
-		$original 	= $module . '/sets/original/' . $image['set_id'] . '/'  . $image['filename'];
-		$image 		= $module . '/sets/frontend/' . $image['set_id'] . '/' . $resolution['width'] . 'x' . $resolution['height'] . '_'  . $resolution['method'] . '/'  . $image['filename'];
+		return 'photogallery/sets/frontend/' . $set_id . '/' . $resolution['width'] . 'x' . $resolution['height']  . $resolution['method'] . '/'  . $filename;
+	}
+
+	public static function getOriginalPath($set_id, $filename)
+	{
+		return 'photogallery/sets/original/' . $set_id . '/'  . $filename;
+	}
+	
+	public static function createImage($var, $set_id, $filename, $width, $height, $method = 'crop')
+	{
+		$original 	= self::getOriginalPath($set_id, $filename);
+		$image 		= self::getImagePath($set_id, $filename, array('width' => $width, 'height' => $height, 'method' => $method));
 		
 		if( ! SpoonFile::exists(FRONTEND_FILES_PATH . '/' . $image) && SpoonFile::exists(FRONTEND_FILES_PATH . '/' . $original)   )
 		{
-			$forceOriginalAspectRatio = $resolution['method'] == 'crop' ? false : true;
+			$forceOriginalAspectRatio = $method == 'crop' ? false : true;
 			$allowEnlargement = true;
 			
-			$thumb = new SpoonThumbnail(FRONTEND_FILES_PATH . '/' . $original, $resolution['width'], $resolution['height']);
+			$thumb = new SpoonThumbnail(FRONTEND_FILES_PATH . '/' . $original, $width, $height);
 			$thumb->setAllowEnlargement($allowEnlargement);
 			$thumb->setForceOriginalAspectRatio($forceOriginalAspectRatio);
 			$thumb->parseToFile(FRONTEND_FILES_PATH . '/' . $image,	100);

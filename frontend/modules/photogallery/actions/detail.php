@@ -60,9 +60,15 @@ class FrontendPhotogalleryDetail extends FrontendBaseBlock
 
 		// get tags
 		$this->record['tags'] = FrontendTagsModel::getForItem($this->getModule(), $this->record['id']);
+		$this->record['extra'] = FrontendPhotogalleryModel::getExtra($this->data['extra_id']);
+		$this->record['data'] = $this->data;
+
 
 		$thumbnail_resolution = FrontendPhotogalleryModel::getExtraResolutionForKind($this->data['extra_id'], 'album_detail_overview_thumbnail');
 		$large_resolution = FrontendPhotogalleryModel::getExtraResolutionForKind($this->data['extra_id'], 'large');
+		
+		$this->tpl->assign('modulePhotogalleryDetailLargeResolution', $large_resolution);
+		$this->tpl->assign('modulePhotogalleryDetailThumbnailResolution', $thumbnail_resolution);
 	}
 
 	/**
@@ -80,7 +86,6 @@ class FrontendPhotogalleryDetail extends FrontendBaseBlock
 		// Load lightbox
 		if($this->data['action'] == 'lightbox')
 		{
-
 			// Lightbox
 			$this->header->addCSS(
 				FrontendPhotogalleryHelper::getPathJS('/fancybox/' . FrontendPhotogalleryModel::FANCYBOX_VERSION . '/jquery.fancybox.css', $this->getModule())
@@ -112,18 +117,18 @@ class FrontendPhotogalleryDetail extends FrontendBaseBlock
 			);	
 
 			// Link Icon
-			$this->header->addCSS(
-				FrontendPhotogalleryHelper::getPathJS('/link-icon/link-icon.css', $this->getModule())
-			);	
+				// Link Icon, only load when needed
+			if(isset($this->record['extra']['data']['settings']['show_hover_icon']) && $this->record['extra']['data']['settings']['show_hover_icon'] == 'true')
+			{
+				$this->header->addCSS(
+					FrontendPhotogalleryHelper::getPathJS('/link-icon/link-icon.css', $this->getModule())
+				);	
 
-			$this->header->addJS(
-				FrontendPhotogalleryHelper::getPathJS('/link-icon/link-icon.js', $this->getModule())
-			);	
-
-			$this->header->addJS(
-				FrontendPhotogalleryHelper::getPathJS('/link-icon-init.js', $this->getModule())
-			);
-
+				$this->header->addJS(
+					FrontendPhotogalleryHelper::getPathJS('/link-icon/link-icon.js', $this->getModule())
+				);	
+			}
+		
 			// Initialize
 			$this->header->addJS(
 				FrontendPhotogalleryHelper::getPathJS('/fancybox-init.js', $this->getModule())
@@ -154,9 +159,11 @@ class FrontendPhotogalleryDetail extends FrontendBaseBlock
 
 		// assign article
 		$this->tpl->assign('blockPhotogalleryAlbum', $this->record);
+		$this->addJSData('lightbox_settings_' . $this->data['extra_id'], $this->record['extra']['data']['settings']);
 		
 		// assign navigation
 		$this->tpl->assign('blockPhotogalleryAlbumNavigation', FrontendPhotogalleryModel::getNavigation($this->record['id']));
-		//$this->tpl->assign('blockPhotogalleryAlbumNavigationInCategory', FrontendPhotogalleryModel::getNavigationInCategory($this->record['id'], $this->record['category_ids']));
+
+		$this->tpl->mapModifier('createimagephotogallery', array('FrontendPhotogalleryHelper', 'createImage'));
 	}
 }

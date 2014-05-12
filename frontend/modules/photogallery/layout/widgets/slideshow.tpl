@@ -1,76 +1,64 @@
 {* Images *}
 	{option:widgetPhotogallerySlideshow.images}
-		<div class="photogallerySlideshowWrapper photogallerySlideshowWrapperId{$widgetPhotogallerySlideshow.id}">
+		<div class="js-photogallery-slideshow-wrapper photogallery-slideshow-wrapper photogallerys-slideshow-wrapper-id-{$widgetPhotogallerySlideshow.id}{option:widgetPhotogallerySlideshowNavigationNumbers} photogallery-slideshow-navigation-numbers{/option:widgetPhotogallerySlideshowNavigationNumbers}" data-id="{$widgetPhotogallerySlideshow.id}">
 			
-			{* Images *}
-			<div class="flexslider">
+			{* Slides *}
+			<div id="photogallery-flexslider-id-{$widgetPhotogallerySlideshow.id}"  class="flexslider photogallery-flexslider">
+
 				<ul class="slides">
 					{iteration:widgetPhotogallerySlideshow.images}
 							
+						<li>
 							{* With internal link *}
 							{option:widgetPhotogallerySlideshow.images.data.internal_link}
-							<li>
-								<a href="{$var|geturl:{$widgetPhotogallerySlideshow.images.data.internal_link.page_id}}" class="linkedImage">
-									<img src="{$widgetPhotogallerySlideshow.images.large_url}" />
-								</a>
-
-								<div class="caption">
-									{option:widgetPhotogallerySlideshow.images.title}
-										<h3>{$widgetPhotogallerySlideshow.images.title}</h3>
-									{/option:widgetPhotogallerySlideshow.images.title}
-									{$widgetPhotogallerySlideshow.images.text}
-								</div>
-
-							</li>
+							<a href="{$var|geturl:{$widgetPhotogallerySlideshow.images.data.internal_link.page_id}}" class="linkedImage">
 							{/option:widgetPhotogallerySlideshow.images.data.internal_link}
-			
+
 							{* With external link *}
 							{option:widgetPhotogallerySlideshow.images.data.external_link}
-							<li>
-								<a href="{$widgetPhotogallerySlideshow.images.data.external_link.url}" class="linkedImage targetBlank">
-									<img src="{$widgetPhotogallerySlideshow.images.large_url}" />
-								</a>
-
-								<div class="caption">
-									{option:widgetPhotogallerySlideshow.images.title}
-										<h3>{$widgetPhotogallerySlideshow.images.title}</h3>
-									{/option:widgetPhotogallerySlideshow.images.title}
-									{$widgetPhotogallerySlideshow.images.text}
-								</div>
-
-							</li>
+							<a href="{$widgetPhotogallerySlideshow.images.data.external_link.url}" class="linkedImage targetBlank">
 							{/option:widgetPhotogallerySlideshow.images.data.external_link}
-		
-							{* No link *}
-							{option:!widgetPhotogallerySlideshow.images.data.internal_link}
-								{option:!widgetPhotogallerySlideshow.images.data.external_link}
-									<li>
-										<img src="{$widgetPhotogallerySlideshow.images.large_url}" />
 
-										<div class="caption">
-											{option:widgetPhotogallerySlideshow.images.title}
-												<h3>{$widgetPhotogallerySlideshow.images.title}</h3>
-											{/option:widgetPhotogallerySlideshow.images.title}
-											{$widgetPhotogallerySlideshow.images.text}
-										</div>
+							<img src="{$var|createimagephotogallery:{$widgetPhotogallerySlideshow.images.set_id}:{$widgetPhotogallerySlideshow.images.filename}:{$widgetPhotogallerySlideshowResolution.width}:{$widgetPhotogallerySlideshowResolution.height}:{$widgetPhotogallerySlideshowResolution.method}}" />
+							
+							{* With internal link *}
+							{option:widgetPhotogallerySlideshow.images.data.internal_link}
+							</a>
+							{/option:widgetPhotogallerySlideshow.images.data.internal_link}
 
-									</li>
-								{/option:!widgetPhotogallerySlideshow.images.data.external_link}
-							{/option:!widgetPhotogallerySlideshow.images.data.internal_link}
+							{* With external link *}
+							{option:widgetPhotogallerySlideshow.images.data.external_link}
+							</a>
+							{/option:widgetPhotogallerySlideshow.images.data.external_link}
+
+							<div class="caption photogallery-flexslider-caption">
+								{option:widgetPhotogallerySlideshowShowCaption}
+									{option:!widgetPhotogallerySlideshow.images.title_hidden}
+										{option:widgetPhotogallerySlideshow.images.title}
+											<h3>{$widgetPhotogallerySlideshow.images.title}</h3>
+										{/option:widgetPhotogallerySlideshow.images.title}
+									{/option:!widgetPhotogallerySlideshow.images.title_hidden}
+									{$widgetPhotogallerySlideshow.images.text}
+								{/option:widgetPhotogallerySlideshowShowCaption}
+							</div>
+
+						</li>
+						
 					{/iteration:widgetPhotogallerySlideshow.images}
 				</ul>
 			</div>
-			
-			{* Pager
-				<div class="photogallerySlideshowPager">
-					<ul>
-						{iteration:widgetPhotogallerySlideshow.images}
-							<li><a href="#">{$widgetPhotogallerySlideshow.images.index}</a></li>
-						{/iteration:widgetPhotogallerySlideshow.images}
-					</ul>
-				</div>
-			*}
 
-			
+
+			{* Slides thumbnail navigation *}
+			{option:widgetPhotogallerySlideshowNavigationThumnails}
+			<div  id="photogallery-flexslider-navigation-id-{$widgetPhotogallerySlideshow.id}" class="flexslider photogallery-flexslider-thumbnail-navigation">
+				<ul class="slides">
+					{iteration:widgetPhotogallerySlideshow.images}
+						<li><img src="{$var|createimagephotogallery:{$widgetPhotogallerySlideshow.images.set_id}:{$widgetPhotogallerySlideshow.images.filename}:150:150:'crop'}" /></li>
+					{/iteration:widgetPhotogallerySlideshow.images}
+				</ul>
+			</div>
+			{/option:widgetPhotogallerySlideshowNavigationThumnails}
+
 		</div>
 	{/option:widgetPhotogallerySlideshow.images}

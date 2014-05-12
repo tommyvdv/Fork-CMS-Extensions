@@ -56,7 +56,14 @@ class FrontendPhotogalleryIndex extends FrontendBaseBlock
 	{		
 		$thumbnail_resolution = FrontendPhotogalleryModel::getExtraResolutionForKind($this->data['extra_id'], 'album_overview_thumbnail');
 
-		if($this->data['display'] == 'albums')
+		$this->tpl->assign('modulePhotogalleryIndexResolution', $thumbnail_resolution);
+
+
+		if(FrontendModel::getModuleSetting('photogallery', 'force_default_category_index', false) && FrontendModel::getModuleSetting('photogallery', 'default_category'))
+		{
+			$this->redirect(SITE_URL . FrontendNavigation::getURLForBlock('photogallery', 'category') . '/' . FrontendPhotogalleryModel::getCategoryUrlById(FrontendModel::getModuleSetting('photogallery', 'default_category')));
+		}
+		elseif($this->data['display'] == 'albums')
 		{
 			// requested page
 			$requestedPage = $this->URL->getParameter('page', 'int', 1);
@@ -85,10 +92,6 @@ class FrontendPhotogalleryIndex extends FrontendBaseBlock
 			foreach($this->items as &$item)
 			{
 				$item['tags'] = FrontendTagsModel::getForItem($this->getModule(), $item['id']);
-				if(!empty($item['image']))
-				{
-					$item['image']['thumbnail_url']  = FrontendPhotogalleryHelper::getImageURL($this->getModule(), $item['image'], $thumbnail_resolution);
-				}
 			}
 			
 			// assign
@@ -101,12 +104,7 @@ class FrontendPhotogalleryIndex extends FrontendBaseBlock
 		elseif($this->data['display'] == 'categories')
 		{
 			$categories = FrontendPhotogalleryModel::getAllCategoriesWithImage();
-			
-			foreach($categories as &$item)
-			{
-				$item['filename_url']   = FrontendPhotogalleryHelper::getImageURL($this->getModule(), $item, $thumbnail_resolution);
-			}
-			
+
 			$this->tpl->assign('modulePhotogalleryCategories', $categories);
 		}
 	}
@@ -120,11 +118,14 @@ class FrontendPhotogalleryIndex extends FrontendBaseBlock
 	{
 		$this->tpl->assign('display' . SpoonFilter::toCamelCase($this->data['display']), true);
 		
+		
 		// get RSS-link
 		$rssLink = FrontendModel::getModuleSetting('photogallery', 'feedburner_url_' . FRONTEND_LANGUAGE);
 		if($rssLink == '') $rssLink = FrontendNavigation::getURLForBlock('photogallery', 'rss');
 	
 		// add RSS-feed
 		$this->header->addLink(array('rel' => 'alternate', 'type' => 'application/rss+xml', 'title' => FrontendModel::getModuleSetting('photogallery', 'rss_title_' . FRONTEND_LANGUAGE), 'href' => $rssLink), true);
+		
+		$this->tpl->mapModifier('createimagephotogallery', array('FrontendPhotogalleryHelper', 'createImage'));
 	}
 }

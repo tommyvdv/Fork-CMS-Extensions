@@ -1,28 +1,30 @@
-ul.photogalleryLightbox li,
-ul.photogalleryDetailLightbox li,
-ul.photogalleryPaged li,
-ul.photogalleryRelatedByCategories li,
-ul.photogalleryRelatedByTags li
+.photogallery-slideshow-navigation-numbers li a
 {
+	background: none;
+	text-indent: 0;
+	box-shadow: none;
+}
+
+.photogallery-list li {
 	float: left;
-	margin:0 10px 10px 0;
+	margin:0 20px 20px 0;
 }
 
-.photogalleryLightbox .caption,
-.photogalleryDetailLightbox .caption
-{
-	display:none;
+/*
+.photogallery-list li:nth-child(5){
+	margin-right: 0;
 }
+*/
 
-.flexslider a
-{
-	border: none;
-}
-
-.flexslider .caption
+.photogallery-flexslider-caption
 {
 	position: absolute;
 	bottom: 1em;
 	left: 1.5em;
 	padding-right: 1.5em;	
+}
+
+.photogallery-flexslider a
+{
+	border: none;
 }

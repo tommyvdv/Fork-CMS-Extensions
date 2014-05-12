@@ -82,8 +82,14 @@ class FrontendPhotogalleryCategory extends FrontendBaseBlock
 		// get resolution
 		$thumbnail_resolution = FrontendPhotogalleryModel::getExtraResolutionForKind($this->data['extra_id'], 'album_overview_thumbnail');
 
+   		$this->tpl->assign('modulePhotogalleryCategoryThumbnailResolution', $thumbnail_resolution);
+
 		// validate category
-		if($requestedCategory == 'false')
+		if($requestedCategory == 'false' && FrontendModel::getModuleSetting('photogallery', 'force_default_category_category', false) && FrontendModel::getModuleSetting('photogallery', 'default_category'))
+		{
+			$this->redirect(SITE_URL . FrontendNavigation::getURLForBlock('photogallery', 'category') . '/' . FrontendPhotogalleryModel::getCategoryUrlById(FrontendModel::getModuleSetting('photogallery', 'default_category')));
+		}
+		elseif($requestedCategory == 'false')
 		{
 			$this->categories_view = true;
 
@@ -121,11 +127,6 @@ class FrontendPhotogalleryCategory extends FrontendBaseBlock
 				foreach($this->categories[$cat_key]['albums'] as $album_cat_key => $album_cat_row)
 				{
 					$this->categories[$cat_key]['albums'][$album_cat_key]['tags'] = FrontendTagsModel::getForItem($this->getModule(), $album_cat_row['id']);
-					
-					if(!empty($album_cat_row['image']))
-					{
-						$this->categories[$cat_key]['albums'][$album_cat_key]['image']['thumbnail_url'] =  FRONTEND_FILES_URL . '/' . $this->getModule() . '/sets/frontend/' . $album_cat_row['image']['set_id'] . '/' . $thumbnail_resolution['width'] . 'x' . $thumbnail_resolution['height'] . '_' . $thumbnail_resolution['method'] . '/' . $album_cat_row['image']['filename'];
-					}
 				}
 			}
 		}
@@ -152,15 +153,15 @@ class FrontendPhotogalleryCategory extends FrontendBaseBlock
 			$this->pagination['offset'] = ($this->pagination['requested_page'] * $this->pagination['limit']) - $this->pagination['limit'];
 
 			// get articles
-			$this->items = FrontendPhotogalleryModel::getAllForCategory($requestedCategory, $this->pagination['limit'], $this->pagination['offset']);
+			$this->items = FrontendPhotogalleryModel::getAllForCategory(
+				$requestedCategory,
+				$this->pagination['limit'],
+				$this->pagination['offset']
+			);
 			
 			foreach($this->items as &$row)
 			{
 				$row['tags'] = FrontendTagsModel::getForItem($this->getModule(), $row['id']);
-				if(!empty($row['image']))
-				{
-					$row['image']['thumbnail_url'] = FrontendPhotogalleryHelper::getImageURL($this->getModule(), $row['image'], $thumbnail_resolution);
-				}
 			}
 		}
 	}
@@ -172,18 +173,21 @@ class FrontendPhotogalleryCategory extends FrontendBaseBlock
 	 */
 	private function parse()
 	{
+		$hasChildren = FrontendPhotogalleryModel::hasChildren($this->category['id'], FrontendModel::getModuleSetting('photogallery', 'show_empty_categories', 'Y') == 'Y');
 
 		// add into breadcrumb
 		if($this->category)
 		{
 			$this->breadcrumb->addElement(SpoonFilter::ucfirst(FL::getLabel('Category')), FrontendNavigation::getURLForBlock('photogallery', 'category'));
-			//$this->breadcrumb->addElement($this->category['label']);
 
 			// get parent, parents parent, etc…
 			$this->breadcrumbs = array_reverse(FrontendPhotogalleryModel::getBreadcrumbsForCategory($this->category['id']));
 			
 			// add breadcrumbs one by one
 			foreach($this->breadcrumbs as $breadcrumb) $this->breadcrumb->addElement($breadcrumb['title'], FrontendNavigation::getURLForBlock('photogallery', 'category') . '/' . $breadcrumb['url']);
+
+			// add all child categories
+			if($hasChildren && FrontendModel::getModuleSetting('photogallery', 'show_all_categories', 'N') == 'Y') $this->breadcrumb->addElement(FL::lbl('AllChildCategories'));
 		}
 		else
 		{
@@ -205,7 +209,6 @@ class FrontendPhotogalleryCategory extends FrontendBaseBlock
 
 		// add RSS-feed
 		$this->header->addLink(array('rel' => 'alternate', 'type' => 'application/rss+xml', 'title' => FrontendModel::getModuleSetting('photogallery', 'rss_title_' . FRONTEND_LANGUAGE), 'href' => $rssLink), true);
-	
 
 		// assign
 		$this->tpl->assign('blockPhotogalleryCategoryView', $this->category_view);
@@ -219,5 +222,7 @@ class FrontendPhotogalleryCategory extends FrontendBaseBlock
 
 		// parse the pagination
 		$this->parsePagination();
+
+		$this->tpl->mapModifier('createimagephotogallery', array('FrontendPhotogalleryHelper', 'createImage'));
 	}
 }

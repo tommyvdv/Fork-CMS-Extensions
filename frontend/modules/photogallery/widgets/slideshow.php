@@ -46,15 +46,15 @@ class FrontendPhotogalleryWidgetSlideshow extends FrontendBaseWidget
 		{
 			// get tags
 			$this->record['tags'] = FrontendTagsModel::getForItem($this->getModule(), $this->record['id']);
+			$this->record['extra'] = FrontendPhotogalleryModel::getExtra($this->data['extra_id']);
 
-			$this->large_resolution = FrontendPhotogalleryModel::getExtraResolutionForKind($this->data['extra_id'], 'large');
-
-			foreach($this->record['images'] as &$image)
-			{
-				$image['large_url'] = FrontendPhotogalleryHelper::getImageURL($this->getModule(), $image, $this->large_resolution);
-			}
-			
-			$this->tpl->assign('widgetPhotogallerySlideshow', $this->record);		}
+			$large_resolution = FrontendPhotogalleryModel::getExtraResolutionForKind($this->data['extra_id'], 'large');
+			$this->tpl->assign('widgetPhotogallerySlideshow', $this->record);
+			$this->tpl->assign('widgetPhotogallerySlideshowResolution', $large_resolution);
+			$this->tpl->assign('widgetPhotogallerySlideshowShowCaption', $this->record['extra']['data']['settings']['show_caption'] == 'true');
+			$this->tpl->assign('widgetPhotogallerySlideshowNavigationThumnails', $this->record['extra']['data']['settings']['pagination_type'] == 'thumbnails');
+			$this->tpl->assign('widgetPhotogallerySlideshowNavigationNumbers', $this->record['extra']['data']['settings']['pagination_type'] == 'numbers');
+		}
 	}
 
 	/**
@@ -65,20 +65,24 @@ class FrontendPhotogalleryWidgetSlideshow extends FrontendBaseWidget
 	private function parse()
 	{
 
-		$this->header->addCSS('/frontend/modules/' . $this->getModule() . '/layout/css/photogallery.css');
-
 		$this->header->addCSS(
 			FrontendPhotogalleryHelper::getPathJS('/flexslider/' . FrontendPhotogalleryModel::FLEXSLIDER_VERSION . '/flexslider.css', $this->getModule())
 		);
 		
 		$this->header->addJS(
-				FrontendPhotogalleryHelper::getPathJS('/flexslider/' . FrontendPhotogalleryModel::FLEXSLIDER_VERSION . '/jquery.flexslider.js', $this->getModule()),
-				false
+			FrontendPhotogalleryHelper::getPathJS('/flexslider/' . FrontendPhotogalleryModel::FLEXSLIDER_VERSION . '/jquery.flexslider.js', $this->getModule()),
+			false
 		);
+
+		$this->header->addCSS('/frontend/modules/' . $this->getModule() . '/layout/css/photogallery.css');
+
 
 		$this->header->addJS(
 				FrontendPhotogalleryHelper::getPathJS('/flexslider-init.js', $this->getModule())
-		);	
+		);
 
+		$this->tpl->mapModifier('createimagephotogallery', array('FrontendPhotogalleryHelper', 'createImage'));
+
+		$this->addJSData('slideshow_settings_' . $this->record['id'], $this->record['extra']['data']['settings']);
 	}
 }

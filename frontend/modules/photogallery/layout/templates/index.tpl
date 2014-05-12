@@ -38,14 +38,14 @@
 					{option:modulePhotogalleryAlbums.introduction}{$modulePhotogalleryAlbums.introduction}{/option:modulePhotogalleryAlbums.introduction}
 
 				{* Image *}
-					<a href="{$modulePhotogalleryAlbums.full_url}"  class="linkedImage" title="{$modulePhotogalleryAlbums.image.title}">
-						<img src="{$modulePhotogalleryAlbums.image.thumbnail_url}" alt="{$modulePhotogalleryAlbums.image.title}" title="{$modulePhotogalleryAlbums.image.title}" />
+					<a href="{$modulePhotogalleryAlbums.full_url}"  class="linkedImage" title="{$modulePhotogalleryAlbums.title}">
+						<img src="{$var|createimagephotogallery:{$modulePhotogalleryAlbums.image.set_id}:{$modulePhotogalleryAlbums.image.filename}:{$modulePhotogalleryIndexResolution.width}:{$modulePhotogalleryIndexResolution.height}:{$modulePhotogalleryIndexResolution.method}}" alt="{$modulePhotogalleryAlbums.title}" />
 					</a>
 
 			{/iteration:modulePhotogalleryAlbums}
 			
 			{* RSS link *}
-				<p><a id="RSSfeed" href="{$var|geturlforblock:'photogallery':'rss'}">{$lblSubscribeToTheRSSFeed|ucfirst}</a></p>
+				<p class="photogallery-rss"><a href="{$var|geturlforblock:'photogallery':'rss'}">{$lblSubscribeToTheRSSFeed|ucfirst}</a></p>
 				
 		{/option:modulePhotogalleryAlbums}
 	{/option:displayAlbums}
@@ -62,13 +62,13 @@
 
 				{* Image *}
 					<a href="{$modulePhotogalleryCategories.full_url}"  class="linkedImage" title="{$modulePhotogalleryCategories.label}">
-						<img src="{$modulePhotogalleryCategories.filename_url}" alt="{$modulePhotogalleryCategories.image.title}" title="{$modulePhotogalleryCategories.label}" />
+						<img src="{$var|createimagephotogallery:{$modulePhotogalleryCategories.set_id}:{$modulePhotogalleryCategories.filename}:{$modulePhotogalleryIndexResolution.width}:{$modulePhotogalleryIndexResolution.height}:{$modulePhotogalleryIndexResolution.method}}" />
 					</a>
 
 			{/iteration:modulePhotogalleryCategories}
 			
 			{* RSS link *}
-				<p><a id="RSSfeed" href="{$var|geturlforblock:'photogallery':'rss'}">{$lblSubscribeToTheRSSFeed|ucfirst}</a></p>
+				<p class="photogallery-rss"><a href="{$var|geturlforblock:'photogallery':'rss'}">{$lblSubscribeToTheRSSFeed|ucfirst}</a></p>
 				
 		{/option:modulePhotogalleryCategories}
 	{/option:displayCategories}

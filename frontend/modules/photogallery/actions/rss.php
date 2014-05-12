@@ -44,6 +44,9 @@ class FrontendPhotogalleryRSS extends FrontendBaseBlock
 	 */
 	private function getData()
 	{
+
+		$this->tpl->mapModifier('createimagephotogallery', array('FrontendPhotogalleryHelper', 'createImage'));
+
 		$thumbnail_resolution = FrontendPhotogalleryModel::getExtraResolutionForKind($this->data['extra_id'], 'album_overview_thumbnail');
 
 		// requested page
@@ -71,17 +74,7 @@ class FrontendPhotogalleryRSS extends FrontendBaseBlock
 		$this->items = FrontendPhotogalleryModel::getAllWithImages($this->pagination['limit'], $this->pagination['offset']);
 
 		// get resolutions
-		$thumbnail_resolution = FrontendPhotogalleryModel::getExtraResolutionForKind($this->data['extra_id'], 'album_detail_overview_thumbnail');
-		$large_resolution = FrontendPhotogalleryModel::getExtraResolutionForKind($this->data['extra_id'], 'large');
-
-		foreach($this->items as &$row)
-		{
-			foreach($row['images'] as &$image)
-			{
-				$image['thumbnail_url'] = FRONTEND_FILES_URL . '/' . $this->getModule() . '/sets/frontend/' . $image['set_id'] . '/' . $thumbnail_resolution['width'] . 'x' . $thumbnail_resolution['height'] . '_' . $thumbnail_resolution['method'] . '/' . $image['filename'];
-				$image['large_url'] = FRONTEND_FILES_URL . '/' . $this->getModule() . '/sets/frontend/' . $image['set_id'] . '/' . $large_resolution['width'] . 'x' . $large_resolution['height'] . '_' . $large_resolution['method'] . '/' . $image['filename'];
-			}
-		}
+		$this->thumbnail_resolution = FrontendPhotogalleryModel::getExtraResolutionForKind($this->data['extra_id'], 'album_detail_overview_thumbnail');
 
 		$this->settings = FrontendModel::getModuleSettings('photogallery');
 	}
@@ -124,17 +117,17 @@ class FrontendPhotogalleryRSS extends FrontendBaseBlock
 						if($this->data['action'] == 'paged')
 						{
 							// append image
-							$description .= '		<a href="' . SITE_URL . $image['full_url'] . '"><img src="' . SITE_URL . $image['thumbnail_url'] . '" /></a>';
+							$description .= '		<a href="' . SITE_URL . $image['full_url'] . '"><img src="' . SITE_URL . FrontendPhotogalleryHelper::createImage(null, $image['set_id'], $image['filename'], $this->thumbnail_resolution['width'], $this->thumbnail_resolution['height'], $this->thumbnail_resolution['method']) . '" /></a>';
 						}
 						elseif($this->data['action'] == 'lightbox')
 						{
 							// append image
-							$description .= '		<a href="' . FrontendModel::addURLParameters($link, array(FL::act('LightboxImage') => $image['id'])) . '"><img src="' . SITE_URL . $image['thumbnail_url'] . '" /></a>';
+							$description .= '		<a href="' . FrontendModel::addURLParameters($link, array(FL::act('LightboxImage') => $image['id'])) . '"><img src="' . SITE_URL . FrontendPhotogalleryHelper::createImage(null, $image['set_id'], $image['filename'], $this->thumbnail_resolution['width'], $this->thumbnail_resolution['height'], $this->thumbnail_resolution['method'])  . '" /></a>';
 						}
 						else
 						{
 							// append image
-							$description .= '		<img src="' . SITE_URL . $image['thumbnail_url'] . '" />';
+							$description .= '		<img src="' . SITE_URL . FrontendPhotogalleryHelper::createImage(null, $image['set_id'], $image['filename'], $this->thumbnail_resolution['width'], $this->thumbnail_resolution['height'], $this->thumbnail_resolution['method']) . '" />';
 						}
 						$description .= '	</p>';
 					}

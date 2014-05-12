@@ -63,7 +63,7 @@ class FrontendPhotogalleryImage extends FrontendBaseBlock
 		
 		$large_resolution = FrontendPhotogalleryModel::getExtraResolutionForKind($this->data['extra_id'], 'large');
 		
-		$this->record['large_url'] = FrontendPhotogalleryHelper::getImageURL($this->getModule(), $this->record, $large_resolution);
+		$this->tpl->assign('modulePhotogalleryImageLargeResolution', $large_resolution);
 	}
 
 	/**
@@ -103,5 +103,7 @@ class FrontendPhotogalleryImage extends FrontendBaseBlock
 
 		// assign navigation
 		$this->tpl->assign('blockPhotogalleryAlbumImageNavigation', FrontendPhotogalleryModel::getImageNavigation($this->record['id'], $this->record['album_id'], $this->record['sequence']));		
+		
+		$this->tpl->mapModifier('createimagephotogallery', array('FrontendPhotogalleryHelper', 'createImage'));
 	}
 }

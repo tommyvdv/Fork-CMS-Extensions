@@ -1,5 +1,5 @@
 {option:widgetPhotogalleryLightbox.images}
-	<div class="photogalleryLightboxWrapper photogalleryLightboxId{$widgetPhotogalleryLightbox.id}">
+	<div class="photogallery-lightbox-wrapper photogallery-lightbox-id-{$widgetPhotogalleryLightbox.id}">
 	{* Title *}
 		<h3>{$widgetPhotogalleryLightbox.title}</h3>
 	
@@ -40,16 +40,22 @@
 	
 	{* Images *}
 		{option:widgetPhotogalleryLightbox.images}
-			<ul class="photogalleryLightbox">
+			<ul class="js-photogallery-lightbox photogallery-list" data-id="{$widgetPhotogalleryLightbox.data.extra_id}">
 				{iteration:widgetPhotogalleryLightbox.images}
 				<li>
-					<a href="{$widgetPhotogalleryLightbox.images.large_url}" rel="{$widgetPhotogalleryLightbox.id}" class="linkedImage linkOverlay">
-						<img src="{$widgetPhotogalleryLightbox.images.thumbnail_url}" />
+					<a href="{$var|createimagephotogallery:{$widgetPhotogalleryLightbox.images.set_id}:{$widgetPhotogalleryLightbox.images.filename}:{$widgetPhotogalleryLightboxLargeResolution.width}:{$widgetPhotogalleryLightboxLargeResolution.height}:{$widgetPhotogalleryLightboxLargeResolution.method}}" rel="{$widgetPhotogalleryLightbox.id}" class="linkedImage js-photogallery-lightbox-{$widgetPhotogalleryLightbox.data.extra_id}"{option:!widgetPhotogalleryLightbox.images.title_hidden} title="{$widgetPhotogalleryLightbox.images.title|htmlentities}"{/option:!widgetPhotogalleryLightbox.images.title_hidden}>
+						<img src="{$var|createimagephotogallery:{$widgetPhotogalleryLightbox.images.set_id}:{$widgetPhotogalleryLightbox.images.filename}:{$widgetPhotogalleryLightboxThumbnailResolution.width}:{$widgetPhotogalleryLightboxThumbnailResolution.height}:{$widgetPhotogalleryLightboxThumbnailResolution.method}}
+" />
 					</a>
 					
 					{* Caption *}
-					<div class="caption">
-						{option:widgetPhotogalleryLightbox.images.title}<h3>{$widgetPhotogalleryLightbox.images.title}</h3>{/option:widgetPhotogalleryLightbox.images.title}
+					<div class="photogallery-lightbox-caption">
+						{option:!widgetPhotogalleryLightbox.images.title_hidden}
+							{option:widgetPhotogalleryLightbox.images.title}
+								<h3>{$widgetPhotogalleryLightbox.images.title}</h3>
+							{/option:widgetPhotogalleryLightbox.images.title}
+						{/option:!widgetPhotogalleryLightbox.images.title_hidden}
+
 						{$widgetPhotogalleryLightbox.images.text}
 					</div>
 				</li>
