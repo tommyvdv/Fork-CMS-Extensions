@@ -77,6 +77,8 @@ class BackendPhotogalleryEditImage extends BackendBaseActionEdit
 		$this->frm->addEditor('text', $this->record['text']);
 		$this->frm->addRadiobutton('hidden', $rbtHiddenValues, $this->record['hidden']);
 
+		$this->frm->addCheckbox('title_hidden', $this->record['title_hidden'] == 'Y');
+
 		// link
 		$linkValue = 'none';
 		if(isset($this->record['data']['internal_link']['page_id'])) $linkValue = 'internal';
@@ -97,7 +99,6 @@ class BackendPhotogalleryEditImage extends BackendBaseActionEdit
 
 		$this->frm->addText('iframe', ($linkValue == 'iframe') ? $this->record['data']['iframe']['url'] : null, null, null, null, true);
 		$this->frm->addText('embed', ($linkValue == 'embed') ? $this->record['data']['embed']['code'] : null, null, null, null, true);
-
 
 		$this->meta = new BackendMeta($this->frm, $this->record['meta_id'], 'title', true);
 
@@ -123,6 +124,7 @@ class BackendPhotogalleryEditImage extends BackendBaseActionEdit
 		// fetch proper slug
 		$this->record['url'] = $this->meta->getURL();
 
+
 		$this->tpl->assign('record', $this->record);
 		$this->tpl->assign('album_id', $this->album_id);
 
@@ -141,11 +143,8 @@ class BackendPhotogalleryEditImage extends BackendBaseActionEdit
 			$this->frm->cleanupFields();
 
 			// validate meta
-			$this->meta->validate();
 
-
-			$this->frm->getField('title')->isFilled(BL::getError('TitleIsRequired'));
-
+			//$this->frm->getField('title')->isFilled(BL::getError('TitleIsRequired'));
 
 			// validate redirect
 			$linkValue = $this->frm->getField('link')->getValue();
@@ -157,7 +156,6 @@ class BackendPhotogalleryEditImage extends BackendBaseActionEdit
 			// no errors?
 			if($this->frm->isCorrect())
 			{
-
 				// init var
 				$data = null;
 
@@ -167,11 +165,11 @@ class BackendPhotogalleryEditImage extends BackendBaseActionEdit
 				if($linkValue == 'iframe') $data['iframe'] = array('url' => $this->frm->getField('iframe')->getValue());
 				if($linkValue == 'embed') $data['embed'] = array('code' => $this->frm->getField('embed')->getValue());
 
-
 				// build item
 				$content['meta_id'] = $this->meta->save(true);
 				$content['title'] = $this->frm->getField('title')->getValue();
 				$content['text'] = $this->frm->getField('text')->getValue();
+				$content['title_hidden'] = $this->frm->getField('title_hidden')->isChecked() ? 'Y' : 'N';
 				$content['edited_on'] = BackendModel::getUTCDate();
 				$content['set_image_id'] = $this->id;
 				$content['album_id'] = $this->album_id;
@@ -187,8 +185,9 @@ class BackendPhotogalleryEditImage extends BackendBaseActionEdit
 				// Update some statistics
 				BackendPhotogalleryModel::updateSetStatistics($this->record['set_id']);
 
+
 			  	// everything is saved, so redirect to the overview
-			  	$this->redirect(BackendModel::createURLForAction('edit') . '&report=edited-image&id=' . $content['album_id'] . '&highlight=row-' . $item['id'] . '#tabImages');
+			  	$this->redirect(BackendModel::createURLForAction('edit_image') . '&report=edited-image&album_id=' . $this->album_id . '&id=' . $this->id );
 			}
 		}
 	}

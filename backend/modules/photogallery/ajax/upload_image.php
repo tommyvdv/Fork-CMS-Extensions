@@ -112,7 +112,6 @@ class BackendPhotogalleryAjaxUploadImage extends BackendBaseAJAXAction
 
 			$fileTypes = array('jpg', 'jpeg', 'gif', 'png'); // Allowed file extensions
 
-
 			if (in_array(strtolower($fileParts['extension']), $fileTypes) && filesize($tempFile) > 0 && self::isImage($tempFile))
 			{
 
@@ -150,6 +149,7 @@ class BackendPhotogalleryAjaxUploadImage extends BackendBaseAJAXAction
 					// build record
 					$temp = array();
 					$temp['title'] = $original_filename;
+					$temp['title_hidden'] = 'Y'; 
 					$temp['album_id'] = $linkedAlbum['id'];
 					$temp['language'] = $linkedAlbum['language'];
 					$temp['set_id'] = $set_id;
@@ -173,82 +173,26 @@ class BackendPhotogalleryAjaxUploadImage extends BackendBaseAJAXAction
 					$thumbnail = new SpoonThumbnail($tempFile , $resolution['width'], $resolution['height'], true);
 					$thumbnail->setAllowEnlargement($allowEnlargement);
 					$thumbnail->setForceOriginalAspectRatio($forceOriginalAspectRatio);
-					$thumbnail->parseToFile($setsFilesPath . '/backend/' . $set_id . '/' . $resolution['width'] . 'x' . $resolution['height'] . '_' . $resolution['method'] . '/' . $filename, BackendPhotogalleryModel::IMAGE_QUALITY);
+					$thumbnail->parseToFile($setsFilesPath . '/backend/' . $set_id . '/' . $resolution['width'] . 'x' . $resolution['height'] . $resolution['method'] . '/' . $filename, BackendPhotogalleryModel::IMAGE_QUALITY);
 				}
 
 				$image['id'] = BackendPhotogalleryModel::insertImage($image, $content, $metaData);
-
-
-				if(BackendPhotogalleryModel::KEEP_ORIGINAL_IMAGE)
+				
+				// Do we need to resize the original image or not?
+				if(BackendPhotogalleryModel::RESIZE_ORIGINAL_IMAGE)
 				{
-					// Do we need to resize the original image or not?
-					if(BackendPhotogalleryModel::RESIZE_ORIGINAL_IMAGE)
-					{
 
-						// Original, but resize if larger then MAX_ORIGINAL_IMAGE_WIDTH OR MAX_ORIGINAL_IMAGE_HEIGHT
-						
-						$thumbnail = new SpoonThumbnail($tempFile , BackendPhotogalleryModel::MAX_ORIGINAL_IMAGE_WIDTH, BackendPhotogalleryModel::MAX_ORIGINAL_IMAGE_HEIGHT, true);
-						$thumbnail->setAllowEnlargement(false);
-						$thumbnail->setForceOriginalAspectRatio(true);
-						$thumbnail->parseToFile($setsFilesPath . '/original/' . $set_id . '/' . $filename, 100);
-					}
-					else
-					{
-						// Move the original image
-						move_uploaded_file($tempFile, $setsFilesPath . '/original/' . $set_id . '/' . $filename);
-					}
-
-
-					// Put original
-					$cronjob = array();
-					$cronjob['module'] = 'photogallery';
-					$cronjob['path'] = 'photogallery/sets/original/' . $set_id;
-					$cronjob['filename'] = $filename;
-					$cronjob['full_path'] = $cronjob['path'] . '/' . $cronjob['filename'];
-					$cronjob['data'] = serialize(array('set_id' => $set_id, 'image_id' => $image['id'], 'delete_local' => true, 'delete_local_in_time' => BackendPhotogalleryModel::DELETE_LOCAL_IN_TIME));
-					$cronjob['action'] = 'put';
-					$cronjob['location'] = 's3';
-					$cronjob['created_on'] =  BackendModel::getUTCDate();
-					$cronjob['execute_on'] = BackendModel::getUTCDate();
-					if(BackendPhotogalleryHelper::existsAmazonS3()) BackendAmazonS3Model::insertCronjob($cronjob);
+					// Original, but resize if larger then MAX_ORIGINAL_IMAGE_WIDTH OR MAX_ORIGINAL_IMAGE_HEIGHT
+					$thumbnail = new SpoonThumbnail($tempFile , BackendPhotogalleryModel::MAX_ORIGINAL_IMAGE_WIDTH, BackendPhotogalleryModel::MAX_ORIGINAL_IMAGE_HEIGHT, true);
+					$thumbnail->setAllowEnlargement(false);
+					$thumbnail->setForceOriginalAspectRatio(true);
+					$thumbnail->parseToFile($setsFilesPath . '/original/' . $set_id . '/' . $filename, 100);
 				}
-				
-				
-				
-				$resolutions = BackendPhotogalleryModel::getUniqueExtrasResolutions();
-				
-				if(BackendPhotogalleryHelper::existsAmazonS3())
+				else
 				{
-					foreach($resolutions as $resolution)
-					{
-						// Delete cronjobs with same path and filename
-						BackendAmazonS3Model::deleteCronjobByFullPath('photogallery', 'photogallery/sets/frontend/' . $set_id . '/' . $resolution['width'] . 'x' . $resolution['height'] . '_' . $resolution['method'] . '/' . $filename);
-					}	
-				}
-				
-				
-				foreach($resolutions as $resolution)
-				{
-					$forceOriginalAspectRatio = $resolution['method'] == 'crop' ? false : true;
-					$allowEnlargement = true;
-
-					$thumbnail = new SpoonThumbnail($tempFile , $resolution['width'], $resolution['height'], true);
-					$thumbnail->setAllowEnlargement($allowEnlargement);
-					$thumbnail->setForceOriginalAspectRatio($forceOriginalAspectRatio);
-					$thumbnail->parseToFile($setsFilesPath . '/frontend/' . $set_id  . '/' . $resolution['width'] . 'x' . $resolution['height'] . '_' . $resolution['method'] . '/' . $filename, BackendPhotogalleryModel::IMAGE_QUALITY);
-					
-					// Put
-					$cronjob = array();
-					$cronjob['module'] = 'photogallery';
-					$cronjob['path'] = 'photogallery/sets/frontend/' . $set_id . '/' . $resolution['width'] . 'x' . $resolution['height'] . '_' . $resolution['method'];
-					$cronjob['filename'] = $filename;
-					$cronjob['full_path'] = $cronjob['path'] . '/' . $cronjob['filename'];
-					$cronjob['data'] = serialize(array('set_id' => $set_id, 'image_id' => $image['id'], 'delete_local' => true, 'delete_local_in_time' => BackendPhotogalleryModel::DELETE_LOCAL_IN_TIME));
-					$cronjob['action'] = 'put';
-					$cronjob['location'] = 's3';
-					$cronjob['created_on'] =  BackendModel::getUTCDate();
-					$cronjob['execute_on'] = BackendModel::getUTCDate();
-					if(BackendPhotogalleryHelper::existsAmazonS3()) BackendAmazonS3Model::insertCronjob($cronjob);
+					// Move the original image
+					SpoonDirectory::create($setsFilesPath . '/original/' . $set_id);
+					move_uploaded_file($tempFile, $setsFilesPath . '/original/' . $set_id . '/' . $filename);
 				}
 			}
 			else

@@ -16,6 +16,131 @@ class FrontendPhotogalleryModel implements FrontendTagsInterface
 	const FANCYBOX_VERSION = '2.1.3';
 	const FLEXSLIDER_VERSION = '2.1';
 	
+	public static function buildCategoriesNavigation($parent_id = 0, $selectedUrl = null)
+	{
+		// Get DB
+		$db = FrontendModel::getDB();
+
+		// redefine
+		$tpl = (string) FRONTEND_MODULES_PATH . '/photogallery/layout/widgets/category_navigation_children.tpl';
+		$tpl = FrontendTheme::getPath($tpl);
+
+		$selectedId = self::getCategoryIdByUrl($selectedUrl);
+
+		// Get all categories
+		$categories = (array) self::getAllCategoriesRecursive(0, $selectedId);
+
+		$categories = self::htmlizeCategories($categories, $tpl);
+
+		// create template
+		$categoriesTpl = new FrontendTemplate(false);
+
+		// assign data to template
+		$categoriesTpl->assign('navigation', $categories);
+
+		// return parsed content
+		$categories =  $categoriesTpl->getContent($tpl, true, true);
+
+		return $categories;
+	}
+
+	public static function htmlizeCategories($categories, $tpl)
+	{
+		$categories = $categories;
+
+		foreach($categories as $key => $category)
+		{
+			if(isset($category['categories']) && !empty($category['categories'])) $categories[$key]['categories'] = self::htmlizeCategories($category['categories'], $tpl);
+			
+			$categories[$key]['navigation_title'] = $category['label'];
+			$categories[$key]['link'] = $category['full_url'];
+			$categories[$key]['nofollow'] = false;
+			$categories[$key]['selected'] = isset($category['selected_by_proxy']) && $category['selected_by_proxy'] ? true : $category['selected'];
+
+			if(isset($categories[$key]['categories']))
+			{
+				// create template
+				$categoriesTpl = new FrontendTemplate(false);
+
+				// assign data to template
+				$categoriesTpl->assign('navigation', $categories[$key]['categories']);
+
+				// return parsed content
+				$categories[$key]['children'] =  $categoriesTpl->getContent($tpl, true, true);
+			}
+			else
+			{
+				$categories[$key]['children'] = '';
+			}
+		}
+
+		return $categories;
+	}
+
+	public static function getCategoryIdByUrl($url)
+	{
+		return (int) FrontendModel::getDB()->getVar(
+			'SELECT category.id
+			FROM photogallery_categories AS category
+				INNER JOIN meta AS meta ON meta.id = category.meta_id
+			WHERE meta.url = ?',
+			array(
+				$url
+			)
+		);
+	}
+
+	public static function getAllCategoriesRecursive($parent_id = 0, $selectedId = null)
+	{
+		$categories = self::getAllCategories(null, $selectedId);
+
+		$categories = self::selectByProxy($categories, $selectedId);
+
+		$categories = self::hierarchise($categories);
+
+		return $categories;
+	}
+
+	public static function selectByProxy($categories, $selectedId = null)
+	{
+		$categories = $categories;
+
+		if(isset($categories[$selectedId]) && $categories[$selectedId]['parent_id'])
+		{
+			$selectId = $categories[$selectedId]['parent_id'];
+
+			$categories[$selectId]['selected_by_proxy'] = true;
+
+			$categories = self::selectByProxy($categories, $selectId);
+		}
+
+		return $categories;
+	}
+
+	public static function hierarchise($categories, $parents = null)
+	{
+		$categories = $categories;
+		$parents = $parents ? $parents : $categories;
+
+		foreach($categories as $id => $category)
+		{
+			$children = null;
+			foreach($parents as $child_key => $child)
+			{
+				if(isset($child['parent_id']) && $child['parent_id'] == (int) $category['id'])
+				{
+					$children[$child_key] = $child;
+					unset($categories[$child_key]);
+
+				}
+			}
+
+			if($children && isset($categories[$id]['id'])) $categories[$id]['categories'] = self::hierarchise($children, $parents);
+		}
+
+		return $categories;
+	}
+
 	public static function getCategoryNavigationHTML($tpl = 'navigation.tpl')
 	{
 
@@ -721,7 +846,7 @@ class FrontendPhotogalleryModel implements FrontendTagsInterface
 	 *
 	 * @return array
 	 */
-	public static function getAllCategories($parent_id = null)
+	public static function getAllCategories($parent_id = null, $selectedId = null)
 	{
 		$parameters[] = FRONTEND_LANGUAGE;
 		$parameters[] = 'N';
@@ -729,7 +854,7 @@ class FrontendPhotogalleryModel implements FrontendTagsInterface
 		if(!is_null($parent_id)) $parameters[] = $parent_id;
 		
 		$return =  (array) FrontendModel::getDB()->getRecords(
-			'SELECT c.id, c.title AS label, m.url, COUNT(c.id) AS total,
+			'SELECT c.id, c.title AS label, m.url, COUNT(c.id) AS total, c.parent_id,
 				m.keywords AS meta_keywords, m.keywords_overwrite AS meta_keywords_overwrite,
 				m.description AS meta_description, m.description_overwrite AS meta_description_overwrite,
 				m.title AS meta_title, m.title_overwrite AS meta_title_overwrite, m.data AS meta_data
@@ -749,12 +874,16 @@ class FrontendPhotogalleryModel implements FrontendTagsInterface
 		);
 		
 		$categoryLink = FrontendNavigation::getURLForBlock('photogallery', 'category');
-	
+
 		foreach($return as &$row)
 		{
 			// set url
 			$row['full_url'] = $categoryLink . '/' . $row['url'];
+			$row['parent_id'] = (int) $row['parent_id'];
 			
+			// selected
+			$row['selected'] = $row['id'] == $selectedId ? true : false;
+
 			// unserialize
 			if(isset($row['meta_data'])) $row['meta_data'] = @unserialize($row['meta_data']);
 		}

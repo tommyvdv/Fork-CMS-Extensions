@@ -81,9 +81,23 @@ class BackendPhotogalleryEditWidgetSlideshow extends BackendBaseActionEdit
 		// create form
 		$this->frm = new BackendForm('editWidget');
 
+		$this->frm->addText('title', $this->record['data']['settings']['title'], null, 'inputText title', 'inputTextError title');
+
 		$this->frm->addText('large_width', $this->large['width']);
 		$this->frm->addText('large_height', $this->large['height']);
 		$this->frm->addDropdown('large_method', array('crop' => BL::getLabel('Crop'), 'resize' => BL::getLabel('Resize')), $this->large['method'])->setDefaultElement(SpoonFilter::ucfirst(BL::getLabel('ChooseAResizeMethod')));
+		
+		$this->frm->addDropdown('show_caption', array('false' => ucfirst(BL::getLabel('No')), 'true' => ucfirst(BL::getLabel('Yes'))), $this->record['data']['settings']['show_caption']);
+		$this->frm->addDropdown('show_pagination', array('false' => ucfirst(BL::getLabel('No')), 'true' => ucfirst(BL::getLabel('Yes'))), $this->record['data']['settings']['show_pagination']);
+		$this->frm->addDropdown('show_arrows', array('false' => ucfirst(BL::getLabel('No')), 'true' => ucfirst(BL::getLabel('Yes'))), $this->record['data']['settings']['show_arrows']);
+		$this->frm->addDropdown('pause_on_hover', array('false' => ucfirst(BL::getLabel('No')), 'true' => ucfirst(BL::getLabel('Yes'))), $this->record['data']['settings']['pause_on_hover']);
+		$this->frm->addDropdown('random', array('false' => ucfirst(BL::getLabel('No')), 'true' => ucfirst(BL::getLabel('Yes'))), $this->record['data']['settings']['random']);
+		$this->frm->addText('slideshow_speed', $this->record['data']['settings']['slideshow_speed']);
+		$this->frm->addText('animation_speed', $this->record['data']['settings']['animation_speed']);
+		$this->frm->addDropdown('pagination_type', array('bullets' => ucfirst(BL::getLabel('Bullets')), 'numbers' => ucfirst(BL::getLabel('Numbers')) , 'thumbnails' => ucfirst(BL::getLabel('Thumbnails'))), $this->record['data']['settings']['pagination_type']);
+		
+		$this->frm->addDropdown('animation', array('fade' => ucfirst(BL::getLabel('Fade')), 'slide' => ucfirst(BL::getLabel('Slide'))), $this->record['data']['settings']['animation']);
+		$this->frm->addText('slideshow_item_width', $this->record['data']['settings']['slideshow_item_width']);
 	}
 
 	/**
@@ -119,12 +133,37 @@ class BackendPhotogalleryEditWidgetSlideshow extends BackendBaseActionEdit
 
 			$this->frm->getField('large_method')->isFilled(BL::getError('FieldIsRequired'));
 
+			$this->frm->getField('title')->isFilled(BL::getError('TitleIsRequired'));
+			$this->frm->getField('slideshow_speed')->isFilled(BL::getError('FieldIsRequired'));
+			$this->frm->getField('animation_speed')->isFilled(BL::getError('FieldIsRequired'));
+
+			if($this->frm->getField('slideshow_item_width')->isFilled(BL::getError('FieldIsRequired'))) $this->frm->getField('slideshow_item_width')->isNumeric(BL::getError('InvalidNumber'));
+
 			// no errors?
 			if($this->frm->isCorrect())
 			{
+				$title = $this->frm->getField('title')->getValue();
+
 				// build item
 				$item['id'] = $this->id;
 				$item['edited_on'] = BackendModel::getUTCDate();
+				$item['data'] = serialize(
+									array(
+										'settings' => array(
+												'title' => $title,
+												'show_caption' => $this->frm->getField('show_caption')->getValue(),
+												'show_pagination' => $this->frm->getField('show_pagination')->getValue(),
+												'show_arrows' => $this->frm->getField('show_arrows')->getValue(),
+												'pause_on_hover' => $this->frm->getField('pause_on_hover')->getValue(),
+												'random' => $this->frm->getField('random')->getValue(),
+												'slideshow_speed' => $this->frm->getField('slideshow_speed')->getValue(),
+												'animation_speed' => $this->frm->getField('animation_speed')->getValue(),
+												'pagination_type' => $this->frm->getField('pagination_type')->getValue(),
+												'animation' => $this->frm->getField('animation')->getValue(),
+												'slideshow_item_width' => $this->frm->getField('slideshow_item_width')->getValue(),
+										)
+									)
+								);
 
 				// insert the item
 				BackendPhotogalleryModel::updateExtra($item);
@@ -157,7 +196,6 @@ class BackendPhotogalleryEditWidgetSlideshow extends BackendBaseActionEdit
 							
 							SpoonDirectory::create(FRONTEND_FILES_PATH . '/' . $this->URL->getModule() . '/sets/original/' . $image['set_id']);
 							
-							$this->fromAmazonS3 = BackendPhotogalleryHelper::processOriginalImage($from);
 							$from = FRONTEND_FILES_PATH . '/' . $this->URL->getModule() . '/sets/original/' . $image['set_id'] . '/' . $image['filename'];
 							
 							$to = $setsFilesPath . '/frontend/' . $image['set_id'] . '/' . $resolutionLarge['width'] . 'x' . $resolutionLarge['height'] . '_' . $resolutionLarge['method'] . '/' . $image['filename'];
@@ -170,25 +208,6 @@ class BackendPhotogalleryEditWidgetSlideshow extends BackendBaseActionEdit
 								$thumb->setAllowEnlargement(true);
 								$thumb->setForceOriginalAspectRatio($resize);
 								$thumb->parseToFile($to);
-								
-								// Delete cronjobs with same path
-								if(BackendPhotogalleryHelper::existsAmazonS3()) BackendAmazonS3Model::deleteCronjobByFullPath($this->URL->getModule(), $this->URL->getModule() . '/sets/frontend/' . $image['set_id'] . '/' . $resolutionLarge['width'] . 'x' . $resolutionLarge['height'] . '_' . $resolutionLarge['method'] . '/' . $image['filename']);
-								
-								// Put
-								$cronjob = array();
-								$cronjob['module'] = $this->URL->getModule();
-								$cronjob['path'] = $this->URL->getModule() . '/sets/frontend/' . $image['set_id'] . '/' . $resolutionLarge['width'] . 'x' . $resolutionLarge['height'] . '_' . $resolutionLarge['method'];
-								$cronjob['filename'] = $image['filename'];
-								$cronjob['full_path'] = $cronjob['path'] . '/' . $cronjob['filename'];
-								$cronjob['data'] = serialize(array('set_id' => $image['set_id'], 'image_id' => $image['id'], 'delete_local' => true, 'delete_local_in_time' => BackendPhotogalleryModel::DELETE_LOCAL_IN_TIME));
-								$cronjob['action'] = 'put';
-								$cronjob['location'] = 's3';
-								
-								$cronjob['created_on'] =  BackendModel::getUTCDate();
-								$cronjob['execute_on'] = BackendModel::getUTCDate();
-								if(BackendPhotogalleryHelper::existsAmazonS3()) BackendAmazonS3Model::insertCronjob($cronjob);
-								
-								if($this->fromAmazonS3) SpoonFile::delete($from);
 							}
 						}
 					}
@@ -207,56 +226,35 @@ class BackendPhotogalleryEditWidgetSlideshow extends BackendBaseActionEdit
 						{
 							$to = $setsFilesPath . '/frontend/' . $set['id'] . '/' . $this->large['width'] . 'x' . $this->large['height'] . '_' . $this->large['method'];
 							SpoonDirectory::delete($to);
-							
-							// Delete cronjobs with prefix if folders needs to be deleted
-							if(BackendPhotogalleryHelper::existsAmazonS3()) BackendAmazonS3Model::deleteCronjobByFullPathLike($this->URL->getModule(), $setsFilesPath . '/frontend/' . $set['id'] . '/' . $this->large['width'] . 'x' . $this->large['height'] . '_' . $this->large['method']);
-								
-							// Delete resolution folder
-							$cronjob = array();
-							$cronjob['module'] = $this->URL->getModule();
-							$cronjob['path'] = $this->URL->getModule() . '/sets/frontend/' . $set['id'] . '/' . $this->large['width'] . 'x' . $this->large['height'] . '_' . $this->large['method'];
-							$cronjob['full_path'] = $cronjob['path'] ;
-							$cronjob['data'] = serialize(array('set_id' => $set['id'], 'image_id' => null));
-							$cronjob['action'] = 'delete';
-							$cronjob['location'] = 's3';
-							$cronjob['created_on'] =  BackendModel::getUTCDate();
-							$cronjob['execute_on'] = BackendModel::getUTCDate();
-							
-							// Delete record
-							if(BackendPhotogalleryHelper::existsAmazonS3()) BackendAmazonS3Model::deleteCronjobByFullPath($this->URL->getModule(), $cronjob['path']);
-					
-							if(BackendPhotogalleryHelper::existsAmazonS3()) BackendAmazonS3Model::insertCronjob($cronjob);
 						}
 					}
 				}
 
-				// A resolution has changed
-				if($extraHasChanged)
+				
+				// Get all module_extra_ids for the extra and loop them
+				foreach(BackendPhotogalleryModel::getAllModuleExtraIds($this->id) as $extra)
 				{
-					// Get all module_extra_ids for the extra and loop them
-					foreach(BackendPhotogalleryModel::getAllModuleExtraIds($this->id) as $extra)
-					{
-						$resolutionsLabel = BackendPhotogalleryHelper::getResolutionsForExtraLabel($extra['extra_id']);
+					$resolutionsLabel = BackendPhotogalleryHelper::getResolutionsForExtraLabel($extra['extra_id']);
 
-						$album = BackendPhotogalleryModel::getAlbum($extra['album_id']);
-						
-
-						$label = $album['title'] . ' | ' . BackendTemplateModifiers::toLabel($this->record['action']) . ' | ' . $resolutionsLabel;
-
-						$extraItem['label'] = $this->record['action'];
-						$extraItem['id'] = $extra['modules_extra_id'];
-						$extraItem['data'] = serialize(array('id' => $extra['album_id'],
-															'extra_id' => $extra['extra_id'],
-															'extra_label' => $label,
-															'language' => $album['language'],
-															'edit_url' => BackendModel::createURLForAction('edit') . '&id=' . $extra['album_id']));
+					$album = BackendPhotogalleryModel::getAlbum($extra['album_id']);
 					
-						BackendPhotogalleryModel::updateModulesExtraWidget($extraItem);
-					}
+
+					$label = $album['title'] . ' | ' . BackendTemplateModifiers::toLabel($this->record['action']) . ' | '  . $title . ' | ' . $resolutionsLabel;
+
+					$extraItem['label'] = $this->record['action'];
+					$extraItem['id'] = $extra['modules_extra_id'];
+					$extraItem['data'] = serialize(array('id' => $extra['album_id'],
+														'extra_id' => $extra['extra_id'],
+														'extra_label' => $label,
+														'language' => $album['language'],
+														'edit_url' => BackendModel::createURLForAction('edit') . '&id=' . $extra['album_id']));
+				
+					BackendPhotogalleryModel::updateModulesExtraWidget($extraItem);
 				}
+				
 
 				// everything is saved, so redirect to the overview
-				$this->redirect(BackendModel::createURLForAction('extras') . '&report=edited-widget&highlight=row-' . $this->record['id']);
+				$this->redirect(BackendModel::createURLForAction('edit_widget_slideshow') . '&report=edited-widget&id=' . $this->record['id']);
 			}
 		}
 	}

@@ -85,7 +85,12 @@ class BackendPhotogalleryCategories extends BackendBaseActionIndex
 		$this->dataGrid->setColumnsHidden(array('sequence'));
 
 		// add subcategories button (if depth is not greater than…)
-		if(count($this->breadcrumbs) <= BackendModel::getModuleSetting('photogallery', 'categories_depth', 0))
+		if(
+			(
+				count($this->breadcrumbs) <= BackendModel::getModuleSetting('photogallery', 'categories_depth', 0) &&
+				!is_null(BackendModel::getModuleSetting('photogallery', 'categories_depth'))
+			) || (int) BackendModel::getModuleSetting('photogallery', 'categories_depth') === 0
+		)
 		{
 			// add children column
 			$this->dataGrid->addColumn('children', null, sprintf(BL::lbl('ViewSubcategories'), '[num_children]'), BackendModel::createURLForAction('categories') . '&amp;category_id=[id]', BL::getLabel('msgCategoriesForParent'));
@@ -114,6 +119,7 @@ class BackendPhotogalleryCategories extends BackendBaseActionIndex
 	protected function parse()
 	{
 		// assign
+		$this->tpl->assign('addToParentURL', BackendModel::createURLForAction('add_category', 'photogallery', BL::getWorkingLanguage(), isset($this->category['id']) ? array('category_id' => $this->category['id']) : array()));
 		$this->tpl->assign('category', $this->category);
 		$this->tpl->assign('dataGrid', ($this->dataGrid->getNumResults() != 0) ? $this->dataGrid->getContent() : false);
 		$this->tpl->assign('breadcrumbs', $this->breadcrumbs);

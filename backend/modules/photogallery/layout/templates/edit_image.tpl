@@ -5,16 +5,14 @@
 	<h2>{$lblPhotogallery|ucfirst}: {$msgEditImage}</h2>
 	
 	<div class="buttonHolderRight">
-		<a href="{$var|geturl:'edit'}&amp;id={$album_id}#tabImages" class="button icon iconBack"><span>{$lblOverview|ucfirst}</span></a>
+		<a href="{$var|geturl:'edit'}&amp;id={$album_id}#tabImages" class="button icon iconBack"><span>{$lblBack|ucfirst}</span></a>
 	</div>
 	
 </div>
 
-
 {form:edit}
 	<label for="title">{$lblTitle|ucfirst}</label>
 	{$txtTitle} {$txtTitleError}
-
 
 	<div id="pageUrl">
 		<div class="oneLiner">
@@ -45,7 +43,21 @@
 
 						<td id="sidebar">
 
-							<div id="publishOptions" class="box">
+
+							<div class="box">
+								<div class="heading">
+									<h3>{$lblSettings|ucfirst}</h3>
+								</div>
+
+								<div class="options">
+									<ul class="inputList pb0">
+										<li>{$chkTitleHidden} {$chkTitleHiddenError} <label for="titleHidden">{$lblHideTitle|ucfirst}</label></li>
+									</ul>
+								</div>
+							</div>
+
+
+							<div class="box">
 								<div class="heading">
 									<h3>{$lblStatus|ucfirst}</h3>
 								</div>

@@ -1,30 +1,3 @@
-ul.photogalleryCategoryNavigation ul {
-	margin-left: 1em;
-}
-
-	ul.photogalleryCategoryNavigation li.selected a {
-		background: yellow;
-		padding: 2px 5px;
-		border-bottom: 1px solid orange;
-	}
-
-		ul.photogalleryCategoryNavigation li.selected li a {
-			background: none;
-			padding: 0;
-			margin-left: 0;
-			border: none;
-		}
-
-			ul.photogalleryCategoryNavigation li.product a {
-				color: #000;
-				border-bottom: none;
-			}
-
-				ul.photogalleryCategoryNavigation li.product.selected a {
-					color: darkred;
-					border-bottom: 1px solid orange;
-				}
-
 ul.photogalleryLightbox li,
 ul.photogalleryDetailLightbox li,
 ul.photogalleryPaged li,

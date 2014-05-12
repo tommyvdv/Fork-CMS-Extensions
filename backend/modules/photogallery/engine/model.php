@@ -45,14 +45,14 @@ class BackendPhotogalleryModel
 		GROUP BY i.id';
 
 	const QRY_DATAGRID_BROWSE_IMAGES_FOR_SET =
-		'SELECT i.id, i.filename, c.title, c.text, i.hidden as is_hidden, i.sequence
+		'SELECT i.id, i.filename, c.title, c.text, c.title_hidden, i.hidden as is_hidden, i.sequence
 		FROM photogallery_sets_images AS i
 		INNER JOIN photogallery_sets_images_content AS c on c.set_image_id = i.id
 		WHERE i.set_id = ? AND c.album_id = ? AND c.language = ?
-		GROUP BY i.id ORDER BY i.sequence ASC';
+		GROUP BY i.id ORDER BY i.sequence DESC';
 
 	const RESIZE_ORIGINAL_IMAGE = true; // resize the original image?
-	const KEEP_ORIGINAL_IMAGE = false; // resize the original image?
+	const KEEP_ORIGINAL_IMAGE = true; // resize the original image?
 	const MAX_ORIGINAL_IMAGE_WIDTH = 2000; // if RESIZE_ORIGINAL_IMAGE resize to # in px
 	const MAX_ORIGINAL_IMAGE_HEIGHT = 2000; // if RESIZE_ORIGINAL_IMAGE resize to # in px
 	const MAX_ORIGINAL_FILE_SIZE = 10; // in mb
@@ -79,7 +79,7 @@ class BackendPhotogalleryModel
 		if(!$id) return array();
 
 		// get db
-		$db = BackendModel::getDB(true);
+		$db = BackendModel::getContainer()->get('database');
 
 		// get category
 		$category = self::getCategory((int) $id);
@@ -135,7 +135,7 @@ class BackendPhotogalleryModel
 	public static function deleteCategoryAllowed($id)
 	{
 		// check if has been assigned to album(s)
-		$hasAlbums = (bool) BackendModel::getDB()->getVar(
+		$hasAlbums = (bool) BackendModel::getContainer()->get('database')->getVar(
 			'SELECT COUNT(category_id)
 			 FROM photogallery_categories_albums AS i
 			 WHERE i.category_id = ?',
@@ -143,7 +143,7 @@ class BackendPhotogalleryModel
 		);
 
 		// check if category is parent of children
-		$hasChildren = (bool) BackendModel::getDB()->getVar(
+		$hasChildren = (bool) BackendModel::getContainer()->get('database')->getVar(
 			'SELECT COUNT(parent_id)
 			FROM photogallery_categories AS i
 			WHERE i.parent_id = ?',
@@ -156,7 +156,7 @@ class BackendPhotogalleryModel
 	/*
 	public static function deleteCategoryAllowed($id)
 	{
-		return !(bool) BackendModel::getDB()->getVar(
+		return !(bool) BackendModel::getContainer()->get('database')->getVar(
 			'SELECT COUNT(category_id)
 			 FROM photogallery_categories_albums AS i
 			 WHERE i.category_id = ?',
@@ -182,7 +182,7 @@ class BackendPhotogalleryModel
 		$idPlaceHolders = array_fill(0, count($ids), '?');
 
 		// get db
-		$db = BackendModel::getDB(true);
+		$db = BackendModel::getContainer()->get('database');
 
 		// get used meta ids
 		$metaIds = (array) $db->getColumn(
@@ -252,7 +252,7 @@ class BackendPhotogalleryModel
 		$idPlaceHolders = array_fill(0, count($ids), '?');
 
 		// get db
-		$db = BackendModel::getDB(true);
+		$db = BackendModel::getContainer()->get('database');
 
 		// delete records
 		$db->delete('photogallery_extras', 'id IN (' . implode(', ', $idPlaceHolders) . ') ', $ids);
@@ -279,7 +279,7 @@ class BackendPhotogalleryModel
 		$ids = (array) $ids;
 
 		// get db
-		$db = BackendModel::getDB(true);
+		$db = BackendModel::getContainer()->get('database');
 
 		// loop and cast to integers
 		foreach($ids as &$id) $id = (int) $id;
@@ -312,7 +312,7 @@ class BackendPhotogalleryModel
 		$idPlaceHolders = array_fill(0, count($ids), '?');
 
 		// get db
-		$db = BackendModel::getDB(true);
+		$db = BackendModel::getContainer()->get('database');
 
 		// get used meta ids
 		$metaIds = (array) $db->getColumn(
@@ -339,7 +339,7 @@ class BackendPhotogalleryModel
 
 		if(!empty($emptySetIds)) $db->delete('photogallery_sets_images_content', 'set_id IN (' . implode(', ', $emptySetIds) . ')');
 		if(!empty($emptySetIds)) $db->delete('photogallery_sets', 'id IN (' . implode(', ', $emptySetIds) . ')');
-		if(!empty($emptySetIds)) BackendModel::getDB(true)->update('photogallery_albums', array('set_id' => null), 'set_id IN(' . implode(',', $emptySetIds) . ')');
+		if(!empty($emptySetIds)) BackendModel::getContainer()->get('database')->update('photogallery_albums', array('set_id' => null), 'set_id IN(' . implode(',', $emptySetIds) . ')');
 
 		// invalidate the cache for blog
 		BackendModel::invalidateFrontendCache('photogallery', BL::getWorkingLanguage());
@@ -365,7 +365,7 @@ class BackendPhotogalleryModel
 		$idPlaceHolders = array_fill(0, count($ids), '?');
 
 		// get db
-		$db = BackendModel::getDB(true);
+		$db = BackendModel::getContainer()->get('database');
 
 		// get used set ids
 		return (array) $db->getColumn(
@@ -394,7 +394,7 @@ class BackendPhotogalleryModel
 		$idPlaceHolders = array_fill(0, count($ids), '?');
 
 		// get db
-		$db = BackendModel::getDB(true);
+		$db = BackendModel::getContainer()->get('database');
 
 		// get used set ids
 		return (array) $db->getColumn(
@@ -423,7 +423,7 @@ class BackendPhotogalleryModel
 		$idPlaceHolders = array_fill(0, count($ids), '?');
 
 		// get db
-		$db = BackendModel::getDB(true);
+		$db = BackendModel::getContainer()->get('database');
 
 		// get used meta ids
 		return (array) $db->getColumn(
@@ -445,7 +445,7 @@ class BackendPhotogalleryModel
 		$id = (int) $id;
 
 		// get db
-		$db = BackendModel::getDB(true);
+		$db = BackendModel::getContainer()->get('database');
 
 		// get item
 		$item = self::getCategory($id);
@@ -475,7 +475,7 @@ class BackendPhotogalleryModel
 	 */
 	public static function existsAlbum($id)
 	{
-		return (bool) BackendModel::getDB()->getVar(
+		return (bool) BackendModel::getContainer()->get('database')->getVar(
 					'SELECT i.id
 					 FROM photogallery_albums AS i
 					 WHERE i.id = ? AND i.language = ?',
@@ -491,7 +491,7 @@ class BackendPhotogalleryModel
 	 */
 	public static function existsImage($id)
 	{
-		return (bool) BackendModel::getDB()->getVar(
+		return (bool) BackendModel::getContainer()->get('database')->getVar(
 					'SELECT i.id
 					 FROM photogallery_sets_images AS i
 					 WHERE i.id = ?',
@@ -509,7 +509,7 @@ class BackendPhotogalleryModel
 	 */
 	public static function existsResolution($width, $height, $method)
 	{
-		return (bool) BackendModel::getDB()->getVar(
+		return (bool) BackendModel::getContainer()->get('database')->getVar(
 					'SELECT i.id
 					 FROM photogallery_extras_resolutions AS i
 					 WHERE i.width = ? AND i.height = ? AND i.method = ?',
@@ -525,7 +525,7 @@ class BackendPhotogalleryModel
 	 */
 	public static function existsExtra($id)
 	{
-		return (bool) BackendModel::getDB()->getVar(
+		return (bool) BackendModel::getContainer()->get('database')->getVar(
 					'SELECT i.id
 					 FROM photogallery_extras AS i
 					 WHERE i.id = ?',
@@ -535,7 +535,7 @@ class BackendPhotogalleryModel
 
 	/*public static function existsCronjobByImageId($module, $id)
 	{
-		return (bool) BackendModel::getDB()->getVar(
+		return (bool) BackendModel::getContainer()->get('database')->getVar(
 					'SELECT i.id
 					 FROM amazon_s3_cronjobs AS i
 					 WHERE i.module = ? AND i.data LIKE ?',
@@ -551,7 +551,7 @@ class BackendPhotogalleryModel
 	 */
 	public static function existsSet($id)
 	{
-		return (bool) BackendModel::getDB()->getVar(
+		return (bool) BackendModel::getContainer()->get('database')->getVar(
 					'SELECT i.id
 					 FROM photogallery_sets AS i
 					 WHERE i.id = ?',
@@ -567,7 +567,7 @@ class BackendPhotogalleryModel
 	 */
 	public static function existsCategory($id)
 	{
-		return (bool) BackendModel::getDB()->getVar(
+		return (bool) BackendModel::getContainer()->get('database')->getVar(
 			'SELECT COUNT(id)
 			 FROM photogallery_categories AS i
 			 WHERE i.id = ? AND i.language = ?',
@@ -584,16 +584,18 @@ class BackendPhotogalleryModel
 	 */
 	public static function getImageWithContent($id, $album_id)
 	{
-		$return =  (array) BackendModel::getDB()->getRecord(
-			'SELECT i.id, i.set_id, i.hidden, c.title, c.text, c.meta_id, i.filename, c.id as image_content_id, c.data, c.album_id
+		$return =  (array) BackendModel::getContainer()->get('database')->getRecord(
+			'SELECT i.id, i.set_id, i.hidden, c.title, c.title_hidden, c.text, c.meta_id, i.filename, c.id as image_content_id, c.data, c.album_id
 			FROM photogallery_sets_images AS i
 			INNER JOIN photogallery_sets_images_content AS c ON c.set_image_id = i.id
 			WHERE i.id = ? AND c.language = ? AND c.album_id = ?
 			LIMIT 1',
 			array((int) $id, BL::getWorkingLanguage(), $album_id));
 
+
 		// unserialize data
 		if($return['data'] !== null) $return['data'] = unserialize($return['data']);
+		$return['title_hidden'] = ($return['title_hidden'] == 'Y');
 
 		return $return;
 	}
@@ -606,7 +608,7 @@ class BackendPhotogalleryModel
 	 */
 	public static function getImage($id)
 	{
-		$return =  (array) BackendModel::getDB()->getRecord(
+		$return =  (array) BackendModel::getContainer()->get('database')->getRecord(
 			'SELECT i.*
 			FROM photogallery_sets_images AS i
 			WHERE i.id = ?
@@ -625,7 +627,7 @@ class BackendPhotogalleryModel
 	 */
 	public static function getExtraResolutionForKind($extra_id, $kind)
 	{
-		$return =  (array) BackendModel::getDB()->getRecord(
+		$return =  (array) BackendModel::getContainer()->get('database')->getRecord(
 			'SELECT i.*
 			FROM photogallery_extras_resolutions AS i
 			WHERE i.extra_id = ? AND i.kind = ?
@@ -643,7 +645,7 @@ class BackendPhotogalleryModel
 	 */
 	public static function getExtraResolutions($id)
 	{
-		$return =  (array) BackendModel::getDB()->getRecords(
+		$return =  (array) BackendModel::getContainer()->get('database')->getRecords(
 			'SELECT i.*
 			FROM photogallery_extras_resolutions AS i
 			WHERE i.extra_id = ?',
@@ -660,7 +662,7 @@ class BackendPhotogalleryModel
 	 */
 	public static function getAllModuleExtraIds($id)
 	{
-		$return =  (array) BackendModel::getDB()->getRecords(
+		$return =  (array) BackendModel::getContainer()->get('database')->getRecords(
 			'SELECT i.*
 			FROM photogallery_extras_ids AS i
 			WHERE i.extra_id = ?',
@@ -677,7 +679,7 @@ class BackendPhotogalleryModel
 	 */
 	public static function getAlbum($id)
 	{
-		return (array) BackendModel::getDB()->getRecord(
+		return (array) BackendModel::getContainer()->get('database')->getRecord(
 			'SELECT i.*, UNIX_TIMESTAMP(i.publish_on) AS publish_on,  UNIX_TIMESTAMP(i.new_from) AS new_from,  UNIX_TIMESTAMP(i.new_until) AS new_until , m.url,
 			GROUP_CONCAT(c.category_id) AS category_ids
 			FROM photogallery_albums AS i
@@ -695,7 +697,7 @@ class BackendPhotogalleryModel
 	 */
 	public static function getAllImages()
 	{
-		return (array) BackendModel::getDB()->getRecords(
+		return (array) BackendModel::getContainer()->get('database')->getRecords(
 			'SELECT i.set_id, i.filename, i.id
 			FROM photogallery_sets_images AS i');
 	}
@@ -707,7 +709,7 @@ class BackendPhotogalleryModel
 	 */
 	public static function getAllAlbums()
 	{
-		return (array) BackendModel::getDB()->getRecords(
+		return (array) BackendModel::getContainer()->get('database')->getRecords(
 			'SELECT i.*
 			FROM photogallery_albums AS i');
 	}
@@ -719,7 +721,7 @@ class BackendPhotogalleryModel
 	 */
 	public static function getAllSets()
 	{
-		return (array) BackendModel::getDB()->getRecords(
+		return (array) BackendModel::getContainer()->get('database')->getRecords(
 			'SELECT i.*
 			FROM photogallery_sets AS i');
 	}
@@ -731,7 +733,7 @@ class BackendPhotogalleryModel
 	 */
 	public static function getAllExtrasWidgets()
 	{
-		return (array) BackendModel::getDB()->getRecords(
+		return (array) BackendModel::getContainer()->get('database')->getRecords(
 			'SELECT i.*
 			FROM photogallery_extras AS i
 			WHERE i.kind = ?', array('widget'));
@@ -745,7 +747,7 @@ class BackendPhotogalleryModel
 	 */
 	public static function getResolutionsForExtra($id)
 	{
-		return (array) BackendModel::getDB()->getRecords('SELECT width, height, method, kind FROM photogallery_extras_resolutions WHERE extra_id = ?',array((int) $id));
+		return (array) BackendModel::getContainer()->get('database')->getRecords('SELECT width, height, method, kind FROM photogallery_extras_resolutions WHERE extra_id = ?',array((int) $id));
 	}
 
 	/**
@@ -756,7 +758,7 @@ class BackendPhotogalleryModel
 	 */
 	public static function getAlbumsLinkedToSet($id)
 	{
-		return (array) BackendModel::getDB()->getRecords(
+		return (array) BackendModel::getContainer()->get('database')->getRecords(
 			'SELECT a.language, a.id
 			FROM  photogallery_albums AS a
 			WHERE a.set_id = ?',
@@ -771,7 +773,7 @@ class BackendPhotogalleryModel
 	 */
 	public static function getCategory($id)
 	{
-		return (array) BackendModel::getDB()->getRecord(
+		return (array) BackendModel::getContainer()->get('database')->getRecord(
 			'SELECT i.*
 			 FROM photogallery_categories AS i
 			 WHERE i.id = ? AND i.language = ?',
@@ -787,7 +789,7 @@ class BackendPhotogalleryModel
 	 */
 	public static function getExtra($id)
 	{
-		$return =  (array) BackendModel::getDB()->getRecord(
+		$return =  (array) BackendModel::getContainer()->get('database')->getRecord(
 			'SELECT i.*
 			 FROM photogallery_extras AS i
 			 WHERE i.id = ? LIMIT 1',
@@ -805,34 +807,15 @@ class BackendPhotogalleryModel
 	 * @param bool[optional] $includeCount Include the count?
 	 * @return array
 	 */
-	/*
-	public static function getCategoriesForDropdown($includeCount = false)
-	{
-		$db = BackendModel::getDB();
-
-		if($includeCount)
-		{
-			return (array) $db->getPairs(
-				'SELECT i.id, CONCAT(i.title, " (", COUNT(p.album_id) ,")") AS title
-				 FROM photogallery_categories AS i
-				 LEFT OUTER JOIN photogallery_categories_albums AS p ON i.id = p.category_id 
-				 WHERE i.language = ? 
-				 GROUP BY i.id ORDER BY i.sequence ASC',
-				array(BL::getWorkingLanguage())
-			);
-		}
-
-		return (array) $db->getPairs(
-			'SELECT i.id, i.title
-			 FROM photogallery_categories AS i
-			 WHERE i.language = ? ORDER BY i.sequence ASC',
-			array(BL::getWorkingLanguage())
-		);
-	}
-	*/
 	public static function getCategoriesForDropdown($allowedDepth = null, $includeCount = false, $parent_id = 0, $depth = 0, $parent = null, $seperator = '&rsaquo;', $space = ' ')
 	{
-		$db = BackendModel::getDB();
+		if(is_array($allowedDepth))
+		{
+			$startAllowedDepth = $allowedDepth[0];
+			$allowedDepth = $allowedDepth[1];
+		}
+
+		$db = BackendModel::getContainer()->get('database');
 
 		$categories = (array) $db->getPairs(
 			'SELECT i.id, i.title
@@ -845,11 +828,20 @@ class BackendPhotogalleryModel
 			)
 		);
 
-		if($depth < $allowedDepth || $allowedDepth === null || $allowedDepth === 0)
+		if(
+			(
+				$depth < $allowedDepth ||
+				(int) $allowedDepth === 0
+			) && !is_null($allowedDepth)
+		)
 		{
 			foreach($categories as $key => $value)
 			{
-				$output[$key] =  $value;
+				if(
+					!isset($startAllowedDepth) ||
+					$depth >= $startAllowedDepth
+				) $output[$key] =  $value;
+				
 				$children = self::getCategoriesForDropdown($allowedDepth, $includeCount, $key, $depth + 1, $value);
 				foreach($children as $c_key => $c_value)
 				{
@@ -869,7 +861,7 @@ class BackendPhotogalleryModel
 	public static function getSequenceAlbum()
 	{
 		// return
-		return (int) BackendModel::getDB()->getVar('SELECT MAX(sequence) FROM photogallery_albums');
+		return (int) BackendModel::getContainer()->get('database')->getVar('SELECT MAX(sequence) FROM photogallery_albums');
 	}
 	
 	
@@ -881,7 +873,7 @@ class BackendPhotogalleryModel
 	public static function getSequenceCategory()
 	{
 		// return
-		return (int) BackendModel::getDB()->getVar('SELECT MAX(sequence) FROM photogallery_categories');
+		return (int) BackendModel::getContainer()->get('database')->getVar('SELECT MAX(sequence) FROM photogallery_categories');
 	}
 	
 
@@ -903,7 +895,7 @@ class BackendPhotogalleryModel
 		$idPlaceHolders = array_fill(0, count($ids), '?');
 
 		// get db
-		$db = BackendModel::getDB(true);
+		$db = BackendModel::getContainer()->get('database');
 
 		// get used set ids
 		return (array) $db->getColumn(
@@ -932,7 +924,7 @@ class BackendPhotogalleryModel
 		$idPlaceHolders = array_fill(0, count($ids), '?');
 
 		// get db
-		$db = BackendModel::getDB(true);
+		$db = BackendModel::getContainer()->get('database');
 
 		// get used set ids
 		return (array) $db->getColumn(
@@ -961,7 +953,7 @@ class BackendPhotogalleryModel
 		$idPlaceHolders = array_fill(0, count($ids), '?');
 
 		// get db
-		$db = BackendModel::getDB(true);
+		$db = BackendModel::getContainer()->get('database');
 
 		// get used set ids
 		return (array) $db->getRecords(
@@ -991,7 +983,7 @@ class BackendPhotogalleryModel
 		$idPlaceHolders = array_fill(0, count($ids), '?');
 
 		// get db
-		$db = BackendModel::getDB(true);
+		$db = BackendModel::getContainer()->get('database');
 
 		// get used set ids
 		return (array) $db->getColumn(
@@ -1010,7 +1002,7 @@ class BackendPhotogalleryModel
 	 */
 	public static function getSetImages($id)
 	{
-		return (array) BackendModel::getDB()->getRecords(
+		return (array) BackendModel::getContainer()->get('database')->getRecords(
 			'SELECT a.filename, a.original_filename, a.id
 			FROM  photogallery_sets_images  as a
 			WHERE a.set_id  = ?',
@@ -1025,7 +1017,7 @@ class BackendPhotogalleryModel
 	public static function getSetsForDropdown()
 	{
 		// get db
-		$db = BackendModel::getDB();
+		$db = BackendModel::getContainer()->get('database');
 
 		// get records and return them
 		return $results =  (array) $db->getPairs(
@@ -1047,7 +1039,7 @@ class BackendPhotogalleryModel
 	public static function getUniqueExtrasResolutions()
 	{
 		// get db
-		$db = BackendModel::getDB();
+		$db = BackendModel::getContainer()->get('database');
 
 		// get records and return them
 		return (array) $db->getRecords(
@@ -1065,7 +1057,7 @@ class BackendPhotogalleryModel
 	public static function getSetImageSequence($set_id)
 	{
 		// return
-		return (int) BackendModel::getDB()->getVar('SELECT MAX(sequence) FROM photogallery_sets_images WHERE set_id = ? LIMIT 1',array($set_id));
+		return (int) BackendModel::getContainer()->get('database')->getVar('SELECT MAX(sequence) FROM photogallery_sets_images WHERE set_id = ? LIMIT 1',array($set_id));
 	}
 
 	/**
@@ -1081,7 +1073,7 @@ class BackendPhotogalleryModel
 		$URL = SpoonFilter::urlise((string) $URL);
 
 		// get db
-		$db = BackendModel::getDB();
+		$db = BackendModel::getContainer()->get('database');
 
 		// new item
 		if($itemId === null)
@@ -1140,7 +1132,7 @@ class BackendPhotogalleryModel
 		$URL = SpoonFilter::urlise((string) $URL);
 
 		// get db
-		$db = BackendModel::getDB();
+		$db = BackendModel::getContainer()->get('database');
 
 		// new category
 		if($id === null)
@@ -1202,7 +1194,7 @@ class BackendPhotogalleryModel
 		$URL = SpoonFilter::urlise((string) $URL);
 
 		// get db
-		$db = BackendModel::getDB();
+		$db = BackendModel::getContainer()->get('database');
 
 		// new category
 		if($id === null)
@@ -1264,7 +1256,7 @@ class BackendPhotogalleryModel
 		$filename = SpoonFilter::urlise((string) $filename);
 
 		// get db
-		$db = BackendModel::getDB();
+		$db = BackendModel::getContainer()->get('database');
 
 		// new category
 		if($id === null)
@@ -1318,7 +1310,7 @@ class BackendPhotogalleryModel
 	 */
 	public static function insertAlbum(array $item)
 	{
-		$db = BackendModel::getDB(true);
+		$db = BackendModel::getContainer()->get('database');
 
 		// insert and return the new id
 		$item['id'] = $db->insert('photogallery_albums', $item);
@@ -1334,7 +1326,7 @@ class BackendPhotogalleryModel
 	 */
 	public static function insertExtraId(array $item)
 	{
-		$db = BackendModel::getDB(true);
+		$db = BackendModel::getContainer()->get('database');
 
 		// insert and return the new id
 		$item['id'] = $db->insert('photogallery_extras_ids', $item);
@@ -1350,7 +1342,7 @@ class BackendPhotogalleryModel
 	 */
 	public static function insertModulesExtraWidget($extra)
 	{
-		$db = BackendModel::getDB(true);
+		$db = BackendModel::getContainer()->get('database');
 
 		$extra['hidden'] = 'N';
 		$extra['type'] = 'widget';
@@ -1369,7 +1361,7 @@ class BackendPhotogalleryModel
 	 */
 	public static function insertExtra(array $item)
 	{
-		$db = BackendModel::getDB(true);
+		$db = BackendModel::getContainer()->get('database');
 
 		// insert and return the new id
 		$item['id'] = $db->insert('photogallery_extras', $item);
@@ -1385,7 +1377,7 @@ class BackendPhotogalleryModel
 	 */
 	public static function insertExtraResolution(array $item)
 	{
-		$db = BackendModel::getDB(true);
+		$db = BackendModel::getContainer()->get('database');
 
 		// insert and return the new id
 		$item['id'] = $db->insert('photogallery_extras_resolutions', $item);
@@ -1401,7 +1393,7 @@ class BackendPhotogalleryModel
 	 */
 	public static function insertSet(array $item)
 	{
-		$db = BackendModel::getDB(true);
+		$db = BackendModel::getContainer()->get('database');
 
 		// insert and return the new id
 		$item['id'] = $db->insert('photogallery_sets', $item);
@@ -1417,7 +1409,7 @@ class BackendPhotogalleryModel
 	 */
 	public static function insertSetImage(array $item)
 	{
-		$db = BackendModel::getDB(true);
+		$db = BackendModel::getContainer()->get('database');
 
 		// insert and return the new id
 		$item['id'] = $db->insert('photogallery_sets_images', $item);
@@ -1435,7 +1427,7 @@ class BackendPhotogalleryModel
 	public static function insertCategory(array $item, $meta = null)
 	{
 		// get db
-		$db = BackendModel::getDB(true);
+		$db = BackendModel::getContainer()->get('database');
 
 		// meta given?
 		if($meta !== null) $item['meta_id'] = $db->insert('meta', $meta);
@@ -1461,7 +1453,7 @@ class BackendPhotogalleryModel
 	public static function insertImage(array $item, array $content, array $meta)
 	{
 		// get db
-		$db = BackendModel::getDB(true);
+		$db = BackendModel::getContainer()->get('database');
 
 		// insert the category
 		$id = $db->insert('photogallery_sets_images', $item);
@@ -1493,7 +1485,7 @@ class BackendPhotogalleryModel
 	public static function insertImagesContentForExisting(array $content, array $meta)
 	{
 		// get db
-		$db = BackendModel::getDB(true);
+		$db = BackendModel::getContainer()->get('database');
 
 		// loop
 		foreach($meta as $key => $row)
@@ -1516,7 +1508,7 @@ class BackendPhotogalleryModel
 	 */
 	public static function updateAlbum(array $item)
 	{
-		$db = BackendModel::getDB(true);
+		$db = BackendModel::getContainer()->get('database');
 
 		// update category
 		$db->update('photogallery_albums', $item, 'id = ?', array($item['id']));
@@ -1532,7 +1524,7 @@ class BackendPhotogalleryModel
 	 */
 	public static function updateExtra(array $item)
 	{
-		$db = BackendModel::getDB(true);
+		$db = BackendModel::getContainer()->get('database');
 
 		// update category
 		$db->update('photogallery_extras', $item, 'id = ?', array($item['id']));
@@ -1548,7 +1540,7 @@ class BackendPhotogalleryModel
 	 */
 	public static function updateExtraResolution(array $item)
 	{
-		$db = BackendModel::getDB(true);
+		$db = BackendModel::getContainer()->get('database');
 
 		// update category
 		$db->update('photogallery_extras_resolutions', $item, 'id = ?', array($item['id']));
@@ -1564,7 +1556,7 @@ class BackendPhotogalleryModel
 	 */
 	public static function updateModulesExtraWidget(array $item)
 	{
-		$db = BackendModel::getDB(true);
+		$db = BackendModel::getContainer()->get('database');
 
 		// update category
 		$db->update('modules_extras', $item, 'id = ?', array($item['id']));
@@ -1580,7 +1572,7 @@ class BackendPhotogalleryModel
 	 */
 	public static function updateModulesExtraBlockByModule(array $item)
 	{
-		$db = BackendModel::getDB(true);
+		$db = BackendModel::getContainer()->get('database');
 
 		// update category
 		$db->update('modules_extras', $item, 'module = ? AND type = ?', array($item['module'], $item['type']));
@@ -1597,7 +1589,7 @@ class BackendPhotogalleryModel
 	 */
 	public static function updateImage(array $item, array $content = null)
 	{
-		$db = BackendModel::getDB(true);
+		$db = BackendModel::getContainer()->get('database');
 
 		// update
 		if($content !== null) $db->update('photogallery_sets_images_content', $content, 'set_image_id = ? AND album_id = ? AND language = ?', array($content['set_image_id'], $content['album_id'], BL::getWorkingLanguage()));
@@ -1611,7 +1603,7 @@ class BackendPhotogalleryModel
 	 */
 	public static function updateSetStatistics($ids)
 	{
-		$db = BackendModel::getDB(true);
+		$db = BackendModel::getContainer()->get('database');
 
 		// make sure $ids is an array
 		$ids = (array) $ids;
@@ -1640,7 +1632,7 @@ class BackendPhotogalleryModel
 	 */
 	public static function updateAlbumStatistics($ids)
 	{
-		$db = BackendModel::getDB(true);
+		$db = BackendModel::getContainer()->get('database');
 
 		// make sure $ids is an array
 		$ids = (array) $ids;
@@ -1669,7 +1661,7 @@ class BackendPhotogalleryModel
 	public static function updateCategory(array $item, $meta = null)
 	{
 		// get db
-		$db = BackendModel::getDB(true);
+		$db = BackendModel::getContainer()->get('database');
 
 		// update category
 		$updated = $db->update('photogallery_categories', $item, 'id = ?', array((int) $item['id']));
@@ -1698,7 +1690,7 @@ class BackendPhotogalleryModel
 	 */
 	public static function updateAlbumsHidden($ids)
 	{
-		BackendModel::getDB(true)->update('photogallery_albums', array('hidden' => 'Y'), 'id IN(' . implode(',', $ids) . ')');
+		BackendModel::getContainer()->get('database')->update('photogallery_albums', array('hidden' => 'Y'), 'id IN(' . implode(',', $ids) . ')');
 		
 		return $ids;
 	}
@@ -1710,7 +1702,7 @@ class BackendPhotogalleryModel
 	 */
 	public static function updateAlbumsPublished($ids)
 	{
-		BackendModel::getDB(true)->update('photogallery_albums', array('hidden' => 'N'), 'id IN(' . implode(',', $ids) . ')');
+		BackendModel::getContainer()->get('database')->update('photogallery_albums', array('hidden' => 'N'), 'id IN(' . implode(',', $ids) . ')');
 		return $ids;
 	}
 
@@ -1721,7 +1713,7 @@ class BackendPhotogalleryModel
 	 */
 	public static function updateImagesHidden($ids)
 	{
-		BackendModel::getDB(true)->update('photogallery_sets_images', array('hidden' => 'Y'), 'id IN(' . implode(',', $ids) . ')');
+		BackendModel::getContainer()->get('database')->update('photogallery_sets_images', array('hidden' => 'Y'), 'id IN(' . implode(',', $ids) . ')');
 		return $ids;
 	}
 
@@ -1732,7 +1724,7 @@ class BackendPhotogalleryModel
 	 */
 	public static function updateImagesPublished($ids)
 	{
-		BackendModel::getDB(true)->update('photogallery_sets_images', array('hidden' => 'N'), 'id IN(' . implode(',', $ids) . ')');
+		BackendModel::getContainer()->get('database')->update('photogallery_sets_images', array('hidden' => 'N'), 'id IN(' . implode(',', $ids) . ')');
 		return $ids;
 	}
 	
@@ -1749,7 +1741,7 @@ class BackendPhotogalleryModel
 		$id = (int) $id;
 
 		// get db
-		$db = BackendModel::getDB(true);
+		$db = BackendModel::getContainer()->get('database');
 
 		// delete old categories
 		$db->delete('photogallery_categories_albums', 'album_id = ?', $id);

@@ -47,7 +47,6 @@ class PhotogalleryInstaller extends ModuleInstaller
 		$this->setActionRights(1, 'photogallery', 'add_widget_slideshow');
 		$this->setActionRights(1, 'photogallery', 'index');
 		$this->setActionRights(1, 'photogallery', 'categories');
-		$this->setActionRights(1, 'photogallery', 'create_amazon_s3_cronjobs');
 		$this->setActionRights(1, 'photogallery', 'delete');
 		$this->setActionRights(1, 'photogallery', 'delete_category');
 		$this->setActionRights(1, 'photogallery', 'delete_extra');
@@ -134,7 +133,31 @@ class PhotogalleryInstaller extends ModuleInstaller
 		$db = $this->getDB();
 
 		// Block
-		$extraId = $db->insert('photogallery_extras', array('data' => serialize(array('action' => 'lightbox', 'display' => 'albums')), 'action' => null, 'kind' => 'module', 'allow_delete' => 'N', 'edited_on' => gmdate('Y-m-d H:i:00'), 'created_on' => gmdate('Y-m-d H:i:00')));
+		$blockDataSettings = array(
+									'show_close_button' => 'false',
+									'show_arrows' => 'true',
+									'show_caption' => 'true',
+									'caption_type' => 'outside',
+									'padding' =>  25,
+									'margin' => 20,
+									'modal' => 'false',
+									'show_hover_icon' => 'true',
+									'close_click' => 'false',
+									'media_helper' => 'true',
+									'navigation_effect' => 'none',
+									'open_effect' => 'none',
+									'close_effect' => 'none',
+									'play_speed' => 3000,
+									'loop' => 'true',
+									'show_thumbnails' => 'true',
+									'thumbnails_position' => 'bottom',
+									'thumbnail_navigation_width' => 50,
+									'thumbnail_navigation_height' => 50,
+									'show_overlay' => 'true',
+									'overlay_color' => 'rgba(255, 255, 255, 0.85)'
+							);
+
+		$extraId = $db->insert('photogallery_extras', array('data' => serialize(array('action' => 'lightbox', 'display' => 'albums', 'settings' => $blockDataSettings)), 'action' => null, 'kind' => 'module', 'allow_delete' => 'N', 'edited_on' => gmdate('Y-m-d H:i:00'), 'created_on' => gmdate('Y-m-d H:i:00')));
 		$db->insert('photogallery_extras_resolutions', array('extra_id' => $extraId, 'width' => 1200, 'height' => 1200, 'method' => 'resize', 'kind' => 'large'));
 		$db->insert('photogallery_extras_resolutions', array('extra_id' => $extraId, 'width' => 125, 'height' => 125, 'method' => 'crop', 'kind' => 'album_detail_overview_thumbnail'));
 		$db->insert('photogallery_extras_resolutions', array('extra_id' => $extraId, 'width' => 200, 'height' => 200, 'method' => 'crop', 'kind' => 'album_overview_thumbnail'));
@@ -142,10 +165,13 @@ class PhotogalleryInstaller extends ModuleInstaller
 		// Module Extra
 		$extraBlockId = $this->insertExtra('photogallery', 'block', 'Photogallery', null, serialize(array('action' => 'lightbox', 'display' => 'albums', 'extra_id' => $extraId)));
 
+
 		// Slideshow
+		/*
 		$extraId = $db->insert('photogallery_extras', array('action' => 'slideshow', 'kind' => 'widget', 'allow_delete' => 'Y', 'edited_on' => gmdate('Y-m-d H:i:00'), 'created_on' => gmdate('Y-m-d H:i:00')));
 		$db->insert('photogallery_extras_resolutions', array('extra_id' => $extraId, 'width' => 600, 'height' => 350, 'method' => 'crop', 'kind' => 'large'));
-
+		*/
+		
 		// Lightbox
 		/*
 		$extraId = $db->insert('photogallery_extras', array('action' => 'lightbox', 'kind' => 'widget', 'allow_delete' => 'Y', 'edited_on' => gmdate('Y-m-d H:i:00'), 'created_on' => gmdate('Y-m-d H:i:00')));
@@ -223,7 +249,7 @@ class PhotogalleryInstaller extends ModuleInstaller
 				'ip' => isset($_SERVER['REMOTE_ADDR']) ? $_SERVER['REMOTE_ADDR'] : null,
 				'type' => 'module',
 				'name' => 'photogallery',
-				'version' => '2.2',
+				'version' => '3.1.3',
 				'email' => SpoonSession::get('email'),
 				'license_name' => '',
 				'license_key' => '',

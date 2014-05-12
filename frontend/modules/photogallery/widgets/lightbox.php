@@ -39,7 +39,6 @@ class FrontendPhotogalleryWidgetLightbox extends FrontendBaseWidget
 	 */
 	private function getData()
 	{
-		$this->amazonS3Account = FrontendPhotogalleryHelper::existsAmazonS3();
 		$this->record = FrontendPhotogalleryModel::getAlbum($this->data);
 		
 		if(!empty($this->record))
@@ -50,35 +49,12 @@ class FrontendPhotogalleryWidgetLightbox extends FrontendBaseWidget
 			$thumbnail_resolution = FrontendPhotogalleryModel::getExtraResolutionForKind($this->data['extra_id'], 'thumbnail');
 			$large_resolution = FrontendPhotogalleryModel::getExtraResolutionForKind($this->data['extra_id'], 'large');
 
-			// No account has been linked
-			if(!$this->amazonS3Account)
+			foreach($this->record['images'] as &$image)
 			{
-				foreach($this->record['images'] as &$image)
-				{
-					$image['thumbnail_url'] = FRONTEND_FILES_URL . '/' . $this->getModule() . '/sets/frontend/' . $image['set_id'] . '/' . $thumbnail_resolution['width'] . 'x' . $thumbnail_resolution['height'] . '_' . $thumbnail_resolution['method'] . '/' . $image['filename'];
-					$image['large_url'] = FRONTEND_FILES_URL . '/' . $this->getModule() . '/sets/frontend/' . $image['set_id'] . '/' . $large_resolution['width'] . 'x' . $large_resolution['height'] . '_' . $large_resolution['method'] . '/' . $image['filename'];
-				}
+				$image['thumbnail_url'] =  FrontendPhotogalleryHelper::getImageURL($this->getModule(), $image, $thumbnail_resolution);
+				$image['large_url'] = FrontendPhotogalleryHelper::getImageURL($this->getModule(), $image, $large_resolution);
 			}
-			elseif($this->amazonS3Account)
-			{
-				foreach($this->record['images'] as &$image)
-				{
-					// Thumbnail res.
-					$image['thumbnail_url']  = FrontendPhotogalleryHelper::getImageURL(
-						$this->getModule() . '/sets/frontend/' . $image['set_id'] . '/' . $thumbnail_resolution['width'] . 'x' . $thumbnail_resolution['height'] . '_' . $thumbnail_resolution['method'] . '/' . $image['filename']
-					);
-					
-					// Large res.
-					$image['large_url']  = FrontendPhotogalleryHelper::getImageURL(
-						$this->getModule() . '/sets/frontend/' . $image['set_id'] . '/' . $large_resolution['width'] . 'x' . $large_resolution['height'] . '_' . $large_resolution['method'] . '/' . $image['filename']
-					);
-				}
-			}
-			else
-			{
-				// Reset
-				$this->record['images'] = array();
-			}
+			
 		}
 	}
 

@@ -28,6 +28,7 @@ class BackendPhotogalleryAjaxImagesSequence extends BackendBaseAJAXAction
 
 		// list id
 		$ids = (array) explode(',', rtrim($newIdSequence, ','));
+		$count = count($ids);
 
 		// loop id's and set new sequence
 		foreach($ids as $i => $id)
@@ -36,8 +37,8 @@ class BackendPhotogalleryAjaxImagesSequence extends BackendBaseAJAXAction
 			$item['id'] = (int) $id;
 
 			// change sequence
-			$item['sequence'] = $i + 1;
-
+			$item['sequence'] = $count--;
+			
 			// update sequence
 			if(BackendPhotogalleryModel::existsImage($item['id'])) BackendPhotogalleryModel::updateImage($item);
 		}

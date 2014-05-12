@@ -13,16 +13,16 @@ jsBackend.uploadifive =
 									   'album_id': uploadAlbumId,
 									   'fork[module]'     : 'photogallery',
 									   'fork[action]'	: 'upload_image',
-									   'fork[language]'	: 'en'
+									   'fork[language]'	: jsBackend.current.language
 				                     },
 				'queueID'          : 'queue',
 				'uploadScript'     : '/backend/ajax.php',
 				'removeCompleted' : true,
 				'fileType'     : 'image',
 
-				'onUploadComplete' : function(file, data)
+				'onQueueComplete' : function(file, data)
 				{ 
-					//console.log(data);
+					window.location = uploadSuccessURL
 				},
 				'onFallback'   : function() {
 					window.location = uploadFallbackURL

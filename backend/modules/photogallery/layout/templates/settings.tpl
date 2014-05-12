@@ -12,6 +12,12 @@
 		</div>
 
 		<div class="options">
+			<label for="categoriesDepthStart">{$lblCategoriesDepthStart|ucfirst}</label>
+			{$ddmCategoriesDepthStart}
+			{$ddmCategoriesDepthStartError}
+		</div>
+
+		<div class="options">
 			<label for="categoriesDepth">{$lblCategoriesDepth|ucfirst}</label>
 			{$ddmCategoriesDepth}
 			{$ddmCategoriesDepthError}

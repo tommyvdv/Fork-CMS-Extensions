@@ -67,9 +67,6 @@ class FrontendPhotogalleryCategory extends FrontendBaseBlock
 		// init
 		$this->category_view = false;
 		$this->categories_view = false;
-
-		// S3
-		$this->amazonS3Account = FrontendPhotogalleryHelper::existsAmazonS3();
 		
 		// get categories
 		$categories = FrontendPhotogalleryModel::getAllCategories();
@@ -127,22 +124,7 @@ class FrontendPhotogalleryCategory extends FrontendBaseBlock
 					
 					if(!empty($album_cat_row['image']))
 					{
-						// No account has been linked
-						if(!$this->amazonS3Account)
-						{
-							$this->categories[$cat_key]['albums'][$album_cat_key]['image']['thumbnail_url'] =  FRONTEND_FILES_URL . '/' . $this->getModule() . '/sets/frontend/' . $album_cat_row['image']['set_id'] . '/' . $thumbnail_resolution['width'] . 'x' . $thumbnail_resolution['height'] . '_' . $thumbnail_resolution['method'] . '/' . $album_cat_row['image']['filename'];
-						}
-						elseif($this->amazonS3Account)
-						{
-							// Thumbnail res.
-							$this->categories[$cat_key]['albums'][$album_cat_key]['image']['thumbnail_url']  = FrontendPhotogalleryHelper::getImageURL(
-								$this->getModule() . '/sets/frontend/' . $album_cat_row['image']['set_id'] . '/' . $thumbnail_resolution['width'] . 'x' . $thumbnail_resolution['height'] . '_' . $thumbnail_resolution['method'] . '/' . $album_cat_row['image']['filename']
-							);
-						}
-						else
-						{
-							$this->categories[$cat_key]['albums'][$cat_key]['image']['thumbnail_url'] = array();
-						}
+						$this->categories[$cat_key]['albums'][$album_cat_key]['image']['thumbnail_url'] =  FRONTEND_FILES_URL . '/' . $this->getModule() . '/sets/frontend/' . $album_cat_row['image']['set_id'] . '/' . $thumbnail_resolution['width'] . 'x' . $thumbnail_resolution['height'] . '_' . $thumbnail_resolution['method'] . '/' . $album_cat_row['image']['filename'];
 					}
 				}
 			}
@@ -177,22 +159,7 @@ class FrontendPhotogalleryCategory extends FrontendBaseBlock
 				$row['tags'] = FrontendTagsModel::getForItem($this->getModule(), $row['id']);
 				if(!empty($row['image']))
 				{
-					// No account has been linked
-					if(!$this->amazonS3Account)
-					{
-						$row['image']['thumbnail_url'] =  FRONTEND_FILES_URL . '/' . $this->getModule() . '/sets/frontend/' . $row['image']['set_id'] . '/' . $thumbnail_resolution['width'] . 'x' . $thumbnail_resolution['height'] . '_' . $thumbnail_resolution['method'] . '/' . $row['image']['filename'];
-					}
-					elseif($this->amazonS3Account)
-					{
-						// Thumbnail res.
-						$row['image']['thumbnail_url']  = FrontendPhotogalleryHelper::getImageURL(
-							$this->getModule() . '/sets/frontend/' . $row['image']['set_id'] . '/' . $thumbnail_resolution['width'] . 'x' . $thumbnail_resolution['height'] . '_' . $thumbnail_resolution['method'] . '/' . $row['image']['filename']
-						);
-					}
-					else
-					{
-						$row['image']['thumbnail_url'] = array();
-					}
+					$row['image']['thumbnail_url'] = FrontendPhotogalleryHelper::getImageURL($this->getModule(), $row['image'], $thumbnail_resolution);
 				}
 			}
 		}
@@ -205,9 +172,6 @@ class FrontendPhotogalleryCategory extends FrontendBaseBlock
 	 */
 	private function parse()
 	{
-		// add into breadcrumb
-		//$this->breadcrumb->addElement(SpoonFilter::ucfirst(FL::getLabel('Category')), );
-		//$this->breadcrumb->addElement($this->category['label']);
 
 		// add into breadcrumb
 		if($this->category)

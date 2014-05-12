@@ -49,21 +49,6 @@ class BackendPhotogalleryDeleteExtra extends BackendBaseActionDelete
 					{
 						$to = $setsFilesPath . '/frontend/' . $set['id'] . '/' . $resolution['width'] . 'x' . $resolution['height'] . '_' . $resolution['method'];
 						SpoonDirectory::delete($to);
-
-						// Delete cronjob
-						if(BackendPhotogalleryHelper::existsAmazonS3()) BackendAmazonS3Model::deleteCronjobByFullPath($this->URL->getModule(), $this->URL->getModule() . '/sets/frontend/' . $set['id'] . '/' . $resolution['width'] . 'x' . $resolution['height'] . '_' . $resolution['method']);
-					
-						$cronjob = array();
-						$cronjob['module'] = $this->URL->getModule();
-						$cronjob['path'] = $this->URL->getModule() . '/sets/frontend/' . $set['id'] . '/' . $resolution['width'] . 'x' . $resolution['height'] . '_' . $resolution['method'];
-						$cronjob['full_path'] = $cronjob['path'] ;
-						$cronjob['data'] = serialize(array('set_id' => $set['id'], 'image_id' => null));
-						$cronjob['action'] = 'delete';
-						$cronjob['location'] = 's3';
-						$cronjob['created_on'] =  BackendModel::getUTCDate();
-						$cronjob['execute_on'] = BackendModel::getUTCDate();
-
-						if(BackendPhotogalleryHelper::existsAmazonS3()) BackendAmazonS3Model::insertCronjob($cronjob);
 					}
 				}
 			}

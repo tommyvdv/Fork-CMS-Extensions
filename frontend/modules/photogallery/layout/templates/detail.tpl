@@ -52,7 +52,12 @@
 			<ul class="photogalleryDetailLightbox">
 				{iteration:blockPhotogalleryAlbum.images}
 				<li>
-					<a data-image_id="{$blockPhotogalleryAlbum.images.id}" href="{$blockPhotogalleryAlbum.images.large_url}" rel="{$blockPhotogalleryAlbum.id}" class="linkedImage linkOverlay" title="{$blockPhotogalleryAlbum.images.title}">
+					{option:!blockPhotogalleryAlbum.images.data.external_link}
+						<a data-image-id="{$blockPhotogalleryAlbum.images.id}" href="{$var|createimage:{$blockPhotogalleryAlbum.images.set_id}:{$blockPhotogalleryAlbum.images.filename}:{$moduleProjectsDetailLargeResolution.width}:{$moduleProjectsDetailLargeResolution.height}:{$moduleProjectsDetailLargeResolution.method}}" rel="{$blockPhotogalleryAlbum.id}" class="linkedImage linkOverlay" title="{$blockPhotogalleryAlbum.title}">
+					{/option:!blockPhotogalleryAlbum.images.data.external_link}
+					{option:blockPhotogalleryAlbum.images.data.external_link}
+						<a data-image-id="{$blockPhotogalleryAlbum.images.id}" href="{$blockPhotogalleryAlbum.images.data.external_link.url}" rel="{$blockPhotogalleryAlbum.id}" class="linkedImage linkOverlay" title="{$blockPhotogalleryAlbum.title}">
+					{/option:blockPhotogalleryAlbum.images.data.external_link}
 						<img src="{$blockPhotogalleryAlbum.images.thumbnail_url}" />
 					</a>
 					<div class="caption">

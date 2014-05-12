@@ -65,10 +65,6 @@
 	{option:blockPhotogalleryCategoryView}
 	
 		<h1>{$lblOnCategory|sprintf:{$blockPhotogalleryCategory.label}|ucfirst}</h1>
-		
-		{* Subcategories *}
-			<h4>{$lblSubcategories}</h4>
-			{$var|parsewidget:'photogallery':'category_navigation':{$blockPhotogalleryCategory.id}}
 
 		{option:blockPhotogalleryCategoryAlbums}
 			{iteration:blockPhotogalleryCategoryAlbums}

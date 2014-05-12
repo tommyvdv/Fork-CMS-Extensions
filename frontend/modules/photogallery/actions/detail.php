@@ -49,10 +49,7 @@ class FrontendPhotogalleryDetail extends FrontendBaseBlock
 	 */
 	private function getData()
 	{
-		// S3
-		$this->amazonS3Account = FrontendPhotogalleryHelper::existsAmazonS3();
-		
-		
+
 		// validate incoming parameters
 		if($this->URL->getParameter(1) === null) $this->redirect(FrontendNavigation::getURL(404));
 		
@@ -66,36 +63,6 @@ class FrontendPhotogalleryDetail extends FrontendBaseBlock
 
 		$thumbnail_resolution = FrontendPhotogalleryModel::getExtraResolutionForKind($this->data['extra_id'], 'album_detail_overview_thumbnail');
 		$large_resolution = FrontendPhotogalleryModel::getExtraResolutionForKind($this->data['extra_id'], 'large');
-
-		// No account has been linked
-		if(!$this->amazonS3Account)
-		{
-			foreach($this->record['images'] as &$image)
-			{
-				$image['thumbnail_url'] = FRONTEND_FILES_URL . '/' . $this->getModule() . '/sets/frontend/' . $image['set_id'] . '/' . $thumbnail_resolution['width'] . 'x' . $thumbnail_resolution['height'] . '_' . $thumbnail_resolution['method'] . '/' . $image['filename'];
-				$image['large_url'] = FRONTEND_FILES_URL . '/' . $this->getModule() . '/sets/frontend/' . $image['set_id'] . '/' . $large_resolution['width'] . 'x' . $large_resolution['height'] . '_' . $large_resolution['method'] . '/' . $image['filename'];
-			}
-		}
-		elseif($this->amazonS3Account)
-		{
-			foreach($this->record['images'] as &$image)
-			{
-				// Thumbnail res.
-				$image['thumbnail_url']  = FrontendPhotogalleryHelper::getImageURL(
-					$this->getModule() . '/sets/frontend/' . $image['set_id'] . '/' . $thumbnail_resolution['width'] . 'x' . $thumbnail_resolution['height'] . '_' . $thumbnail_resolution['method'] . '/' . $image['filename']
-				);
-				
-				// Large res.
-				$image['large_url']  = FrontendPhotogalleryHelper::getImageURL(
-					$this->getModule() . '/sets/frontend/' . $image['set_id'] . '/' . $large_resolution['width'] . 'x' . $large_resolution['height'] . '_' . $large_resolution['method'] . '/' . $image['filename']
-				);
-			}
-		}
-		else
-		{
-			// Reset
-			$this->record['images'] = array();
-		}
 	}
 
 	/**

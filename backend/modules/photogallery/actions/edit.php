@@ -76,8 +76,15 @@ class BackendPhotogalleryEdit extends BackendBaseActionEdit
 		
 		$today = mktime(00, 00, 00);
 		
-		//$this->categories = BackendPhotogalleryModel::getCategoriesForDropdown(true);
-		$this->categories = BackendPhotogalleryModel::getCategoriesForDropdown(BackendModel::getModuleSetting('photogallery', 'categories_depth', 0));
+		// categories
+		$allowedDepth = BackendModel::getModuleSetting('photogallery', 'categories_depth', 0);
+		$allowedDepthStart = BackendModel::getModuleSetting('photogallery', 'categories_depth_start', 0);
+		$this->categories = BackendPhotogalleryModel::getCategoriesForDropdown(
+			array(
+				$allowedDepthStart,
+				$allowedDepth == 0 ? 0 : $allowedDepth + 1
+			)
+		);
 		
 		// create elements
 		$this->frm->addText('title', $this->record['title'], null, 'inputText title', 'inputTextError title');
@@ -102,6 +109,8 @@ class BackendPhotogalleryEdit extends BackendBaseActionEdit
 			$this->frm->getField('new_date_until')->setAttribute('disabled', 'disabled');
 		}
 		
+		$this->frm->addCheckbox('show_in_albums', $this->record['show_in_albums'] === 'Y');
+
 		// meta
 		$this->meta = new BackendMeta($this->frm, $this->record['meta_id'], 'title', true);
 		
@@ -128,7 +137,7 @@ class BackendPhotogalleryEdit extends BackendBaseActionEdit
 		$this->dataGrid->setPaging(false);
 
 		// set colum URLs
-		$this->dataGrid->setColumnURL('filename', BackendModel::createURLForAction('edit_image') . '&amp;id=[id]&amp;album_id=' . $this->id);
+		//$this->dataGrid->setColumnURL('preview', BackendModel::createURLForAction('edit_image') . '&amp;id=[id]&amp;album_id=' . $this->id);
 
 		// set colums hidden
 		// $this->dataGrid->setColumnsHidden(array('category_id', 'sequence'));
@@ -143,12 +152,13 @@ class BackendPhotogalleryEdit extends BackendBaseActionEdit
 		
 		
 		$this->dataGrid->setColumnFunction(create_function('$is_hidden','return $is_hidden = $is_hidden == "Y" ? SpoonFilter::ucfirst(Bl::getLabel("Yes")) : SpoonFilter::ucfirst(Bl::getLabel("No"));'),array('[is_hidden]'),'is_hidden',true);
-		
+		$this->dataGrid->setColumnFunction(create_function('$title_hidden, $title','return $title_hidden == "Y" ? "" : $title;'),array('[title_hidden]','[title]'),'title',true);
+
 		// make sure the column with the handler is the first one
 		$this->dataGrid->setColumnsSequence('dragAndDropHandle','checkbox','preview','is_hidden','title','text','edit');
 		
 		// Hidden
-		$this->dataGrid->setColumnHidden('filename');
+		$this->dataGrid->setColumnsHidden(array('filename', 'title_hidden'));
 
 		// add a class on the handler column, so JS knows this is just a handler
 		$this->dataGrid->setColumnAttributes('dragAndDropHandle', array('class' => 'dragAndDropHandle'));
@@ -156,7 +166,7 @@ class BackendPhotogalleryEdit extends BackendBaseActionEdit
 		// our JS needs to know an id, so we can send the new order
 		$this->dataGrid->setRowAttributes(array('id' => '[id]'));
 		
-		$this->dataGrid->setAttributes(array('data-action' => "album_images_sequence"));
+		$this->dataGrid->setAttributes(array('data-action' => "images_sequence"));
 		
 		// add mass action dropdown
 		$ddmMassAction = new SpoonFormDropdown('action', array('delete' => BL::getLabel('Delete'), 'hide' => BL::getLabel('Hide'), 'publish' => BL::getLabel('Publish')), 'delete');
@@ -229,6 +239,7 @@ class BackendPhotogalleryEdit extends BackendBaseActionEdit
 				$item['text'] = $this->frm->getField('text')->getValue();
 				$item['edited_on'] = BackendModel::getUTCDate();
 				$item['hidden'] = $this->frm->getField('hidden')->getValue();
+				$item['show_in_albums'] = $this->frm->getField('show_in_albums')->isChecked() ? 'Y' : 'N';
 				$item['publish_on'] = BackendModel::getUTCDate(null, BackendModel::getUTCTimestamp($this->frm->getField('publish_on_date'), $this->frm->getField('publish_on_time')));
 				$item['id'] = $this->id;
 				
@@ -304,13 +315,6 @@ class BackendPhotogalleryEdit extends BackendBaseActionEdit
 					// Delete files
 					$setsFilesPath = FRONTEND_FILES_PATH . '/' . $this->URL->getModule() . '/sets';
 					
-					
-					foreach($ids as $id)
-					{
-						// Delete cronjob
-						if(BackendPhotogalleryHelper::existsAmazonS3()) BackendAmazonS3Model::deleteCronjobByData($this->URL->getModule(), 's:8:"image_id";i:' . (int) $id . ';');
-					}
-					
 					foreach($ids as $id)
 					{
 						$image = BackendPhotogalleryModel::getImageWithContent($id, $this->id);
@@ -329,18 +333,6 @@ class BackendPhotogalleryEdit extends BackendBaseActionEdit
 						foreach($resolutions as $resolution)
 						{
 							SpoonFile::delete($setsFilesPath . '/frontend/' . $this->record['set_id'] . '/' . $resolution['width'] . 'x' . $resolution['height'] . '_' . $resolution['method'] . '/' . $image['filename']);
-							
-							$cronjob = array();
-							$cronjob['module'] = $this->URL->getModule();
-							$cronjob['path'] = $this->URL->getModule() . '/sets/frontend/' . $this->record['set_id'] . '/' . $resolution['width'] . 'x' . $resolution['height'] . '_' . $resolution['method'];
-							$cronjob['filename'] = $image['filename'];
-							$cronjob['full_path'] = $cronjob['path'] . '/' . $cronjob['filename'];
-							$cronjob['data'] = serialize(array('set_id' => $this->record['set_id'], 'image_id' => $id));
-							$cronjob['action'] = 'delete';
-							$cronjob['location'] = 's3';
-							$cronjob['created_on'] =  BackendModel::getUTCDate();
-							$cronjob['execute_on'] = BackendModel::getUTCDate();
-							if(BackendPhotogalleryHelper::existsAmazonS3()) BackendAmazonS3Model::insertCronjob($cronjob);
 						}
 					}
 					
@@ -351,21 +343,6 @@ class BackendPhotogalleryEdit extends BackendBaseActionEdit
 					foreach($emptySetsAfterDelete as $id)
 					{
 						SpoonDirectory::delete($setsFilesPath . '/' . $id);
-
-						$cronjob = array();
-						$cronjob['module'] = $this->URL->getModule();
-						$cronjob['path'] = $this->URL->getModule() . '/sets/' . $id;
-						$cronjob['full_path'] = $cronjob['path'];
-						$cronjob['data'] = serialize(array('set_id' => $id, 'image_id' => null));
-						$cronjob['action'] = 'delete';
-						$cronjob['location'] = 's3';
-						$cronjob['created_on'] =  BackendModel::getUTCDate();
-						$cronjob['execute_on'] = BackendModel::getUTCDate();
-						
-						// Are there any cronjobs with the same prefix? Delete them
-						if(BackendPhotogalleryHelper::existsAmazonS3()) BackendAmazonS3Model::deleteCronjobByFullPathLike($this->URL->getModule(), $cronjob['full_path']);
-
-						if(BackendPhotogalleryHelper::existsAmazonS3()) BackendAmazonS3Model::insertCronjob($cronjob);
 					}
 					
 					BackendPhotogalleryModel::updateSetStatistics($this->record['set_id']);

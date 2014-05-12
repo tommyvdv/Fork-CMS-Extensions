@@ -46,7 +46,6 @@ class FrontendPhotogalleryWidgetRelatedListByTags extends FrontendBaseWidget
 		{
 			$limit = FrontendModel::getModuleSetting('photogallery', 'related_list_tags_number_of_items', 10);
 			
-			// validate incoming parameters
 			if($this->URL->getParameter(1) !== null) $this->records = FrontendPhotogalleryModel::getRelatedByTags($this->URL->getParameter(1), $limit);
 		}
 	}

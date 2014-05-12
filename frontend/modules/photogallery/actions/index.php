@@ -54,9 +54,8 @@ class FrontendPhotogalleryIndex extends FrontendBaseBlock
 	 */
 	private function getData()
 	{		
-		// S3
-		$this->amazonS3Account = FrontendPhotogalleryHelper::existsAmazonS3();
 		$thumbnail_resolution = FrontendPhotogalleryModel::getExtraResolutionForKind($this->data['extra_id'], 'album_overview_thumbnail');
+
 		if($this->data['display'] == 'albums')
 		{
 			// requested page
@@ -88,22 +87,7 @@ class FrontendPhotogalleryIndex extends FrontendBaseBlock
 				$item['tags'] = FrontendTagsModel::getForItem($this->getModule(), $item['id']);
 				if(!empty($item['image']))
 				{
-					// No account has been linked
-					if(!$this->amazonS3Account)
-					{
-						$item['image']['thumbnail_url'] =  FRONTEND_FILES_URL . '/' . $this->getModule() . '/sets/frontend/' . $item['image']['set_id'] . '/' . $thumbnail_resolution['width'] . 'x' . $thumbnail_resolution['height'] . '_' . $thumbnail_resolution['method'] . '/' . $item['image']['filename'];
-					}
-					elseif($this->amazonS3Account)
-					{
-						// Thumbnail res.
-						$item['image']['thumbnail_url'] = FrontendPhotogalleryHelper::getImageURL(
-							$this->getModule() . '/sets/frontend/' . $item['image']['set_id'] . '/' . $thumbnail_resolution['width'] . 'x' . $thumbnail_resolution['height'] . '_' . $thumbnail_resolution['method'] . '/' . $item['image']['filename']
-						);
-					}
-					else
-					{
-						$item['image']['thumbnail_url'] = array();
-					}
+					$item['image']['thumbnail_url']  = FrontendPhotogalleryHelper::getImageURL($this->getModule(), $item['image'], $thumbnail_resolution);
 				}
 			}
 			
@@ -118,25 +102,9 @@ class FrontendPhotogalleryIndex extends FrontendBaseBlock
 		{
 			$categories = FrontendPhotogalleryModel::getAllCategoriesWithImage();
 			
-			
 			foreach($categories as &$item)
 			{
-				// No account has been linked
-				if(!$this->amazonS3Account)
-				{
-					$item['filename_url'] =  FRONTEND_FILES_URL . '/' . $this->getModule() . '/sets/frontend/' . $item['set_id'] . '/' . $thumbnail_resolution['width'] . 'x' . $thumbnail_resolution['height'] . '_' .$thumbnail_resolution['method'] . '/' . $item['filename'];
-				}
-				elseif($this->amazonS3Account)
-				{
-					// Thumbnail res.
-					$item['filename_url'] = FrontendPhotogalleryHelper::getImageURL(
-						$this->getModule() . '/sets/frontend/' . $item['set_id'] . '/' . $thumbnail_resolution['width'] . 'x' . $thumbnail_resolution['height'] . '_' . $thumbnail_resolution['method'] . '/' . $item['filename']
-					);
-				}
-				else
-				{
-					$item['filename_url'] = array();
-				}
+				$item['filename_url']   = FrontendPhotogalleryHelper::getImageURL($this->getModule(), $item, $thumbnail_resolution);
 			}
 			
 			$this->tpl->assign('modulePhotogalleryCategories', $categories);

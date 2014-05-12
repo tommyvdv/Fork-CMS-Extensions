@@ -44,8 +44,6 @@ class FrontendPhotogalleryRSS extends FrontendBaseBlock
 	 */
 	private function getData()
 	{
-		// S3
-		$this->amazonS3Account = FrontendPhotogalleryHelper::existsAmazonS3();
 		$thumbnail_resolution = FrontendPhotogalleryModel::getExtraResolutionForKind($this->data['extra_id'], 'album_overview_thumbnail');
 
 		// requested page
@@ -78,34 +76,10 @@ class FrontendPhotogalleryRSS extends FrontendBaseBlock
 
 		foreach($this->items as &$row)
 		{
-			// No account has been linked
-			if(!$this->amazonS3Account)
+			foreach($row['images'] as &$image)
 			{
-				foreach($row['images'] as &$image)
-				{
-					$image['thumbnail_url'] = FRONTEND_FILES_URL . '/' . $this->getModule() . '/sets/frontend/' . $image['set_id'] . '/' . $thumbnail_resolution['width'] . 'x' . $thumbnail_resolution['height'] . '_' . $thumbnail_resolution['method'] . '/' . $image['filename'];
-					$image['large_url'] = FRONTEND_FILES_URL . '/' . $this->getModule() . '/sets/frontend/' . $image['set_id'] . '/' . $large_resolution['width'] . 'x' . $large_resolution['height'] . '_' . $large_resolution['method'] . '/' . $image['filename'];
-				}
-			}
-			elseif($this->amazonS3Account)
-			{
-				foreach($row['images'] as &$image)
-				{
-					// Thumbnail res.
-					$image['thumbnail_url']  = FrontendPhotogalleryHelper::getImageURL(
-						$this->getModule() . '/sets/frontend/' . $image['set_id'] . '/' . $thumbnail_resolution['width'] . 'x' . $thumbnail_resolution['height'] . '_' . $thumbnail_resolution['method'] . '/' . $image['filename']
-					);
-					
-					// Large res.
-					$image['large_url']  = FrontendPhotogalleryHelper::getImageURL(
-						$this->getModule() . '/sets/frontend/' . $image['set_id'] . '/' . $large_resolution['width'] . 'x' . $large_resolution['height'] . '_' . $large_resolution['method'] . '/' . $image['filename']
-					);
-				}
-			}
-			else
-			{
-				// Reset
-				$row['images'] = array();
+				$image['thumbnail_url'] = FRONTEND_FILES_URL . '/' . $this->getModule() . '/sets/frontend/' . $image['set_id'] . '/' . $thumbnail_resolution['width'] . 'x' . $thumbnail_resolution['height'] . '_' . $thumbnail_resolution['method'] . '/' . $image['filename'];
+				$image['large_url'] = FRONTEND_FILES_URL . '/' . $this->getModule() . '/sets/frontend/' . $image['set_id'] . '/' . $large_resolution['width'] . 'x' . $large_resolution['height'] . '_' . $large_resolution['method'] . '/' . $image['filename'];
 			}
 		}
 

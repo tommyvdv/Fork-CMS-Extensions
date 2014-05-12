@@ -12,17 +12,6 @@
  */
 class FrontendPhotogalleryHelper
 {
-	/**
-	 * Check if Amazon S3 exists
-	 *
-	 * @return bool
-	 */
-	public static function existsAmazonS3()
-	{
-		if(is_callable(array('FrontendAmazonS3Helper', 'getSetting'))) return FrontendAmazonS3Helper::getSetting('account');
-		return false;
-	}
-
 
 	/**
 	 * Generate a correct path
@@ -70,28 +59,22 @@ class FrontendPhotogalleryHelper
 	 * @param string $path The path.
 	 * @return string
 	 */
-	public static function getImageURL($path)
+	public static function getImageURL($module, $image, $resolution)
 	{
-		// Redefine
-		$path = (string) $path;
-		$url = false;
+		$original 	= $module . '/sets/original/' . $image['set_id'] . '/'  . $image['filename'];
+		$image 		= $module . '/sets/frontend/' . $image['set_id'] . '/' . $resolution['width'] . 'x' . $resolution['height'] . '_'  . $resolution['method'] . '/'  . $image['filename'];
 		
-		if(SpoonFile::exists(FRONTEND_FILES_PATH . '/' . $path) && !FrontendAmazonS3Model::existsCronjobPutByFullPath('photogallery', $path))
+		if( ! SpoonFile::exists(FRONTEND_FILES_PATH . '/' . $image) && SpoonFile::exists(FRONTEND_FILES_PATH . '/' . $original)   )
 		{
-			$url = FRONTEND_FILES_URL . '/' . $path;
+			$forceOriginalAspectRatio = $resolution['method'] == 'crop' ? false : true;
+			$allowEnlargement = true;
+			
+			$thumb = new SpoonThumbnail(FRONTEND_FILES_PATH . '/' . $original, $resolution['width'], $resolution['height']);
+			$thumb->setAllowEnlargement($allowEnlargement);
+			$thumb->setForceOriginalAspectRatio($forceOriginalAspectRatio);
+			$thumb->parseToFile(FRONTEND_FILES_PATH . '/' . $image,	100);
 		}
-		else
-		{
-			if(FrontendAmazonS3Model::existsCronjobPutByFullPath('photogallery', $path))
-			{
-				$url = FRONTEND_FILES_URL . '/' . $path;
-			}
-			else
-			{
-				$url = FrontendAmazonS3Helper::getSetting('url') . $path;
-			}
-		}
-		
-		return $url;
+
+		return FRONTEND_FILES_URL . '/' . $image;
 	}
 }

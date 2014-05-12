@@ -20,16 +20,17 @@
 							<label for="title">{$lblTitle|ucfirst}<abbr title="{$lblRequiredField}">*</abbr></label>
 							{$txtTitle} {$txtTitleError}
 						</p>
-						<div class="options">
-							{option:categories}
-								<label for="parentId">{$lblParent|ucfirst}</label>
-								{$ddmParentId} {$ddmParentIdError}
-							{/option:categories}
-							{option:!categories}
-								{$msgNoParents|sprintf:{$var|geturl:'add_category'}}
-							{/option:!categories}
-							
-						</div>
+						{option:categories_depth}
+							<div class="options">
+								{option:categories}
+									<label for="parentId">{$lblParent|ucfirst}</label>
+									{$ddmParentId} {$ddmParentIdError}
+								{/option:categories}
+								{option:!categories}
+									{$msgNoParents|sprintf:{$var|geturl:'add_category'}}
+								{/option:!categories}
+							</div>
+						{/option:categories_depth}
 					</td>
 				</tr>
 			</table>

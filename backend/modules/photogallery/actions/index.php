@@ -63,8 +63,13 @@ class BackendPhotogalleryIndex extends BackendBaseActionIndex
 		$parameters = array();
 
 		// basic query
-		$query = 'SELECT l.id, l.sequence, l.title, l.num_images, l.hidden as is_hidden, UNIX_TIMESTAMP(l.publish_on) as publish_on, l.num_images_not_hidden
+		$query = 'SELECT l.id, l.sequence, l.title, l.num_images, l.hidden as is_hidden, UNIX_TIMESTAMP(l.publish_on) as publish_on, l.num_images_not_hidden,
+					GROUP_CONCAT(c.title SEPARATOR ", ") AS categories
 				FROM photogallery_albums AS l
+					INNER JOIN meta AS m ON l.meta_id = m.id
+					LEFT JOIN photogallery_categories_albums AS a ON l.id = a.album_id
+					LEFT JOIN photogallery_categories AS c ON a.category_id = c.id
+					LEFT JOIN meta AS cm ON cm.id = c.meta_id
 				WHERE 1';
 
 		// add title
@@ -84,6 +89,9 @@ class BackendPhotogalleryIndex extends BackendBaseActionIndex
 		$query .= ' AND l.language = ?';
 		$parameters[] = BL::getWorkingLanguage();
 
+		// unique album ids
+		$query .= ' GROUP BY l.id';
+
 		// query + parameters
 		return array($query, $parameters);
 	}
@@ -99,11 +107,12 @@ class BackendPhotogalleryIndex extends BackendBaseActionIndex
 		// create dataGrid
 		$this->dataGrid = new BackendDataGridDB($query, $parameters);
 		$this->dataGrid->setMassActionCheckboxes('checkbox', '[id]');
+		$this->dataGrid->setSortParameter('desc');
 
 		$this->dataGrid->enableSequenceByDragAndDrop();
 
 		// sorting columns
-		$this->dataGrid->setSortingColumns(array('title','publish_on'), 'sequence');
+		$this->dataGrid->setSortingColumns(array('title','publish_on', 'sequence'), 'sequence');
 
 		// set colum URLs
 		$this->dataGrid->setColumnURL('title', BackendModel::createURLForAction('edit') . '&amp;id=[id]');
@@ -125,7 +134,7 @@ class BackendPhotogalleryIndex extends BackendBaseActionIndex
 
 		$this->dataGrid->setColumnAttributes('num_images', array('class' => 'small'));
 
-		$this->dataGrid->setColumnsSequence(array('dragAndDropHandle','checkbox','preview','num_images','title','publish_on','is_hidden','edit'));
+		$this->dataGrid->setColumnsSequence(array('dragAndDropHandle','checkbox','preview','num_images','title','publish_on', 'categories','is_hidden','edit'));
 
 		// add mass action dropdown
 		$ddmMassAction = new SpoonFormDropdown('action', array('delete' => BL::getLabel('Delete'), 'hide' => BL::getLabel('Hide'), 'publish' => BL::getLabel('Publish')), 'delete');
@@ -135,6 +144,8 @@ class BackendPhotogalleryIndex extends BackendBaseActionIndex
 		$ddmMassAction->setOptionAttributes('published', array('data-message-id' => 'confirmPublished'));
 		$this->dataGrid->setMassAction($ddmMassAction);
 		$this->dataGrid->setAttributes(array('data-action' => "sequence"));
+
+
 	}
 
 	/**

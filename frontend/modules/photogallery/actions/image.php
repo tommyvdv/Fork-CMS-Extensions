@@ -49,10 +49,7 @@ class FrontendPhotogalleryImage extends FrontendBaseBlock
 	 */
 	private function getData()
 	{
-		// S3
-		$this->amazonS3Account = FrontendPhotogalleryHelper::existsAmazonS3();
-		
-		
+
 		// validate incoming parameters
 		if($this->URL->getParameter(1) === null) $this->redirect(FrontendNavigation::getURL(404));
 		
@@ -65,22 +62,8 @@ class FrontendPhotogalleryImage extends FrontendBaseBlock
 		$this->record['tags'] = FrontendTagsModel::getForItem($this->getModule(), $this->record['album_id']);
 		
 		$large_resolution = FrontendPhotogalleryModel::getExtraResolutionForKind($this->data['extra_id'], 'large');
-	
-		// No account has been linked
-		if(!$this->amazonS3Account)
-		{
-			$this->record['large_url'] =  FRONTEND_FILES_URL . '/' . $this->getModule() . '/sets/frontend/' . $this->record['set_id'] . '/' . $large_resolution['width'] . 'x' . $large_resolution['height'] . '_' . $large_resolution['method'] . '/' . $this->record['filename'];
-		}
-		elseif($this->amazonS3Account)
-		{
-			$this->record['large_url'] = FrontendPhotogalleryHelper::getImageURL(
-				$this->getModule() . '/sets/frontend/' . $this->record['set_id'] . '/' . $large_resolution['width'] . 'x' . $large_resolution['height'] . '_' . $large_resolution['method'] . '/' . $this->record['filename']
-			);
-		}
-		else
-		{
-			$this->record['large_url'] = array();
-		}
+		
+		$this->record['large_url'] = FrontendPhotogalleryHelper::getImageURL($this->getModule(), $this->record, $large_resolution);
 	}
 
 	/**

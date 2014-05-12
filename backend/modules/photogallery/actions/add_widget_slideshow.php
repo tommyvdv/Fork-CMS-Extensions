@@ -44,9 +44,22 @@ class BackendPhotogalleryAddWidgetSlideshow extends BackendBaseActionAdd
 		$this->frm = new BackendForm('addWidget');
 
 		// create elements
+		$this->frm->addText('title', null, null, 'inputText title', 'inputTextError title');
 		$this->frm->addText('large_width');
 		$this->frm->addText('large_height');
 		$this->frm->addDropdown('large_method', array('crop' => BL::getLabel('Crop'), 'resize' => BL::getLabel('Resize')))->setDefaultElement(SpoonFilter::ucfirst(BL::getLabel('ChooseAResizeMethod')));
+		
+		$this->frm->addDropdown('show_caption', array('false' => ucfirst(BL::getLabel('No')), 'true' => ucfirst(BL::getLabel('Yes'))), 'false');
+		$this->frm->addDropdown('show_pagination', array('false' => ucfirst(BL::getLabel('No')), 'true' => ucfirst(BL::getLabel('Yes'))), 'true');
+		$this->frm->addDropdown('show_arrows', array('false' => ucfirst(BL::getLabel('No')), 'true' => ucfirst(BL::getLabel('Yes'))), 'true');
+		$this->frm->addDropdown('pause_on_hover', array('false' => ucfirst(BL::getLabel('No')), 'true' => ucfirst(BL::getLabel('Yes'))), 'true');
+		$this->frm->addDropdown('random', array('false' => ucfirst(BL::getLabel('No')), 'true' => ucfirst(BL::getLabel('Yes'))), 'false');
+		$this->frm->addText('slideshow_speed', 7000);
+		$this->frm->addText('animation_speed', 600);
+		$this->frm->addDropdown('pagination_type', array('bullets' => ucfirst(BL::getLabel('Bullets')), 'numbers' => ucfirst(BL::getLabel('Numbers')) , 'thumbnails' => ucfirst(BL::getLabel('Thumbnails'))), 'bullets');
+		
+		$this->frm->addDropdown('animation', array('fade' => ucfirst(BL::getLabel('Fade')), 'slide' => ucfirst(BL::getLabel('Slide'))));
+		$this->frm->addText('slideshow_item_width', 0);
 	}
 
 	/**
@@ -80,16 +93,41 @@ class BackendPhotogalleryAddWidgetSlideshow extends BackendBaseActionAdd
 			self::validateResolution('large_width');
 			self::validateResolution('large_height');
 			$this->frm->getField('large_method')->isFilled(BL::getError('FieldIsRequired'));
+		
+			$this->frm->getField('title')->isFilled(BL::getError('TitleIsRequired'));
+			$this->frm->getField('slideshow_speed')->isFilled(BL::getError('FieldIsRequired'));
+			$this->frm->getField('animation_speed')->isFilled(BL::getError('FieldIsRequired'));
+
+			if($this->frm->getField('slideshow_item_width')->isFilled(BL::getError('FieldIsRequired'))) $this->frm->getField('slideshow_item_width')->isNumeric(BL::getError('InvalidNumber'));
 
 			// no errors?
 			if($this->frm->isCorrect())
 			{
+				$title = $this->frm->getField('title')->getValue();
+
 				// build item
 				$item['kind'] = 'widget';
 				$item['action'] = 'slideshow';
 				$item['allow_delete'] = 'Y';
 				$item['created_on'] = BackendModel::getUTCDate();
 				$item['edited_on'] = BackendModel::getUTCDate();
+				$item['data'] = serialize(
+									array(
+										'settings' => array(
+												'title' => $title,
+												'show_caption' => $this->frm->getField('show_caption')->getValue(),
+												'show_pagination' => $this->frm->getField('show_pagination')->getValue(),
+												'show_arrows' => $this->frm->getField('show_arrows')->getValue(),
+												'pause_on_hover' => $this->frm->getField('pause_on_hover')->getValue(),
+												'random' => $this->frm->getField('random')->getValue(),
+												'slideshow_speed' => $this->frm->getField('slideshow_speed')->getValue(),
+												'animation_speed' => $this->frm->getField('animation_speed')->getValue(),
+												'pagination_type' => $this->frm->getField('pagination_type')->getValue(),
+												'animation' => $this->frm->getField('animation')->getValue(),
+												'slideshow_item_width' => $this->frm->getField('slideshow_item_width')->getValue(),
+										)
+									)
+								);
 
 				// insert the item
 				$item['id'] = BackendPhotogalleryModel::insertExtra($item);
@@ -100,50 +138,8 @@ class BackendPhotogalleryAddWidgetSlideshow extends BackendBaseActionAdd
 				$resolutionLarge['method'] = $this->frm->getField('large_method')->getValue();
 				$resolutionLarge['kind'] = 'large';
 
-				$exists = BackendPhotogalleryModel::existsResolution($resolutionLarge['width'], $resolutionLarge['height'], $resolutionLarge['kind']);
-
-				if(!$exists)
-				{
-					foreach(BackendPhotogalleryModel::getAllImages() as $image)
-					{
-						
-						$from = $this->URL->getModule() . '/sets/original/' . $image['set_id'] . '/' . $image['filename'];
-						
-						SpoonDirectory::create(FRONTEND_FILES_PATH . '/' . $this->URL->getModule() . '/sets/original/' . $image['set_id']);
-						
-						$this->fromAmazonS3 = BackendPhotogalleryHelper::processOriginalImage($from);
-						$from = FRONTEND_FILES_PATH . '/' . $this->URL->getModule() . '/sets/original/' . $image['set_id'] . '/' . $image['filename'];
-						$to = FRONTEND_FILES_PATH . '/' . $this->URL->getModule() . '/sets/frontend/' . $image['set_id'] . '/' . $resolutionLarge['width'] . 'x' . $resolutionLarge['height'] . '_' . $resolutionLarge['method'] . '/' . $image['filename'];
-						
-						// Does the source file exists?
-						if(SpoonFile::exists($from))
-						{
-							$resize = $resolutionLarge['method'] == 'resize' ? true : false;
-							$thumb = new SpoonThumbnail($from, $resolutionLarge['width'] , $resolutionLarge['height']);
-							$thumb->setAllowEnlargement(true);
-							$thumb->setForceOriginalAspectRatio($resize);
-							$thumb->parseToFile($to);
-							
-							// Put
-							$cronjob = array();
-							$cronjob['module'] = $this->URL->getModule();
-							$cronjob['path'] = $this->URL->getModule() . '/sets/frontend/' . $image['set_id'] . '/' . $resolutionLarge['width'] . 'x' . $resolutionLarge['height'] . '_' . $resolutionLarge['method'];
-							$cronjob['filename'] = $image['filename'];
-							$cronjob['full_path'] = $cronjob['path'] . '/' . $cronjob['filename'];
-							$cronjob['data'] = serialize(array('set_id' => $image['set_id'], 'image_id' => $image['id'], 'delete_local' => true, 'delete_local_in_time' => BackendPhotogalleryModel::DELETE_LOCAL_IN_TIME));
-							$cronjob['action'] = 'put';
-							$cronjob['location'] = 's3';
-							
-							$cronjob['created_on'] =  BackendModel::getUTCDate();
-							$cronjob['execute_on'] = BackendModel::getUTCDate();
-							if(BackendPhotogalleryHelper::existsAmazonS3()) BackendAmazonS3Model::insertCronjob($cronjob);
-							
-							if($this->fromAmazonS3) SpoonFile::delete($from);
-						}
-					}
-				}
-
 				BackendPhotogalleryModel::insertExtraResolution($resolutionLarge);
+
 
 				// Create all widgets for each album
 				foreach(BackendPhotogalleryModel::getAllAlbums() as $album)
@@ -151,7 +147,7 @@ class BackendPhotogalleryAddWidgetSlideshow extends BackendBaseActionAdd
 					
 					$resolutionsLabel = BackendPhotogalleryHelper::getResolutionsForExtraLabel($item['id']);
 
-					$label = $album['title'] . ' | ' . BackendTemplateModifiers::toLabel($item['action']) . ' | ' . $resolutionsLabel;
+					$label = $album['title'] . ' | ' . BackendTemplateModifiers::toLabel($item['action']) . ' | '  . $title . ' | ' . $resolutionsLabel;
 
 					$extra['module'] = $this->getModule();
 					$extra['label'] = $item['action'];

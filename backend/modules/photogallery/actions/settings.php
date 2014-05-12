@@ -34,8 +34,15 @@ class BackendPhotogallerySettings extends BackendBaseActionEdit
 	{
 		$this->frm = new BackendForm('settings');
 
+		$depths = array_merge(
+			array(null => BL::lbl('NotAllowed'), 0 => BL::lbl('infinity')),
+			array_combine(range(1, 5), range(1, 5))
+		);
+
 		// add fields for pagination
-		$this->frm->addDropdown('categories_depth', array_combine(range(0, 5), range(0, 5)), BackendModel::getModuleSetting($this->URL->getModule(), 'categories_depth', 1));
+		$this->frm->addDropdown('categories_depth_start', array_combine(range(0, 5), range(0, 5)), BackendModel::getModuleSetting($this->URL->getModule(), 'categories_depth_start'));
+		$this->frm->addDropdown('categories_depth', $depths, BackendModel::getModuleSetting($this->URL->getModule(), 'categories_depth'));
+
 		$this->frm->addDropdown('overview_albums_number_of_items', array_combine(range(1, 30), range(1, 30)), BackendModel::getModuleSetting($this->URL->getModule(), 'overview_albums_number_of_items', 10));
 		$this->frm->addDropdown('overview_categories_number_of_items', array_combine(range(1, 30), range(1, 30)), BackendModel::getModuleSetting($this->URL->getModule(), 'overview_categories_number_of_items', 10));
 		$this->frm->addDropdown('related_list_categories_number_of_items', array_combine(range(1, 30), range(1, 30)), BackendModel::getModuleSetting($this->URL->getModule(), 'related_list_categories_number_of_items', 10));
@@ -56,7 +63,6 @@ class BackendPhotogallerySettings extends BackendBaseActionEdit
 		$this->frm->addText('license_name', BackendModel::getModuleSetting($this->URL->getModule(), 'license_name'));
 		$this->frm->addText('license_key', BackendModel::getModuleSetting($this->URL->getModule(), 'license_key'));
 		$this->frm->addText('license_domain', BackendModel::getModuleSetting($this->URL->getModule(), 'license_domain'));
-		
 	}
 
 	/**
@@ -103,7 +109,10 @@ class BackendPhotogallerySettings extends BackendBaseActionEdit
 			if($this->frm->isCorrect())
 			{
 				// set our settings
-				BackendModel::setModuleSetting($this->URL->getModule(), 'categories_depth', (int) $this->frm->getField('categories_depth')->getValue());
+				//Spoon::dump($this->frm->getField('categories_depth')->getValue());
+				$selected_depth = $this->frm->getField('categories_depth')->getValue() != null ? $this->frm->getField('categories_depth')->getValue() : null;
+				BackendModel::setModuleSetting($this->URL->getModule(), 'categories_depth_start', $this->frm->getField('categories_depth_start')->getValue());
+				BackendModel::setModuleSetting($this->URL->getModule(), 'categories_depth', $selected_depth);
 				BackendModel::setModuleSetting($this->URL->getModule(), 'overview_albums_number_of_items', (int) $this->frm->getField('overview_albums_number_of_items')->getValue());
 				BackendModel::setModuleSetting($this->URL->getModule(), 'overview_categories_number_of_items', (int) $this->frm->getField('overview_categories_number_of_items')->getValue());
 				BackendModel::setModuleSetting($this->URL->getModule(), 'related_list_categories_number_of_items', (int) $this->frm->getField('related_list_categories_number_of_items')->getValue());
