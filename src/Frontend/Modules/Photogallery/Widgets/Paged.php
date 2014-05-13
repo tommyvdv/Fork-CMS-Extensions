@@ -1,9 +1,12 @@
 <?php
 
-namespace Backend\Modules\Photogallery\Widgets;
+namespace Frontend\Modules\Photogallery\Widgets;
 
-use Backend\Core\Engine\Base\Widget as BackendBaseWidget;
-use Backend\Modules\Photogallery\Engine\Model as BackendPhotogalleryModel;
+use Frontend\Core\Engine\Base\Widget as FrontendBaseWidget;
+use Frontend\Core\Engine\Language as FL;
+use Frontend\Core\Engine\Model as FrontendModel;
+use Frontend\Core\Engine\Navigation as FrontendNavigation;
+use Frontend\Modules\Photogallery\Engine\Model as FrontendPhotogalleryModel;
 use Frontend\Modules\Photogallery\Engine\Helper as FrontendPhotogalleryHelper;
 
 /**
@@ -12,7 +15,7 @@ use Frontend\Modules\Photogallery\Engine\Helper as FrontendPhotogalleryHelper;
  * @author Tijs Verkoyen <tijs@sumocoders.be>
  * @author Davy Hellemans <davy.hellemans@netlash.com>
  */
-class Paged extends BackendBaseWidget
+class Paged extends FrontendBaseWidget
 {
     /**
      * Execute the extra

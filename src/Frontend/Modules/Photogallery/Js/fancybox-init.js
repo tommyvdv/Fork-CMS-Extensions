@@ -4,7 +4,7 @@
     {
     	var $this = $(this);
     	var lightboxId = $this.data('id');
-    	var lightboxSettings = jsFrontend.data.get('photogallery.lightbox_settings_' + lightboxId);
+    	var lightboxSettings = jsFrontend.data.get('Photogallery.lightbox_settings_' + lightboxId);
 
     	var show_close_button = lightboxSettings.show_close_button == 'true'; 
     	var show_arrows = lightboxSettings.show_arrows == 'true';

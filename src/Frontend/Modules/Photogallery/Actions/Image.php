@@ -111,6 +111,6 @@ class Image extends FrontendBaseBlock
         // assign navigation
         $this->tpl->assign('blockPhotogalleryAlbumImageNavigation', FrontendPhotogalleryModel::getImageNavigation($this->record['id'], $this->record['album_id'], $this->record['sequence']));      
         
-        $this->tpl->mapModifier('createimagephotogallery', array(new FrontendPhotogalleryHelper(), 'createImage'));
+        $this->tpl->mapModifier('createimagephotogallery', array('Frontend\Modules\Photogallery\Engine\Helper', 'createImage'));
     }
 }

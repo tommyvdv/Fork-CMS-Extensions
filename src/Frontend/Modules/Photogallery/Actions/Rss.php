@@ -50,7 +50,7 @@ class Rss extends FrontendBaseBlock
     private function getData()
     {
 
-        $this->tpl->mapModifier('createimagephotogallery', array(new FrontendPhotogalleryHelper(), 'createImage'));
+        $this->tpl->mapModifier('createimagephotogallery', array('Frontend\Modules\Photogallery\Engine\Helper', 'createImage'));
 
         $thumbnail_resolution = FrontendPhotogalleryModel::getExtraResolutionForKind($this->data['extra_id'], 'album_overview_thumbnail');
 

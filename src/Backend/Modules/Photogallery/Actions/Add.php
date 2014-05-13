@@ -199,8 +199,8 @@ class Add extends BackendBaseActionAdd
                     $label = $item['title'] . ' | ' . BackendTemplateModifiers::toLabel($widget['action']) . ' | ' . $resolutionsLabel;
                     
                     $extra['module'] = $this->getModule();
-                    $extra['label'] = $widget['action'];
-                    $extra['action'] = $widget['action'];
+                    $extra['label'] = ucfirst($widget['action']);
+                    $extra['action'] = ucfirst($widget['action']);
                     $extra['data'] = serialize(
                                         array(
                                             'id' => $item['id'],

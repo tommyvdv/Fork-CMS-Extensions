@@ -57,12 +57,12 @@ class Detail extends FrontendBaseBlock
      * @return void
      */
     private function getData()
-    {
-
+    {   
         // validate incoming parameters
-        if($this->URL->getParameter(1) === null) $this->redirect(FrontendNavigation::getURL(404));
+        if($this->URL->getParameter(1) === null && $this->URL->getParameter(0) === null) $this->redirect(FrontendNavigation::getURL(404));
         
-        $this->record = FrontendPhotogalleryModel::get($this->URL->getParameter(1));
+        $this->record = FrontendPhotogalleryModel::get($this->URL->getParameter(0));
+        if(empty($this->record)) $this->record = FrontendPhotogalleryModel::get($this->URL->getParameter(1));
         
         // anything found?
         if(empty($this->record)) $this->redirect(FrontendNavigation::getURL(404));
@@ -173,6 +173,6 @@ class Detail extends FrontendBaseBlock
         // assign navigation
         $this->tpl->assign('blockPhotogalleryAlbumNavigation', FrontendPhotogalleryModel::getNavigation($this->record['id']));
 
-        $this->tpl->mapModifier('createimagephotogallery', array(new FrontendPhotogalleryHelper(), 'createImage'));
+        $this->tpl->mapModifier('createimagephotogallery', array('Frontend\Modules\Photogallery\Engine\Helper', 'createImage'));
     }
 }

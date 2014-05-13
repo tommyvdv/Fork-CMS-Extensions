@@ -1,9 +1,13 @@
 <?php
 
-namespace Backend\Modules\Photogallery\Widgets;
+namespace Frontend\Modules\Photogallery\Widgets;
 
-use Backend\Core\Engine\Base\Widget as BackendBaseWidget;
-use Backend\Modules\Photogallery\Engine\Model as BackendPhotogalleryModel;
+use Frontend\Core\Engine\Base\Widget as FrontendBaseWidget;
+use Frontend\Core\Engine\Language as FL;
+use Frontend\Core\Engine\Model as FrontendModel;
+use Frontend\Core\Engine\Navigation as FrontendNavigation;
+use Frontend\Modules\Tags\Engine\Model as FrontendTagsModel;
+use Frontend\Modules\Photogallery\Engine\Model as FrontendPhotogalleryModel;
 use Frontend\Modules\Photogallery\Engine\Helper as FrontendPhotogalleryHelper;
 
 /**
@@ -12,7 +16,7 @@ use Frontend\Modules\Photogallery\Engine\Helper as FrontendPhotogalleryHelper;
  * @author Frederik Heyninck <frederik@figure8.be>
  * @author Tommy Van de Velde <tommy@figure8.be>
  */
-class Lightbox extends BackendBaseWidget
+class Lightbox extends FrontendBaseWidget
 {
     /**
      * Execute the extra
@@ -109,7 +113,7 @@ class Lightbox extends BackendBaseWidget
         $this->header->addCSS('/frontend/modules/' . $this->getModule() . '/layout/css/photogallery.css');
 
         $this->tpl->assign('widgetPhotogalleryLightbox', $this->record);
-        $this->tpl->mapModifier('createimagephotogallery', array(new FrontendPhotogalleryHelper(), 'createImage'));
+        $this->tpl->mapModifier('createimagephotogallery', array('Frontend\Modules\Photogallery\Engine\Helper', 'createImage'));
         $this->addJSData('lightbox_settings_' . $this->data['extra_id'], $this->record['extra']['data']['settings']);
     }
 }

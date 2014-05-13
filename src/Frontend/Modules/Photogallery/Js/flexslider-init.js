@@ -4,8 +4,10 @@
     {
     	var $this = $(this);
     	var slideshowId = $this.data('id');
-    	var slideshowSettings = jsFrontend.data.get('photogallery.slideshow_settings_' + slideshowId);
-    	
+    	var slideshowSettings = jsFrontend.data.get('Photogallery.slideshow_settings_' + slideshowId);
+
+console.log(slideshowSettings, slideshowId);
+
         var controlNav = slideshowSettings.show_pagination == 'true';
         var controlType = slideshowSettings.pagination_type;
         var controlTypeIsThumbnails = (controlType == 'thumbnails');

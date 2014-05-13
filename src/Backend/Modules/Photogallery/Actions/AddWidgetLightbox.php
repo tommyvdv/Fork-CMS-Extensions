@@ -208,8 +208,8 @@ class AddWidgetLightbox extends BackendBaseActionAdd
                     $label = $album['title'] . ' | ' . BackendTemplateModifiers::toLabel($item['action']) . ' | '  . $title  . ' | ' . $resolutionsLabel;
                     
                     $extra['module'] = $this->getModule();
-                    $extra['label'] = $item['action'];
-                    $extra['action'] = $item['action'];
+                    $extra['label'] = ucfirst($item['action']);
+                    $extra['action'] = ucfirst($item['action']);
                     $extra['data'] = serialize(
                                         array(
                                             'id' => $album['id'],

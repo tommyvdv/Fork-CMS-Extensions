@@ -6,6 +6,7 @@ use Frontend\Core\Engine\Base\Block as FrontendBaseBlock;
 use Frontend\Core\Engine\Language as FL;
 use Frontend\Core\Engine\Model as FrontendModel;
 use Frontend\Core\Engine\Navigation as FrontendNavigation;
+use Frontend\Modules\Tags\Engine\Model as FrontendTagsModel;
 use Frontend\Modules\Photogallery\Engine\Model as FrontendPhotogalleryModel;
 use Frontend\Modules\Photogallery\Engine\Helper as FrontendPhotogalleryHelper;
 
@@ -228,6 +229,6 @@ class Category extends FrontendBaseBlock
         // parse the pagination
         $this->parsePagination();
 
-        $this->tpl->mapModifier('createimagephotogallery', array(new FrontendPhotogalleryHelper(), 'createImage'));
+        $this->tpl->mapModifier('createimagephotogallery', array('Frontend\Modules\Photogallery\Engine\Helper', 'createImage'));
     }
 }

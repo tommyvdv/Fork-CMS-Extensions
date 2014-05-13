@@ -3,7 +3,6 @@
 		<h3>{$blockPhotogalleryAlbumImage.title}</h3>
 	{/option:blockPhotogalleryAlbumImage.title}
 
-
 {* Meta *}
 	<ul>
 		<li>
@@ -33,23 +32,27 @@
 
 {* Text *}	
 	{$blockPhotogalleryAlbumImage.text}
-	
+
 
 {* Image *}
 	{* With internal link *}
 	{option:blockPhotogalleryAlbumImage.data.internal_link}
-		<a href="{$var|geturl:{$blockPhotogalleryAlbumImage.data.internal_link.page_id}}" class="linkedImage"><img src="{$blockPhotogalleryAlbumImage.large_url}" alt="{$blockPhotogalleryAlbumImage.title}" title="{$blockPhotogalleryAlbumImage.title}" /></a>
+		<a href="{$var|geturl:{$blockPhotogalleryAlbumImage.data.internal_link.page_id}}" class="linkedImage">
+			<img src="{$var|createimagephotogallery:{$blockPhotogalleryAlbumImage.set_id}:{$blockPhotogalleryAlbumImage.filename}:{$modulePhotogalleryImageLargeResolution.width}:{$modulePhotogalleryImageLargeResolution.height}:{$modulePhotogalleryImageLargeResolution.method}}" />
+		</a>
 	{/option:blockPhotogalleryAlbumImage.data.internal_link}
 
 	{* With external link *}
 	{option:blockPhotogalleryAlbumImage.data.external_link}
-		<a href="{$blockPhotogalleryAlbumImage.data.external_link.url}" class="linkedImage targetBlank"><img src="{$blockPhotogalleryAlbumImage.large_url}" alt="{$blockPhotogalleryAlbumImage.title}" title="{$blockPhotogalleryAlbumImage.title}" /></a>
+		<a href="{$blockPhotogalleryAlbumImage.data.external_link.url}" class="linkedImage targetBlank">
+			<img src="{$var|createimagephotogallery:{$blockPhotogalleryAlbumImage.set_id}:{$blockPhotogalleryAlbumImage.filename}:{$modulePhotogalleryImageLargeResolution.width}:{$modulePhotogalleryImageLargeResolution.height}:{$modulePhotogalleryImageLargeResolution.method}}" />
+		</a>
 	{/option:blockPhotogalleryAlbumImage.data.external_link}
 
 	{* No link *}
 	{option:!blockPhotogalleryAlbumImage.data.internal_link}
 		{option:!blockPhotogalleryAlbumImage.data.external_link}
-			<img src="{$blockPhotogalleryAlbumImage.large_url}" alt="{$blockPhotogalleryAlbumImage.title}" title="{$blockPhotogalleryAlbumImage.title}" />
+			<img src="{$var|createimagephotogallery:{$blockPhotogalleryAlbumImage.set_id}:{$blockPhotogalleryAlbumImage.filename}:{$modulePhotogalleryImageLargeResolution.width}:{$modulePhotogalleryImageLargeResolution.height}:{$modulePhotogalleryImageLargeResolution.method}}" />
 		{/option:!blockPhotogalleryAlbumImage.data.external_link}
 	{/option:!blockPhotogalleryAlbumImage.data.internal_link}
 

@@ -161,7 +161,8 @@ class Installer extends ModuleInstaller
         
         // Module Extra
         $extraBlockId = $this->insertExtra('Photogallery', 'block', 'Photogallery', null, serialize(array('action' => 'lightbox', 'display' => 'albums', 'extra_id' => $extraId)));
-
+        $this->insertExtra('Photogallery', 'block', 'Detail', 'Detail', serialize(array('action' => 'lightbox', 'display' => 'albums', 'extra_id' => $extraId)));
+        $this->insertExtra('Photogallery', 'block', 'Category', 'Category', serialize(array('action' => 'lightbox', 'display' => 'albums', 'extra_id' => $extraId)));
 
         // Slideshow
         /*
@@ -189,9 +190,9 @@ class Installer extends ModuleInstaller
         */
         
         // Widgets
-        $this->insertExtra('Photogallery', 'widget', 'CategoryNavigation', 'category_navigation');
-        $this->insertExtra('Photogallery', 'widget', 'RelatedListByCategories', 'related_list_by_categories');
-        $this->insertExtra('Photogallery', 'widget', 'RelatedListByTags', 'related_list_by_tags');
+        $this->insertExtra('Photogallery', 'widget', 'CategoryNavigation', 'CategoryNavigation');
+        $this->insertExtra('Photogallery', 'widget', 'RelatedListByCategories', 'RelatedListByCategories');
+        $this->insertExtra('Photogallery', 'widget', 'RelatedListByTags', 'RelatedListByTags');
         
         // loop languages
         foreach($this->getLanguages() as $language)

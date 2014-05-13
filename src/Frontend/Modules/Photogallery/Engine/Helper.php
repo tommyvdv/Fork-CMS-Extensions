@@ -6,6 +6,7 @@ use Frontend\Core\Engine\Language as FL;
 use Frontend\Core\Engine\Model as FrontendModel;
 use Frontend\Core\Engine\Navigation as FrontendNavigation;
 use Frontend\Core\Engine\Url as FrontendURL;
+use Frontend\Core\Engine\Theme as FrontendTheme;
 use Frontend\Modules\Tags\Engine\Model as FrontendTagsModel;
 use Frontend\Modules\Tags\Engine\TagsInterface as FrontendTagsInterface;
 
@@ -28,13 +29,13 @@ class Helper
         $module = (string) $module;
 
         $theme = FrontendTheme::getTheme();
-        $themePath = '/frontend/themes/' . $theme . '/core/js';
+        $themePath = '/src/Frontend/Themes/' . $theme . '/Core/Js';
 
         $filePath = $themePath . $file;
 
         if(\SpoonFile::exists(PATH_WWW . str_replace(PATH_WWW, '', $filePath))) return $filePath;
 
-        return '/frontend/modules/' . $module . '/js' . $file;
+        return '/src/Frontend/Modules/' . $module . '/Js' . $file;
     }
 
     /**
