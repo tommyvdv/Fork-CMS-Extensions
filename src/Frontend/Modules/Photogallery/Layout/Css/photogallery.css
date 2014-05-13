@@ -1,0 +1,30 @@
+.photogallery-slideshow-navigation-numbers li a
+{
+	background: none;
+	text-indent: 0;
+	box-shadow: none;
+}
+
+.photogallery-list li {
+	float: left;
+	margin:0 20px 20px 0;
+}
+
+/*
+.photogallery-list li:nth-child(5){
+	margin-right: 0;
+}
+*/
+
+.photogallery-flexslider-caption
+{
+	position: absolute;
+	bottom: 1em;
+	left: 1.5em;
+	padding-right: 1.5em;	
+}
+
+.photogallery-flexslider a
+{
+	border: none;
+}

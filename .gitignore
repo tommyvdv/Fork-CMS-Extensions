@@ -3,20 +3,9 @@
 .buildpath
 .settings
 .*.swp
-<<<<<<< HEAD
-*
-backend/cache/navigation/
-frontend/files/photogallery/
-!/library/external/aws
-!/frontend/modules/photogallery
-!/backend/modules/photogallery
-!/frontend/modules/amazon_s3
-!/backend/modules/amazon_s3
-=======
 .DS_Store
 app/cache/*
 app/logs/*
 backend/cache/navigation/
 vendor/
 app/config/parameters.yml
->>>>>>> cae6680519b9ba35ffa678a7f8106a2bb1718e55
