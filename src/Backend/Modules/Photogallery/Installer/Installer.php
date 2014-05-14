@@ -160,9 +160,11 @@ class Installer extends ModuleInstaller
         $db->insert('photogallery_extras_resolutions', array('extra_id' => $extraId, 'width' => 200, 'height' => 200, 'method' => 'crop', 'kind' => 'album_overview_thumbnail'));
         
         // Module Extra
-        $extraBlockId = $this->insertExtra('Photogallery', 'block', 'Photogallery', null, serialize(array('action' => 'lightbox', 'display' => 'albums', 'extra_id' => $extraId)));
-        $this->insertExtra('Photogallery', 'block', 'Detail', 'Detail', serialize(array('action' => 'lightbox', 'display' => 'albums', 'extra_id' => $extraId)));
-        $this->insertExtra('Photogallery', 'block', 'Category', 'Category', serialize(array('action' => 'lightbox', 'display' => 'albums', 'extra_id' => $extraId)));
+        $extraBlockModuleId = $this->insertExtra('Photogallery', 'block', 'Photogallery', null, serialize(array('action' => 'lightbox', 'display' => 'albums', 'extra_id' => $extraId)));
+        $extraBlockModuleDetailId = $this->insertExtra('Photogallery', 'block', 'Detail', 'Detail', serialize(array('action' => 'lightbox', 'display' => 'albums', 'extra_id' => $extraId)));
+        $extraBlockModuleCategoryId = $this->insertExtra('Photogallery', 'block', 'Category', 'Category', serialize(array('action' => 'lightbox', 'display' => 'albums', 'extra_id' => $extraId)));
+        $extraBlockModuleImageId = $this->insertExtra('Photogallery', 'block', 'Image', 'Image', serialize(array('extra_id' => $extraId)));
+
 
         // Slideshow
         /*
@@ -207,26 +209,30 @@ class Installer extends ModuleInstaller
         }
         
         // Insert page
-        self::insertPhotogalleryPage('Photogallery', $extraBlockId );
+        $parentId = self::insertPhotogalleryPage('Photogallery', $extraBlockModuleId);
+
+        self::insertPhotogalleryPage('Detail', $extraBlockModuleDetailId, $parentId);
+        self::insertPhotogalleryPage('Category', $extraBlockModuleCategoryId, $parentId);
+        self::insertPhotogalleryPage('Image Detail', $extraBlockModuleImageId, $parentId);
         
         // Do API Call
         self::doApiCall();
     }
 
-    private function insertPhotogalleryPage($title, $extraId)
+    private function insertPhotogalleryPage($title, $extraId, $parentId = 0)
     {
         // loop languages
         foreach($this->getLanguages() as $language)
         {
-            
-            // check if a page for blog already exists in this language
+            // check if a page for Photogallery already exists in this language
             if(!(bool) $this->getDB()->getVar('SELECT COUNT(p.id)
                                                 FROM pages AS p
                                                 INNER JOIN pages_blocks AS b ON b.revision_id = p.revision_id
                                                 WHERE b.extra_id = ? AND p.language = ?',
                                                 array($extraId, $language)))
             {
-                $this->insertPage(
+                return $this->insertPage(
+                	'parent_id' => $parentID,
                     array('title' =>  $title, 'language' => $language, 'type' => 'root'),
                     null,
                     array('extra_id' => $extraId, 'position' => 'main')
