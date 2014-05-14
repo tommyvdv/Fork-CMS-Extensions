@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<module>
+	<name>Photogallery</name>
+	<version>2.0.0</version>
+	<requirements>
+		<minimum_version>3.7.0</minimum_version>
+	</requirements>
+	<description>
+		<![CDATA[
+			The multilingual photogallery with dynamic widgets.
+		]]>
+	</description>
+	<authors>
+		<author>
+			<name><![CDATA[Frederik Heyninck]]></name>
+			<url><![CDATA[http://www.figure8.be]]></url>
+		</author>
+		<author>
+			<name><![CDATA[Tommy Van de Velde]]></name>
+			<url><![CDATA[http://www.figure8.be]]></url>
+		</author>
+	</authors>
+	<events>
+	</events>
+</module>
