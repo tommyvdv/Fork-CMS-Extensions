@@ -19,13 +19,13 @@ class Installer extends ModuleInstaller
     public function install()
     {
         // load install.sql
-        $this->importSQL(dirname(__FILE__) . '/data/install.sql');
+        $this->importSQL(dirname(__FILE__) . '/Data/install.sql');
 
         // add 'Photogallery' as a module
-        $this->addModule('Photogallery', 'The multilingual photogallery with dynamic widgets.');
+        $this->addModule('Photogallery');
 
         // import locale
-        $this->importLocale(dirname(__FILE__) . '/data/locale.xml');
+        $this->importLocale(dirname(__FILE__) . '/Data/locale.xml');
 
         // module rights
         $this->setModuleRights(1, 'Photogallery');
@@ -35,15 +35,9 @@ class Installer extends ModuleInstaller
         $this->setActionRights(1, 'Photogallery', 'AddCategory');
         $this->setActionRights(1, 'Photogallery', 'AddImagesChoose');
         $this->setActionRights(1, 'Photogallery', 'AddImagesExisting');
-        $this->setActionRights(1, 'Photogallery', 'AddImagesUpload');
-        $this->setActionRights(1, 'Photogallery', 'AddImagesUploadZip');
         $this->setActionRights(1, 'Photogallery', 'AddImagesUploadMultiple');
-        $this->setActionRights(1, 'Photogallery', 'AddWidgetCategories');
         $this->setActionRights(1, 'Photogallery', 'AddWidgetChoose');
         $this->setActionRights(1, 'Photogallery', 'AddWidgetLightbox');
-        $this->setActionRights(1, 'Photogallery', 'AddWidgetPaged');
-        $this->setActionRights(1, 'Photogallery', 'AddWidgetRelatedByCategories');
-        $this->setActionRights(1, 'Photogallery', 'AddWidgetRelatedByTags');
         $this->setActionRights(1, 'Photogallery', 'AddWidgetSlideshow');
         $this->setActionRights(1, 'Photogallery', 'Index');
         $this->setActionRights(1, 'Photogallery', 'Categories');
@@ -56,11 +50,7 @@ class Installer extends ModuleInstaller
         $this->setActionRights(1, 'Photogallery', 'EditCategory');
         $this->setActionRights(1, 'Photogallery', 'EditImage');
         $this->setActionRights(1, 'Photogallery', 'EditModule');
-        $this->setActionRights(1, 'Photogallery', 'EditWidgetCategories');
         $this->setActionRights(1, 'Photogallery', 'EditWidgetLightbox');
-        $this->setActionRights(1, 'Photogallery', 'EditWidgetPaged');
-        $this->setActionRights(1, 'Photogallery', 'EditWidgetRelatedByCategories');
-        $this->setActionRights(1, 'Photogallery', 'EditWidgetRelatedByTags');
         $this->setActionRights(1, 'Photogallery', 'EditWidgetlideshow');
         $this->setActionRights(1, 'Photogallery', 'Extras');
         $this->setActionRights(1, 'Photogallery', 'MassAction');
@@ -68,6 +58,7 @@ class Installer extends ModuleInstaller
         $this->setActionRights(1, 'Photogallery', 'Sequence');
         $this->setActionRights(1, 'Photogallery', 'UploadImage');
         $this->setActionRights(1, 'Photogallery', 'Settings');
+        $this->setActionRights(1, 'Photogallery', 'Copy');
 
         // make module searchable
         $this->makeSearchable('Photogallery');
@@ -75,9 +66,7 @@ class Installer extends ModuleInstaller
         // set navigation
         $navigationModulesId = $this->setNavigation(null, 'Modules');
         $navigationId = $this->setNavigation($navigationModulesId, 'Photogallery', 'photogallery/index',  array(
-            'photogallery/add_images_upload',
             'photogallery/add_images_upload_multiple',
-            'photogallery/add_images_upload_zip',
             'photogallery/add_images_choose',
             'photogallery/add_images_existing',
             'photogallery/edit_image',
@@ -98,18 +87,10 @@ class Installer extends ModuleInstaller
             'photogallery/add_widget_choose',
             'photogallery/edit_widget_slideshow',
             'photogallery/edit_widget_lightbox',
-            'photogallery/edit_widget_paged',
-            'photogallery/edit_widget_categories',
-            'photogallery/add_widget_categories',
             'photogallery/edit_block',
             'photogallery/add_widget_slideshow',
             'photogallery/add_widget_lightbox',
-            'photogallery/add_widget_paged',
-            'photogallery/edit_module',
-            'photogallery/add_widget_related_by_categories',
-            'photogallery/edit_widget_related_by_categories',
-            'photogallery/add_widget_related_by_tags',
-            'photogallery/edit_widget_related_by_tags',
+            'photogallery/edit_module'
         ));
         
         // settings navigation
@@ -118,40 +99,33 @@ class Installer extends ModuleInstaller
         $this->setNavigation($navigationModulesId, 'Photogallery', 'photogallery/settings');
         
         // Settings
-        $this->setSetting('Photogallery', 'awsAccessKey', '');
-        $this->setSetting('Photogallery', 'awsSecretKey', '');
-        $this->setSetting('Photogallery', 's3_url', '');
-        $this->setSetting('Photogallery', 's3_account', false);
-        $this->setSetting('Photogallery', 's3_region', '');
-        
-        // ping service (feedburner)
         $this->setSetting('Photogallery', 'ping_services', false);
 
         $db = $this->getDB();
 
         // Block
         $blockDataSettings = array(
-                                    'show_close_button' => 'false',
-                                    'show_arrows' => 'true',
-                                    'show_caption' => 'true',
-                                    'caption_type' => 'outside',
-                                    'padding' =>  25,
-                                    'margin' => 20,
-                                    'modal' => 'false',
-                                    'show_hover_icon' => 'true',
-                                    'close_click' => 'false',
-                                    'media_helper' => 'true',
-                                    'navigation_effect' => 'none',
-                                    'open_effect' => 'none',
-                                    'close_effect' => 'none',
-                                    'play_speed' => 3000,
-                                    'loop' => 'true',
-                                    'show_thumbnails' => 'true',
-                                    'thumbnails_position' => 'bottom',
-                                    'thumbnail_navigation_width' => 50,
-                                    'thumbnail_navigation_height' => 50,
-                                    'show_overlay' => 'true',
-                                    'overlay_color' => 'rgba(255, 255, 255, 0.85)'
+                                'show_close_button' => 'false',
+                                'show_arrows' => 'true',
+                                'show_caption' => 'true',
+                                'caption_type' => 'outside',
+                                'padding' =>  25,
+                                'margin' => 20,
+                                'modal' => 'false',
+                                'show_hover_icon' => 'true',
+                                'close_click' => 'false',
+                                'media_helper' => 'true',
+                                'navigation_effect' => 'none',
+                                'open_effect' => 'none',
+                                'close_effect' => 'none',
+                                'play_speed' => 3000,
+                                'loop' => 'true',
+                                'show_thumbnails' => 'true',
+                                'thumbnails_position' => 'bottom',
+                                'thumbnail_navigation_width' => 50,
+                                'thumbnail_navigation_height' => 50,
+                                'show_overlay' => 'true',
+                                'overlay_color' => 'rgba(255, 255, 255, 0.85)'
                             );
 
         $extraId = $db->insert('photogallery_extras', array('data' => serialize(array('action' => 'lightbox', 'display' => 'albums', 'settings' => $blockDataSettings)), 'action' => null, 'kind' => 'module', 'allow_delete' => 'N', 'edited_on' => gmdate('Y-m-d H:i:00'), 'created_on' => gmdate('Y-m-d H:i:00')));
@@ -164,32 +138,6 @@ class Installer extends ModuleInstaller
         $extraBlockModuleDetailId = $this->insertExtra('Photogallery', 'block', 'Detail', 'Detail', serialize(array('action' => 'lightbox', 'display' => 'albums', 'extra_id' => $extraId)));
         $extraBlockModuleCategoryId = $this->insertExtra('Photogallery', 'block', 'Category', 'Category', serialize(array('action' => 'lightbox', 'display' => 'albums', 'extra_id' => $extraId)));
         $extraBlockModuleImageId = $this->insertExtra('Photogallery', 'block', 'Image', 'Image', serialize(array('extra_id' => $extraId)));
-
-
-        // Slideshow
-        /*
-        $extraId = $db->insert('photogallery_extras', array('action' => 'slideshow', 'kind' => 'widget', 'allow_delete' => 'Y', 'edited_on' => gmdate('Y-m-d H:i:00'), 'created_on' => gmdate('Y-m-d H:i:00')));
-        $db->insert('photogallery_extras_resolutions', array('extra_id' => $extraId, 'width' => 600, 'height' => 350, 'method' => 'crop', 'kind' => 'large'));
-        */
-        
-        // Lightbox
-        /*
-        $extraId = $db->insert('photogallery_extras', array('action' => 'lightbox', 'kind' => 'widget', 'allow_delete' => 'Y', 'edited_on' => gmdate('Y-m-d H:i:00'), 'created_on' => gmdate('Y-m-d H:i:00')));
-        $db->insert('photogallery_extras_resolutions', array('extra_id' => $extraId, 'width' => 800, 'height' => 600, 'method' => 'resize', 'kind' => 'large'));
-        $db->insert('photogallery_extras_resolutions', array('extra_id' => $extraId, 'width' => 75, 'height' => 75, 'method' => 'crop', 'kind' => 'thumbnail'));
-        */
-
-        // Paged
-        /*
-        $extraId = $db->insert('photogallery_extras', array('action' => 'paged', 'kind' => 'widget', 'allow_delete' => 'Y', 'edited_on' => gmdate('Y-m-d H:i:00'), 'created_on' => gmdate('Y-m-d H:i:00')));
-        $db->insert('photogallery_extras_resolutions', array('extra_id' => $extraId, 'width' => 75, 'height' => 75, 'method' => 'crop', 'kind' => 'thumbnail'));
-        */
-
-        // Category widget
-        /*
-        $extraId = $db->insert('photogallery_extras', array('action' => 'categories', 'kind' => 'widget', 'allow_delete' => 'Y', 'edited_on' => gmdate('Y-m-d H:i:00'), 'created_on' => gmdate('Y-m-d H:i:00')));
-        $db->insert('photogallery_extras_resolutions', array('extra_id' => $extraId, 'width' => 500, 'height' => 350, 'method' => 'crop', 'kind' => 'large'));
-        */
         
         // Widgets
         $this->insertExtra('Photogallery', 'widget', 'CategoryNavigation', 'CategoryNavigation');
@@ -209,7 +157,7 @@ class Installer extends ModuleInstaller
         }
         
         // Insert page
-        $parentId = self::insertPhotogalleryPage('Photogallery', $extraBlockModuleId);
+        $parentId = self::insertPhotogalleryPage('Photogallery', $extraBlockModuleId, 0 , 'root');
 
         self::insertPhotogalleryPage('Detail', $extraBlockModuleDetailId, $parentId);
         self::insertPhotogalleryPage('Category', $extraBlockModuleCategoryId, $parentId);
@@ -219,7 +167,7 @@ class Installer extends ModuleInstaller
         self::doApiCall();
     }
 
-    private function insertPhotogalleryPage($title, $extraId, $parentId = 0)
+    private function insertPhotogalleryPage($title, $extraId, $parentId = 0, $type = 'page')
     {
         // loop languages
         foreach($this->getLanguages() as $language)
@@ -232,8 +180,8 @@ class Installer extends ModuleInstaller
                                                 array($extraId, $language)))
             {
                 return $this->insertPage(
-                	'parent_id' => $parentID,
-                    array('title' =>  $title, 'language' => $language, 'type' => 'root'),
+                	
+                    array('parent_id' => $parentId,'title' =>  $title, 'language' => $language, 'type' => $type),
                     null,
                     array('extra_id' => $extraId, 'position' => 'main')
                 );
@@ -243,8 +191,6 @@ class Installer extends ModuleInstaller
 
     private function doApiCall()
     {
-        //if(!is_callable(array('Api', 'doCall'))) include dirname(__FILE__) . '/../engine/api_call.php';
-        
         try
         {
             // build parameters
@@ -253,7 +199,7 @@ class Installer extends ModuleInstaller
                 'ip' => isset($_SERVER['REMOTE_ADDR']) ? $_SERVER['REMOTE_ADDR'] : null,
                 'type' => 'module',
                 'name' => 'Photogallery',
-                'version' => '3.1.3',
+                'version' => '3.7',
                 'email' => \SpoonSession::get('email'),
                 'license_name' => '',
                 'license_key' => '',
@@ -266,7 +212,6 @@ class Installer extends ModuleInstaller
             $return = $api->doCall('products.insertProductInstallation', $parameters, false);
             $this->setSetting('Photogallery', 'api_call_id', (string) $return->data->id);
         } 
-        catch(Exception $e) 
-        {}
+        catch(Exception $e){}
     }
 }

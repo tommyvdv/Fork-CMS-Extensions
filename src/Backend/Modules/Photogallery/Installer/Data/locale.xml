@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <locale>
-    <frontend>
-        <core>
+    <Frontend>
+        <Core>
             <item type="label" name="AllCategories">
                 <translation language="nl"><![CDATA[alle categorieën]]></translation>
                 <translation language="en"><![CDATA[all categories]]></translation>
@@ -50,10 +50,10 @@
                 <translation language="nl"><![CDATA[afbeelding]]></translation>
                 <translation language="en"><![CDATA[image]]></translation>
             </item>
-        </core>
-    </frontend>
-    <backend>
-        <core>
+        </Core>
+    </Frontend>
+    <Backend>
+        <Core>
             <item type="label" name="Photogallery">
                 <translation language="nl"><![CDATA[fotogalerij]]></translation>
                 <translation language="en"><![CDATA[photogallery]]></translation>
@@ -71,8 +71,8 @@
                 <translation language="en"><![CDATA[related list by tags]]></translation>
                 <translation language="nl"><![CDATA[gerelateerde lijst door tags]]></translation>
             </item>
-        </core>
-        <photogallery>
+        </Core>
+        <Photogallery>
 
 
             <item type="label" name="ShowCloseButton">
@@ -862,6 +862,6 @@
                 <translation language="en"><![CDATA[No categories selected.]]></translation>
                 <translation language="nl"><![CDATA[Er zijn nog geen categorieën geselecteerd.]]></translation>
             </item>
-        </photogallery>
-    </backend>
+        </Photogallery>
+    </Backend>
 </locale>
