@@ -47,8 +47,8 @@
 						
 						{* Image *}
 							<a href="{$blockPhotogalleryCategories.albums.full_url}" class="linkedImage" title="{$blockPhotogalleryCategories.albums.title}">
-								<img src="{$var|createimagephotogallery:{$blockPhotogalleryCategories.albums.set_id}:{$blockPhotogalleryCategories.albums.image.filename}:{$modulePhotogalleryCategoryThumbnailResolution.width}:{$modulePhotogalleryCategoryThumbnailResolution.height}:{$modulePhotogalleryCategoryThumbnailResolution.method}}" />
-
+								{*<img src="{$var|createimagephotogallery:{$blockPhotogalleryCategories.albums.set_id}:{$blockPhotogalleryCategories.albums.image.filename}:{$modulePhotogalleryCategoryThumbnailResolution.width}:{$modulePhotogalleryCategoryThumbnailResolution.height}:{$modulePhotogalleryCategoryThumbnailResolution.method}}" />*}
+								<img src="{$var|createimageresolution:{$blockPhotogalleryCategories.albums.set_id}:{$blockPhotogalleryCategories.albums.image.filename}:'detail_thumbnail'}" alt="{$blockPhotogalleryCategories.title}" />
 							</a>
 					
 					{/iteration:blockPhotogalleryCategories.albums}
@@ -104,7 +104,9 @@
 				
 				{* Image *}
 					<a href="{$blockPhotogalleryCategoryAlbums.full_url}" class="linkedImage" title="{$blockPhotogalleryCategoryAlbums.image.title}">
-	<img src="{$var|createimagephotogallery:{$blockPhotogalleryCategoryAlbums.set_id}:{$blockPhotogalleryCategoryAlbums.image.filename}:{$modulePhotogalleryCategoryThumbnailResolution.width}:{$modulePhotogalleryCategoryThumbnailResolution.height}:{$modulePhotogalleryCategoryThumbnailResolution.method}}" />					</a>
+						{*<img src="{$var|createimagephotogallery:{$blockPhotogalleryCategoryAlbums.set_id}:{$blockPhotogalleryCategoryAlbums.image.filename}:{$modulePhotogalleryCategoryThumbnailResolution.width}:{$modulePhotogalleryCategoryThumbnailResolution.height}:{$modulePhotogalleryCategoryThumbnailResolution.method}}" />*}
+						<img src="{$var|createimageresolution:{$blockPhotogalleryCategoryAlbums.set_id}:{$blockPhotogalleryCategoryAlbums.image.filename}:'detail_thumbnail'}" alt="{$blockPhotogalleryCategoryAlbums.title}" />
+					</a>
 			
 			{/iteration:blockPhotogalleryCategoryAlbums}
 		{/option:blockPhotogalleryCategoryAlbums}

@@ -179,6 +179,9 @@ class Category extends FrontendBaseBlock
      */
     private function parse()
     {
+        // map modifiers
+        FrontendPhotogalleryHelper::mapModifiers($this->tpl);
+        
         $hasChildren = FrontendPhotogalleryModel::hasChildren($this->category['id'], FrontendModel::getModuleSetting('photogallery', 'show_empty_categories', 'Y') == 'Y');
 
         // add into breadcrumb

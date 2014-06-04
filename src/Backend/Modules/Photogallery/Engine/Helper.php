@@ -2,6 +2,10 @@
 
 namespace Backend\Modules\Photogallery\Engine;
 
+use Symfony\Component\Filesystem\Filesystem;
+use Symfony\Component\Filesystem\Exception\IOException;
+use Symfony\Component\Finder\Finder;
+
 use Backend\Core\Engine\Exception;
 use Backend\Core\Engine\Model as BackendModel;
 use Backend\Core\Engine\TemplateModifiers as BackendTemplateModifiers;
@@ -15,6 +19,36 @@ use Backend\Core\Engine\Language as BL;
  */
 class Helper
 {
+	public static function refreshResolution($resolution, $backend = false)
+	{
+		$backend_path = false;
+		$frontend_path = FRONTEND_FILES_PATH . '/' . 'photogallery/sets/';
+
+		$targetDir = ($resolution['width_null'] == 'Y' ? '' : $resolution['width']) . 'x' . ($resolution['height_null'] == 'Y' ? '' : $resolution['height'])  . $resolution['method'];
+		
+		$finder = new Finder();
+        $fs = new Filesystem();
+        foreach (
+            $finder->directories()
+            	->name($targetDir)
+                ->in($frontend_path)
+                ->depth(2)
+            as $directory
+        ) {
+        	$fs->remove($directory);
+        }
+	}
+
+    public static function getResolutionEditButton($id, $allow_edit)
+    {
+        return $allow_edit == 'Y' ? '<a class="button icon iconEdit linkButton" href="'.BackendModel::createURLForAction('edit_resolution').'&amp;id='.$id.'"><span>'.ucfirst(BL::getLabel('Edit')).'</span></a>' : '<a class="button icon iconDetails linkButton" href="'.BackendModel::createURLForAction('edit_resolution').'&amp;id='.$id.'"><span>'.ucfirst(BL::getLabel('Detail')).'</span></a>';
+    }
+
+	public static function translateYes($enum = 'Y')
+	{
+		return $enum == 'Y' ? BL::lbl('Yes') : BL::lbl('No');
+	}
+
 	public static function toLabel($input)
 	{
 		if(!$input) return '';

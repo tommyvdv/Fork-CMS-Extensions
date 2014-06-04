@@ -56,11 +56,8 @@ class Image extends FrontendBaseBlock
      */
     private function getData()
     {
-
-        // validate incoming parameters
-        if($this->URL->getParameter(1) === null) $this->redirect(FrontendNavigation::getURL(404));
-        
-        $this->record = FrontendPhotogalleryModel::getImage($this->URL->getParameter(1));
+        $this->record = FrontendPhotogalleryModel::getImage($this->URL->getParameter(0));
+        if(empty($this->record)) $this->record = FrontendPhotogalleryModel::getImage($this->URL->getParameter(1));
 
         // anything found?
         if(empty($this->record)) $this->redirect(FrontendNavigation::getURL(404));
@@ -80,6 +77,9 @@ class Image extends FrontendBaseBlock
      */
     private function parse()
     {
+        // map modifiers
+        FrontendPhotogalleryHelper::mapModifiers($this->tpl);
+
         // add into breadcrumb
         $this->breadcrumb->addElement($this->record['album_title'], $this->record['album_full_url']);
         $this->breadcrumb->addElement(\SpoonFilter::ucfirst(FL::getLabel('Image')));

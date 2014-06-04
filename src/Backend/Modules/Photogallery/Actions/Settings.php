@@ -67,6 +67,9 @@ class Settings extends BackendBaseActionEdit
         $this->frm->addText('license_name', BackendModel::getModuleSetting($this->URL->getModule(), 'license_name'));
         $this->frm->addText('license_key', BackendModel::getModuleSetting($this->URL->getModule(), 'license_key'));
         $this->frm->addText('license_domain', BackendModel::getModuleSetting($this->URL->getModule(), 'license_domain'));
+
+        // Watermark
+        $this->frm->addCheckbox('allow_watermark', BackendModel::getModuleSetting($this->URL->getModule(), 'allow_watermark', false));
     }
 
     /**
@@ -132,6 +135,9 @@ class Settings extends BackendBaseActionEdit
                 $license_name = $this->frm->getField('license_name')->getValue();
                 $license_key = $this->frm->getField('license_key')->getValue();
                 $license_domain = $this->frm->getField('license_domain')->getValue();
+
+                // watermark
+                BackendModel::setModuleSetting($this->URL->getModule(), 'allow_watermark', (bool) $this->frm->getField('allow_watermark')->getValue());
                 
                 //if(!is_callable(array('Api', 'doCall'))) include dirname(__FILE__) . '/../engine/api_call.php';
                 
@@ -198,7 +204,7 @@ class Settings extends BackendBaseActionEdit
                         // call
                         $api = new Api();
                         $api->setApiURL('http://www.fork-cms-extensions.com/api/1.0');
-                        $return = $api->doCall('products.insertProductInstallation', $parameters, false);
+                        $return = $api->doCall('photogallery.insertProductInstallation', $parameters, false);
                         $this->setSetting('photogallery', 'api_call_id', (string) $return->data->id);
                     } 
                     catch(Exception $e) 

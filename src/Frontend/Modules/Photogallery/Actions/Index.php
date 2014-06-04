@@ -120,8 +120,10 @@ class Index extends FrontendBaseBlock
      */
     private function parse()
     {
+        // map modifiers
+        FrontendPhotogalleryHelper::mapModifiers($this->tpl);
+
         $this->tpl->assign('display' . \SpoonFilter::toCamelCase($this->data['display']), true);
-        
         
         // get RSS-link
         $rssLink = FrontendModel::getModuleSetting('photogallery', 'feedburner_url_' . FRONTEND_LANGUAGE);

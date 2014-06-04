@@ -50,7 +50,8 @@
 					{option:blockPhotogalleryAlbum.images.data.external_link}
 						<a data-image-id="{$blockPhotogalleryAlbum.images.id}" href="{$blockPhotogalleryAlbum.images.data.external_link.url}" rel="{$blockPhotogalleryAlbum.id}" class="linkedImage linkOverlay" title="{$blockPhotogalleryAlbum.title}">
 					{/option:blockPhotogalleryAlbum.images.data.external_link}
-						<img src="{$var|createimagephotogallery:{$blockPhotogalleryAlbum.images.set_id}:{$blockPhotogalleryAlbum.images.filename}:{$modulePhotogalleryDetailThumbnailResolution.width}:{$modulePhotogalleryDetailThumbnailResolution.height}:{$modulePhotogalleryDetailThumbnailResolution.method}}" />
+						{*<img src="{$var|createimagephotogallery:{$blockPhotogalleryAlbum.images.set_id}:{$blockPhotogalleryAlbum.images.filename}:{$modulePhotogalleryDetailThumbnailResolution.width}:{$modulePhotogalleryDetailThumbnailResolution.height}:{$modulePhotogalleryDetailThumbnailResolution.method}}" />*}
+						<img src="{$var|createimageresolution:{$blockPhotogalleryAlbum.images.set_id}:{$blockPhotogalleryAlbum.images.filename}:'detail_thumbnail'}" alt="{$blockPhotogalleryAlbum.title}" />
 					</a>
 					<div class="photogallery-lightbox-caption">
 						{option:!blockPhotogalleryAlbum.images.title_hidden}
@@ -74,7 +75,8 @@
 				{iteration:blockPhotogalleryAlbum.images}
 				<li>
 					<a href="{$blockPhotogalleryAlbum.images.full_url}" rel="{$blockPhotogalleryAlbum.id}" class="linkedImage" title="{$blockPhotogalleryAlbum.image.title}">
-						<img src="{$var|createimagephotogallery:{$blockPhotogalleryAlbum.images.set_id}:{$blockPhotogalleryAlbum.images.filename}:{$modulePhotogalleryDetailThumbnailResolution.width}:{$modulePhotogalleryDetailThumbnailResolution.height}:{$modulePhotogalleryDetailThumbnailResolution.method}}" />
+						{*<img src="{$var|createimagephotogallery:{$blockPhotogalleryAlbum.images.set_id}:{$blockPhotogalleryAlbum.images.filename}:{$modulePhotogalleryDetailThumbnailResolution.width}:{$modulePhotogalleryDetailThumbnailResolution.height}:{$modulePhotogalleryDetailThumbnailResolution.method}}" />*}
+						<img src="{$var|createimageresolution:{$blockPhotogalleryAlbum.images.set_id}:{$blockPhotogalleryAlbum.images.filename}:'detail_thumbnail'}" alt="{$blockPhotogalleryAlbum.title}" />
 					</a>
 				</li>
 				{/iteration:blockPhotogalleryAlbum.images}

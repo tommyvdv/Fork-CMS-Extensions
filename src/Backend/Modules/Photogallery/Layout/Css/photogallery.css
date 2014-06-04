@@ -1,3 +1,5 @@
+/* general */
+
 .dataGrid .preview
 {
 	width:60px;
@@ -15,4 +17,40 @@ td.small
 #embed
 {
 	width: 50%;
+}
+
+/* resolutions */
+
+p span.unit {
+	padding-left: .25em;
+}
+
+.pixelInput input {
+	width: 50px;
+	text-align: right;
+}
+
+div.positions {
+	width: 100%;
+	overflow: hidden;
+}
+
+div.positions div.position-cell {
+	float: left;
+	display: block;
+	width: 33%;
+	text-align: center;
+	padding: 1em 0;
+}
+
+.dataGrid .preview
+{
+	width:60px;
+}
+
+
+th.small,
+td.small
+{
+	width:5%;
 }

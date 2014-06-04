@@ -107,8 +107,6 @@
         </div>
     </div>
     
-    
-    
     <div class="box">
         <div class="horizontal">
             <div class="heading">
@@ -128,6 +126,18 @@
                 {$txtLicenseDomain} {$txtLicenseDomainError}
             </div>
             
+        </div>
+    </div>
+
+    <div class="box">
+        <div class="heading">
+            <h3>{$lblWatermark}</h3>
+        </div>
+        <div class="options">
+            <p>{$msgHelpWatermark}:</p>
+            <ul class="inputList p0">
+                <li><label for="allowWatermark">{$chkAllowWatermark} {$lblAllowWatermark|ucfirst}</label></li>
+            </ul>
         </div>
     </div>
 

@@ -87,10 +87,13 @@ class Detail extends FrontendBaseBlock
      */
     private function parse()
     {
+        // map modifiers
+        FrontendPhotogalleryHelper::mapModifiers($this->tpl);
+        
         // add into breadcrumb
         $this->breadcrumb->addElement($this->record['title']);
         
-        $this->header->addCSS('/frontend/modules/' . $this->getModule() . '/layout/css/photogallery.css');
+        $this->header->addCSS('/src/Frontend/Modules/Photogallery/Layout/Css/photogallery.css');
         
         // Load lightbox
         if($this->data['action'] == 'lightbox')

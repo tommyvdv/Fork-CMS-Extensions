@@ -38,21 +38,24 @@
 	{* With internal link *}
 	{option:blockPhotogalleryAlbumImage.data.internal_link}
 		<a href="{$var|geturl:{$blockPhotogalleryAlbumImage.data.internal_link.page_id}}" class="linkedImage">
-			<img src="{$var|createimagephotogallery:{$blockPhotogalleryAlbumImage.set_id}:{$blockPhotogalleryAlbumImage.filename}:{$modulePhotogalleryImageLargeResolution.width}:{$modulePhotogalleryImageLargeResolution.height}:{$modulePhotogalleryImageLargeResolution.method}}" />
+			{*<img src="{$var|createimagephotogallery:{$blockPhotogalleryAlbumImage.set_id}:{$blockPhotogalleryAlbumImage.filename}:{$modulePhotogalleryImageLargeResolution.width}:{$modulePhotogalleryImageLargeResolution.height}:{$modulePhotogalleryImageLargeResolution.method}}" />*}
+			<img src="{$var|createimageresolution:{$blockPhotogalleryAlbumImage.set_id}:{$blockPhotogalleryAlbumImage.filename}:'large'}" alt="{$blockPhotogalleryAlbumImage.title}" />
 		</a>
 	{/option:blockPhotogalleryAlbumImage.data.internal_link}
 
 	{* With external link *}
 	{option:blockPhotogalleryAlbumImage.data.external_link}
 		<a href="{$blockPhotogalleryAlbumImage.data.external_link.url}" class="linkedImage targetBlank">
-			<img src="{$var|createimagephotogallery:{$blockPhotogalleryAlbumImage.set_id}:{$blockPhotogalleryAlbumImage.filename}:{$modulePhotogalleryImageLargeResolution.width}:{$modulePhotogalleryImageLargeResolution.height}:{$modulePhotogalleryImageLargeResolution.method}}" />
+			{*<img src="{$var|createimagephotogallery:{$blockPhotogalleryAlbumImage.set_id}:{$blockPhotogalleryAlbumImage.filename}:{$modulePhotogalleryImageLargeResolution.width}:{$modulePhotogalleryImageLargeResolution.height}:{$modulePhotogalleryImageLargeResolution.method}}" />*}
+			<img src="{$var|createimageresolution:{$blockPhotogalleryAlbumImage.set_id}:{$blockPhotogalleryAlbumImage.filename}:'large'}" alt="{$blockPhotogalleryAlbumImage.title}" />
 		</a>
 	{/option:blockPhotogalleryAlbumImage.data.external_link}
 
 	{* No link *}
 	{option:!blockPhotogalleryAlbumImage.data.internal_link}
 		{option:!blockPhotogalleryAlbumImage.data.external_link}
-			<img src="{$var|createimagephotogallery:{$blockPhotogalleryAlbumImage.set_id}:{$blockPhotogalleryAlbumImage.filename}:{$modulePhotogalleryImageLargeResolution.width}:{$modulePhotogalleryImageLargeResolution.height}:{$modulePhotogalleryImageLargeResolution.method}}" />
+			{*<img src="{$var|creatphotogallery:{$blockPhotogalleryAlbumImage.set_id}:{$blockPhotogalleryAlbumImage.filename}:{$modulePhotogalleryImageLargeResolution.width}:{$modulePhotogalleryImageLargeResolution.height}:{$modulePhotogalleryImageLargeResolution.method}}" />*}
+			<img src="{$var|createimageresolution:{$blockPhotogalleryAlbumImage.set_id}:{$blockPhotogalleryAlbumImage.filename}:'large'}" alt="{$blockPhotogalleryAlbumImage.title}" />
 		{/option:!blockPhotogalleryAlbumImage.data.external_link}
 	{/option:!blockPhotogalleryAlbumImage.data.internal_link}
 

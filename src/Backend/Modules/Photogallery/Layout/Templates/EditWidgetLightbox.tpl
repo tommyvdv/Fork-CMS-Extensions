@@ -7,7 +7,7 @@
 
 {form:editWidget}
     
-    {include:{$BACKEND_MODULES_PATH}/photogallery/layout/templates/Partials/WidgetFormContentLightbox.tpl}
+    {include:{$BACKEND_MODULES_PATH}/Photogallery/Layout/Templates/Partials/WidgetFormContentLightbox.tpl}
 
     <div class="fullwidthOptions">
         {option:item.allow_delete}

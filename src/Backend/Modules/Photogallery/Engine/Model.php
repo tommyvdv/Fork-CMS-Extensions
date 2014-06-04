@@ -16,6 +16,71 @@ use Backend\Modules\Tags\Engine\Model as BackendTagsModel;
  */
 class Model
 {
+	const QRY_DATAGRID_BROWSE_RESOLUTIONS =
+		'SELECT i.id,
+			CONCAT(IF(i.width_null = "Y", "*" , i.width), " x ", IF(i.height_null = "Y", "*" , i.height)) AS resolution,
+			i.method,
+			i.kind,
+			i.allow_delete,
+			i.allow_edit
+		FROM photogallery_resolutions AS i
+		GROUP BY i.id';
+
+	public static function insertResolution(array $item)
+	{
+		$db = BackendModel::get('database');
+
+		// insert and return the new id
+		$item['id'] = $db->insert('photogallery_resolutions', $item);
+
+		return $item['id'];
+	}
+
+	public static function updateResolution(array $item)
+	{
+		$db = BackendModel::get('database');
+
+		// update category
+		$db->update('photogallery_resolutions', $item, 'id = ?', array($item['id']));
+		
+		return $item['id'];
+	}
+
+	public static function existsRes($id)
+	{
+		return (bool) BackendModel::get('database')->getVar(
+			'SELECT i.id
+			FROM photogallery_resolutions AS i
+			WHERE i.id = ?',
+			array((int) $id)
+		);
+	}
+
+	public static function getResolution($id)
+	{
+		$return =  (array) BackendModel::get('database')->getRecord(
+			'SELECT i.*
+			FROM photogallery_resolutions AS i
+			WHERE i.id = ?
+			LIMIT 1',
+			array((int) $id)
+		);
+
+		$return['width_null'] = $return['width_null'] == 'Y' ? true : false;
+		$return['height_null'] = $return['height_null'] == 'Y' ? true : false;
+		$return['allow_watermark'] = $return['allow_watermark'] == 'Y' ? true : false;
+		$return['regenerate'] = $return['regenerate'] == 'Y' ? true : false;
+		$return['allow_edit'] = $return['allow_edit'] == 'Y' ? true : false;
+		$return['allow_delete'] = $return['allow_delete'] == 'Y' ? true : false;
+
+		return $return;
+	}
+
+	public static function deleteResolution($id)
+	{
+		BackendModel::get('database')->delete('photogallery_resolutions', 'id = ?', array($id));
+	}
+
 	const QRY_DATAGRID_BROWSE_CATEGORIES =
 		'SELECT i.id, i.title, COUNT(a.album_id) AS num_albums, i.sequence,
 			(SELECT COUNT(*) FROM photogallery_categories WHERE parent_id = i.id) AS num_children

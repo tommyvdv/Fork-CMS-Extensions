@@ -39,7 +39,8 @@
 
 				{* Image *}
 					<a href="{$modulePhotogalleryAlbums.full_url}"  class="linkedImage" title="{$modulePhotogalleryAlbums.title}">
-						<img src="{$var|createimagephotogallery:{$modulePhotogalleryAlbums.image.set_id}:{$modulePhotogalleryAlbums.image.filename}:{$modulePhotogalleryIndexResolution.width}:{$modulePhotogalleryIndexResolution.height}:{$modulePhotogalleryIndexResolution.method}}" alt="{$modulePhotogalleryAlbums.title}" />
+						{*<img src="{$var|createimagephotogallery:{$modulePhotogalleryAlbums.image.set_id}:{$modulePhotogalleryAlbums.image.filename}:{$modulePhotogalleryIndexResolution.width}:{$modulePhotogalleryIndexResolution.height}:{$modulePhotogalleryIndexResolution.method}}" alt="{$modulePhotogalleryAlbums.title}" />*}
+						<img src="{$var|createimageresolution:{$modulePhotogalleryAlbums.image.set_id}:{$modulePhotogalleryAlbums.image.filename}:'overview_thumbnail'}" alt="{$modulePhotogalleryAlbums.title}" />
 					</a>
 
 			{/iteration:modulePhotogalleryAlbums}
@@ -62,7 +63,8 @@
 
 				{* Image *}
 					<a href="{$modulePhotogalleryCategories.full_url}"  class="linkedImage" title="{$modulePhotogalleryCategories.label}">
-						<img src="{$var|createimagephotogallery:{$modulePhotogalleryCategories.set_id}:{$modulePhotogalleryCategories.filename}:{$modulePhotogalleryIndexResolution.width}:{$modulePhotogalleryIndexResolution.height}:{$modulePhotogalleryIndexResolution.method}}" />
+						{*<img src="{$var|createimagephotogallery:{$modulePhotogalleryCategories.set_id}:{$modulePhotogalleryCategories.filename}:{$modulePhotogalleryIndexResolution.width}:{$modulePhotogalleryIndexResolution.height}:{$modulePhotogalleryIndexResolution.method}}" />*}
+						<img src="{$var|createimageresolution:{$modulePhotogalleryCategories.set_id}:{$modulePhotogalleryCategories.filename}:'overview_thumbnail'}" alt="{$modulePhotogalleryCategories.title}" />
 					</a>
 
 			{/iteration:modulePhotogalleryCategories}

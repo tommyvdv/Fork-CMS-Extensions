@@ -22,6 +22,34 @@ CREATE TABLE `photogallery_albums` (
   KEY `idx_status_language_hidden` (`language`,`hidden`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
+--
+-- Table structure for table `products_resolutions`
+--
+
+CREATE TABLE `photogallery_resolutions` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `width` int(11) DEFAULT NULL,
+  `width_null` enum('N','Y') COLLATE utf8_unicode_ci DEFAULT 'N',
+  `height` int(11) DEFAULT NULL,
+  `height_null` enum('N','Y') COLLATE utf8_unicode_ci DEFAULT 'N',
+  `method` enum('crop','resize') COLLATE utf8_unicode_ci NOT NULL,
+  `kind` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  `allow_watermark` enum('N','Y') COLLATE utf8_unicode_ci DEFAULT 'N',
+  `watermark` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `regenerate` enum('N','Y') COLLATE utf8_unicode_ci DEFAULT 'N',
+  `watermark_position` int(11) DEFAULT NULL,
+  `watermark_padding` int(11) DEFAULT NULL,
+  `allow_delete` enum('Y','N') COLLATE utf8_unicode_ci DEFAULT 'Y',
+  `allow_edit` enum('Y','N') COLLATE utf8_unicode_ci DEFAULT 'Y',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+INSERT INTO `photogallery_resolutions` (`id`, `width`, `width_null`, `height`, `height_null`, `method`, `kind`, `allow_watermark`, `watermark`, `regenerate`, `watermark_position`, `watermark_padding`, `allow_delete`, `allow_edit`)
+VALUES
+  (1, 125, 'N', 125, 'N', 'crop', 'backend_thumb', 'N', NULL, 'N', NULL, NULL, 'N', 'N'),
+  (2, 320, 'N', 240, 'N', 'crop', 'overview_thumbnail', 'N', NULL, 'N', NULL, NULL, 'N', 'N'),
+  (3, 800, 'N', 600, 'N', 'crop', 'detail_thumbnail', 'N', NULL, 'N', NULL, NULL, 'N', 'N'),
+  (4, 1200, 'N', 1200, 'N', 'resize', 'large', 'N', NULL, 'N', NULL, NULL, 'N', 'N');
 
 --
 -- Table structure for table `photogallery_categories_albums`

@@ -117,8 +117,7 @@
 
 
     <div id="tabLightboxSettings">
-
-        {include:{$BACKEND_MODULES_PATH}/photogallery/layout/templates/form_content_lightbox_settings.tpl}
+        {include:{$BACKEND_MODULES_PATH}/Photogallery/Layout/Templates/Partials/FormContentLightboxSettings.tpl}
     </div>
 </div>
     
