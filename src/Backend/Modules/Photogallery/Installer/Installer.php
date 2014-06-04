@@ -55,6 +55,10 @@ class Installer extends ModuleInstaller
         $this->setActionRights(1, 'Photogallery', 'Extras');
         $this->setActionRights(1, 'Photogallery', 'MassAction');
         $this->setActionRights(1, 'Photogallery', 'ImagesSequence');
+        $this->setActionRights(1, 'Photogallery', 'Resolutions');
+        $this->setActionRights(1, 'Photogallery', 'AddResolution');
+        $this->setActionRights(1, 'Photogallery', 'EditResolution');
+        $this->setActionRights(1, 'Photogallery', 'DeleteResolution');
         $this->setActionRights(1, 'Photogallery', 'Sequence');
         $this->setActionRights(1, 'Photogallery', 'UploadImage');
         $this->setActionRights(1, 'Photogallery', 'Settings');
@@ -91,6 +95,11 @@ class Installer extends ModuleInstaller
             'photogallery/add_widget_slideshow',
             'photogallery/add_widget_lightbox',
             'photogallery/edit_module'
+        ));
+
+        $this->setNavigation($navigationId, 'Resolutions', 'photogallery/resolutions', array(
+            'photogallery/add_resolution',
+            'photogallery/edit_resolution'
         ));
         
         // settings navigation
