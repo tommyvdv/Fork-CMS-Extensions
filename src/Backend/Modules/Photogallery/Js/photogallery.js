@@ -6,6 +6,7 @@ jsBackend.photogallery =
 	{
 		// init others
 		jsBackend.photogallery.resolutions();
+		jsBackend.photogallery.settings();
 
 		// do meta
 		if($('#title').length > 0) $('#title').doMeta();
@@ -28,6 +29,27 @@ jsBackend.photogallery =
 			});
 			
 			$('#new').change();
+		}
+	},
+
+	settings: function()
+	{
+		$('.js-checkbox-dependant').each(function(i,el){
+			target = $('input[name='+$(el).data('dependant-on')+']');
+			jsBackend.photogallery.check_dependance(target);
+			$('input[name='+$(el).data('dependant-on')+']').change(function(e){
+				jsBackend.photogallery.check_dependance($(e.target));
+			});
+		});
+	},
+
+	check_dependance: function(target)
+	{
+		if(target.is(':checked'))
+		{
+			$('*[data-dependant-on='+target.attr('name')+']').slideDown();
+		} else {
+			$('*[data-dependant-on='+target.attr('name')+']').slideUp();
 		}
 	},
 

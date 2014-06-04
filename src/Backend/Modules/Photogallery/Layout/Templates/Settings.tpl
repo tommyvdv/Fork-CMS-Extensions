@@ -30,39 +30,53 @@
         </div>
 
         <div class="options">
-            <label for="overviewAlbumsNumberOfItems">{$lblItemsPerPage|ucfirst}</label>
-            {$ddmOverviewAlbumsNumberOfItems}
-            {$ddmOverviewAlbumsNumberOfItemsError}
+            <label for="generalNumberOfItems">{$lblGeneralItemsPerPage|ucfirst}</label>
+            {$ddmGeneralNumberOfItems}
+            {$ddmGeneralNumberOfItemsError}
         </div>
 
         <div class="options">
-            <label for="overviewCategoriesNumberOfItems">{$lblItemsPerCategoryPage|ucfirst}</label>
-            {$ddmOverviewCategoriesNumberOfItems}
-            {$ddmOverviewCategoriesNumberOfItemsError}
+            <ul class="inputList p0">
+                <li><label for="specificNumberOfItems">{$chkSpecificNumberOfItems} {$lblSpecificNumberOfItems|ucfirst}</label></li>
+            </ul>
         </div>
 
-        <div class="options">
-            <label for="relatedListCategoriesNumberOfItems">{$msgNumItemsInRelatedCategoryList|ucfirst}</label>
-            {$ddmRelatedListCategoriesNumberOfItems}
-            {$ddmRelatedListCategoriesNumberOfItemsError}
-        </div>
+        <div class="js-checkbox-dependant hidden" data-dependant-on="specific_number_of_items">
+            <div class="options">
+                <label for="overviewAlbumsNumberOfItems">{$lblItemsPerPage|ucfirst}</label>
+                {$ddmOverviewAlbumsNumberOfItems}
+                {$ddmOverviewAlbumsNumberOfItemsError}
+            </div>
 
-        <div class="options">
-            <label for="relatedListTagsNumberOfItems">{$msgNumItemsInRelatedTagsList|ucfirst}</label>
-            {$ddmRelatedListTagsNumberOfItems}
-            {$ddmRelatedListTagsNumberOfItemsError}
-        </div>
+            <div class="options">
+                <label for="overviewCategoriesNumberOfItems">{$lblItemsPerCategoryPage|ucfirst}</label>
+                {$ddmOverviewCategoriesNumberOfItems}
+                {$ddmOverviewCategoriesNumberOfItemsError}
+            </div>
 
-        <div class="options">
-            <label for="relatedCategoriesNumberOfItems">{$msgNumItemsByRelatedCategories|ucfirst}</label>
-            {$ddmRelatedCategoriesNumberOfItems}
-            {$ddmRelatedCategoriesNumberOfItemsError}
-        </div>
+            <div class="options">
+                <label for="relatedListCategoriesNumberOfItems">{$msgNumItemsInRelatedCategoryList|ucfirst}</label>
+                {$ddmRelatedListCategoriesNumberOfItems}
+                {$ddmRelatedListCategoriesNumberOfItemsError}
+            </div>
 
-        <div class="options">
-            <label for="relatedTagsNumberOfItems">{$msgNumItemsByRelatedTags|ucfirst}</label>
-            {$ddmRelatedTagsNumberOfItems}
-            {$ddmRelatedTagsNumberOfItemsError}
+            <div class="options">
+                <label for="relatedListTagsNumberOfItems">{$msgNumItemsInRelatedTagsList|ucfirst}</label>
+                {$ddmRelatedListTagsNumberOfItems}
+                {$ddmRelatedListTagsNumberOfItemsError}
+            </div>
+
+            <div class="options">
+                <label for="relatedCategoriesNumberOfItems">{$msgNumItemsByRelatedCategories|ucfirst}</label>
+                {$ddmRelatedCategoriesNumberOfItems}
+                {$ddmRelatedCategoriesNumberOfItemsError}
+            </div>
+
+            <div class="options">
+                <label for="relatedTagsNumberOfItems">{$msgNumItemsByRelatedTags|ucfirst}</label>
+                {$ddmRelatedTagsNumberOfItems}
+                {$ddmRelatedTagsNumberOfItemsError}
+            </div>
         </div>
     </div>
 
