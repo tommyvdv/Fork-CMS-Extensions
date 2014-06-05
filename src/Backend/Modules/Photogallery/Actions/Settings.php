@@ -139,6 +139,10 @@ class Settings extends BackendBaseActionEdit
                 BackendModel::setModuleSetting($this->URL->getModule(), 'categories_depth_start', $this->frm->getField('categories_depth_start')->getValue());
                 BackendModel::setModuleSetting($this->URL->getModule(), 'categories_depth', $selected_depth);
 
+                $selected_depth = $this->frm->getField('albums_categories_depth')->getValue() != null ? $this->frm->getField('albums_categories_depth')->getValue() : null;
+                BackendModel::setModuleSetting($this->URL->getModule(), 'albums_categories_depth_start', $this->frm->getField('albums_categories_depth_start')->getValue());
+                BackendModel::setModuleSetting($this->URL->getModule(), 'albums_categories_depth', $selected_depth);
+
                 BackendModel::setModuleSetting($this->URL->getModule(), 'general_number_of_items', (int) $this->frm->getField('general_number_of_items')->getValue());
                 BackendModel::setModuleSetting($this->URL->getModule(), 'specific_number_of_items', (bool) $this->frm->getField('specific_number_of_items')->getValue());
                 if($this->frm->getField('specific_number_of_items')->getChecked())

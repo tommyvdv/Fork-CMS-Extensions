@@ -71,13 +71,13 @@ class EditCategory extends BackendBaseActionEdit
         $this->frm = new BackendForm('editCategory');
 
         // get categories
-        $allowedDepth = BackendModel::getModuleSetting($this->URL->getModule(), 'categories_depth');
-        $allowedDepthStart = BackendModel::getModuleSetting($this->URL->getModule(), 'categories_depth_start');
+        $allowedDepth = BackendModel::getModuleSetting($this->URL->getModule(), 'categories_depth', 0);
+        $allowedDepthStart = BackendModel::getModuleSetting($this->URL->getModule(), 'categories_depth_start', 0);
         $this->categoriesCount = BackendPhotogalleryModel::getCategoriesCount();
         $this->categories = BackendPhotogalleryModel::getCategoriesForDropdown(
             array(
                 $allowedDepthStart,
-                $allowedDepth
+                $allowedDepth == 0 ? 0 : $allowedDepth
             )
         );
         

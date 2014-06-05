@@ -86,12 +86,13 @@ class Edit extends BackendBaseActionEdit
         $today = mktime(00, 00, 00);
         
         // categories
-        $allowedDepth = BackendModel::getModuleSetting('photogallery', 'categories_depth', 0);
-        $allowedDepthStart = BackendModel::getModuleSetting('photogallery', 'categories_depth_start', 0);
+        $allowedDepth = BackendModel::getModuleSetting($this->URL->getModule(), 'albums_categories_depth');
+        $allowedDepthStart = BackendModel::getModuleSetting($this->URL->getModule(), 'albums_categories_depth_start', 0);
+        $this->categories_count = BackendPhotogalleryModel::getCategoriesCount();
         $this->categories = BackendPhotogalleryModel::getCategoriesForDropdown(
             array(
                 $allowedDepthStart,
-                $allowedDepth == 0 ? 0 : $allowedDepth + 1
+                $allowedDepth
             )
         );
         
@@ -204,6 +205,7 @@ class Edit extends BackendBaseActionEdit
         $this->tpl->assign('record', $this->record);
         
         $this->tpl->assign('categories', $this->categories);
+        $this->tpl->assign('categories_count', $this->categories_count);
         
         // parse dataGrid
         $this->tpl->assign('dataGrid', ($this->dataGrid->getNumResults() != 0) ? $this->dataGrid->getContent() : false);

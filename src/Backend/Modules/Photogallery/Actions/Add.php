@@ -57,16 +57,24 @@ class Add extends BackendBaseActionAdd
 
         $today = mktime(00, 00, 00);
 
-        //$this->categories = BackendPhotogalleryModel::getCategoriesForDropdown(true);
-        $allowedDepth = BackendModel::getModuleSetting('photogallery', 'categories_depth', 0);
-        $allowedDepthStart = BackendModel::getModuleSetting('photogallery', 'categories_depth_start', 0);
+        // get categories
+        $allowedDepth = BackendModel::getModuleSetting($this->URL->getModule(), 'albums_categories_depth');
+        $allowedDepthStart = BackendModel::getModuleSetting($this->URL->getModule(), 'albums_categories_depth_start', 0);
+        $this->categories_count = BackendPhotogalleryModel::getCategoriesCount();
         $this->categories = BackendPhotogalleryModel::getCategoriesForDropdown(
+            array(
+                $allowedDepthStart,
+                $allowedDepth
+            )
+        );
+/*
+        \Spoon::dump(
             array(
                 $allowedDepthStart,
                 $allowedDepth == 0 ? 0 : $allowedDepth + 1
             )
         );
-
+*/
         // create elements
         $this->frm->addText('title', null, null, 'inputText title', 'inputTextError title');
         $this->frm->addEditor('text');
@@ -113,6 +121,8 @@ class Add extends BackendBaseActionAdd
         
         // parse categories to template
         $this->tpl->assign('categories', $this->categories);
+        $this->tpl->assign('categories_depth', is_null(BackendModel::getModuleSetting($this->URL->getModule(), 'categories_depth')) ? false : true);
+        $this->tpl->assign('categories_count', $this->categories_count);
     }
 
     /**

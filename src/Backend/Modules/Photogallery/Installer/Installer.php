@@ -153,6 +153,7 @@ class Installer extends ModuleInstaller
         $this->insertExtra('Photogallery', 'widget', 'RelatedListByCategories', 'RelatedListByCategories');
         $this->insertExtra('Photogallery', 'widget', 'RelatedListByTags', 'RelatedListByTags');
         
+        $this->setDefaultSettings();
         // loop languages
         foreach($this->getLanguages() as $language)
         {
@@ -196,6 +197,36 @@ class Installer extends ModuleInstaller
                 );
             }
         }
+    }
+
+    private function setDefaultSettings()
+    {
+        // categories depth on album and category level
+        BackendModel::setModuleSetting($this->URL->getModule(), 'categories_depth_start', '0');
+        BackendModel::setModuleSetting($this->URL->getModule(), 'categories_depth', '');
+        BackendModel::setModuleSetting($this->URL->getModule(), 'albums_categories_depth_start', '0');
+        BackendModel::setModuleSetting($this->URL->getModule(), 'albums_categories_depth', '1');
+
+        // general paging and no paging
+        BackendModel::setModuleSetting($this->URL->getModule(), 'general_number_of_items', 10;
+        BackendModel::setModuleSetting($this->URL->getModule(), 'no_specific_number_of_items', false);
+        BackendModel::setModuleSetting($this->URL->getModule(), 'specific_number_of_items', false);
+
+        // specific paging
+        BackendModel::setModuleSetting($this->URL->getModule(), 'overview_albums_number_of_items', 10);
+        BackendModel::setModuleSetting($this->URL->getModule(), 'overview_categories_number_of_items', 10);
+        BackendModel::setModuleSetting($this->URL->getModule(), 'related_list_categories_number_of_items', 10);
+        BackendModel::setModuleSetting($this->URL->getModule(), 'related_list_tags_number_of_items', 10);
+        BackendModel::setModuleSetting($this->URL->getModule(), 'related_categories_number_of_items', 10);
+        BackendModel::setModuleSetting($this->URL->getModule(), 'related_tags_number_of_items', 10);
+
+        // specific no paging
+        BackendModel::setModuleSetting($this->URL->getModule(), 'no_overview_albums_number_of_items', false);
+        BackendModel::setModuleSetting($this->URL->getModule(), 'no_overview_categories_number_of_items', false);
+        BackendModel::setModuleSetting($this->URL->getModule(), 'no_related_list_categories_number_of_items', false);
+        BackendModel::setModuleSetting($this->URL->getModule(), 'no_related_list_tags_number_of_items', false);
+        BackendModel::setModuleSetting($this->URL->getModule(), 'no_related_categories_number_of_items', false);
+        BackendModel::setModuleSetting($this->URL->getModule(), 'no_related_tags_number_of_items', false);
     }
 
     private function doApiCall()
