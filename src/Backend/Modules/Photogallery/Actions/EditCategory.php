@@ -71,13 +71,18 @@ class EditCategory extends BackendBaseActionEdit
         $this->frm = new BackendForm('editCategory');
 
         // get categories
+        $allowedDepth = BackendModel::getModuleSetting($this->URL->getModule(), 'categories_depth', 0);
+        $allowedDepthStart = BackendModel::getModuleSetting($this->URL->getModule(), 'categories_depth_start', 0);
+        $this->categoriesCount = BackendPhotogalleryModel::getCategoriesCount();
         $this->categories = BackendPhotogalleryModel::getCategoriesForDropdown(
-            BackendModel::getModuleSetting('photogallery', 'categories_depth'),
-            false
+            array(
+                $allowedDepthStart,
+                $allowedDepth == 0 ? 0 : $allowedDepth
+            )
         );
 
         // create elements
-        $this->frm->addText('title', $this->record['title']);
+        $this->frm->addText('title', $this->record['title'], null, 'inputText title');
         $this->frm->addDropdown('parent_id', $this->categories, $this->record['parent_id'])->setDefaultElement('');
         $this->tpl->assign('deleteAllowed', BackendPhotogalleryModel::deleteCategoryAllowed($this->id));
 
@@ -98,12 +103,26 @@ class EditCategory extends BackendBaseActionEdit
 
         // assign
         $this->tpl->assign('item', $this->record);
+
+        // assign category (if there is one)
         $this->tpl->assign('category', $this->record);
         $this->tpl->assign('categories', $this->categories);
-        $this->tpl->assign('categories_depth', is_null(BackendModel::getModuleSetting('photogallery', 'categories_depth')) ? false : true);
+        $this->tpl->assign('categories_depth', is_null(BackendModel::getModuleSetting($this->URL->getModule(), 'categories_depth')) ? false : true);
+        $this->tpl->assign('categoriesCount', $this->categoriesCount);
+        //$this->tpl->assign('imageIsAllowed', $this->imageIsAllowed);
 
         // delete allowed?
         $this->tpl->assign('deleteAllowed', BackendPhotogalleryModel::deleteCategoryAllowed($this->id));
+
+        // get url
+        $url = BackendModel::getURLForBlock($this->URL->getModule(), 'category');
+        $url404 = BackendModel::getURL(404);
+
+        // parse additional variables
+        if($url404 != $url) $this->tpl->assign('detailURL', SITE_URL . $url);
+
+        // fetch proper slug
+        $this->record['url'] = $this->meta->getURL();
     }
 
     /**

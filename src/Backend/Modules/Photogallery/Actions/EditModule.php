@@ -69,7 +69,6 @@ class EditModule extends BackendBaseActionEdit
 
         $this->album_detail_overview_thumbnail = BackendPhotogalleryModel::getExtraResolutionForKind($this->id, 'album_detail_overview_thumbnail');
         $this->album_overview_thumbnail = BackendPhotogalleryModel::getExtraResolutionForKind($this->id, 'album_overview_thumbnail');
-
         $this->large = BackendPhotogalleryModel::getExtraResolutionForKind($this->id, 'large');
     }
 
@@ -89,6 +88,11 @@ class EditModule extends BackendBaseActionEdit
     {
         // create form
         $this->frm = new BackendForm('editWidget');
+
+        // resolution mode
+        $this->frm->addDropdown('overview_resolution', BackendPhotogalleryModel::getResolutionsForDropdown(), $this->album_detail_overview_thumbnail['resolution']);
+        $this->frm->addDropdown('detail_overview_resolution', BackendPhotogalleryModel::getResolutionsForDropdown(), $this->album_overview_thumbnail['resolution']);
+        $this->frm->addDropdown('large_resolution', BackendPhotogalleryModel::getResolutionsForDropdown(), $this->large['resolution']);
 
         // create elements
         $this->frm->addText('album_detail_overview_thumbnail_width', $this->album_detail_overview_thumbnail['width']);
@@ -237,17 +241,28 @@ class EditModule extends BackendBaseActionEdit
                 // insert the item
                 BackendPhotogalleryModel::updateExtra($item);
 
+                // resolutions @todo
+                $resolutionDetailThumbnail['resolution'] = $this->frm->getField('overview_resolution')->getValue();
+                $resolutionDetailThumbnail['id'] = $this->album_detail_overview_thumbnail['id'];
+                BackendPhotogalleryModel::updateExtraResolution($resolutionDetailThumbnail);
+                $resolutionOverviewThumbnail['resolution'] = $this->frm->getField('detail_overview_resolution')->getValue();
+                $resolutionOverviewThumbnail['id'] = $this->album_overview_thumbnail['id'];
+                BackendPhotogalleryModel::updateExtraResolution($resolutionOverviewThumbnail);
+                $resolutionLarge['resolution'] = $this->frm->getField('large_resolution')->getValue();
+                $resolutionLarge['id'] = $this->large['id'];
+                BackendPhotogalleryModel::updateExtraResolution($resolutionLarge);
+
                 $resolutionDetailThumbnail['width'] = $this->frm->getField('album_detail_overview_thumbnail_width')->getValue();
                 $resolutionDetailThumbnail['height'] = $this->frm->getField('album_detail_overview_thumbnail_height')->getValue();
                 $resolutionDetailThumbnail['method'] = $this->frm->getField('album_detail_overview_thumbnail_method')->getValue();
                 $resolutionDetailThumbnail['kind'] = 'album_detail_overview_thumbnail';
-                $resolutionDetailThumbnail['id'] = $this->album_detail_overview_thumbnail['id'];
+                //$resolutionDetailThumbnail['id'] = $this->album_detail_overview_thumbnail['id'];
 
                 $resolutionOverviewThumbnail['width'] = $this->frm->getField('album_overview_thumbnail_width')->getValue();
                 $resolutionOverviewThumbnail['height'] = $this->frm->getField('album_overview_thumbnail_height')->getValue();
                 $resolutionOverviewThumbnail['method'] = $this->frm->getField('album_overview_thumbnail_method')->getValue();
                 $resolutionOverviewThumbnail['kind'] = 'album_overview_thumbnail';
-                $resolutionOverviewThumbnail['id'] = $this->album_overview_thumbnail['id'];
+                //$resolutionOverviewThumbnail['id'] = $this->album_overview_thumbnail['id'];
 
                 $resolutionLarge['width'] = $this->frm->getField('large_width')->getValue();
                 $resolutionLarge['height'] = $this->frm->getField('large_height')->getValue();

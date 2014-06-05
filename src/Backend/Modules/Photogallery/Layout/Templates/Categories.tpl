@@ -10,10 +10,14 @@
     {/option:!category}
     <div class="buttonHolderRight">
         {option:category}
-            <a href="{$addToParentURL}" class="button icon iconAdd"><span>{$lblAddCategoryToParent|sprintf:{$category.title}|ucfirst}</span></a>
+            {option:add_allowed}
+                <a href="{$addToParentURL}" class="button icon iconAdd"><span>{$lblAddCategoryToParent|sprintf:{$category.title}|ucfirst}</span></a>
+            {/option:add_allowed}
         {/option:category}
         {option:!category}
-            <a href="{$var|geturl:'add_category'}" class="button icon iconAdd"><span>{$lblAddCategory|ucfirst}</span></a>
+            {option:add_allowed}
+                <a href="{$var|geturl:'add_category'}" class="button icon iconAdd"><span>{$lblAddCategory|ucfirst}</span></a>
+            {/option:add_allowed}
         {/option:!category}
     </div>
 </div>
@@ -42,6 +46,16 @@
         {$msgNoCategories|sprintf:{$var|geturl:'add_category'}}
     {/option:!category}
 {/option:!dataGrid}
+
+{option:isGod}
+    {option:debug}
+        depth: {$depth|dump}<br/>
+        start_depth: {$start_depth|dump}<br/>
+        limit_depth: {$limit_depth|dump}<br/>
+        add_allowed: {$add_allowed|dump}<br/>
+        add_child_allowed: {$add_child_allowed|dump}<br/>
+    {/option:debug}
+{/option:isGod}
 
 {include:{$BACKEND_CORE_PATH}/Layout/Templates/StructureEndModule.tpl}
 {include:{$BACKEND_CORE_PATH}/Layout/Templates/Footer.tpl}

@@ -7,8 +7,15 @@
 		<div class="heading">
 			<h3>{$lblThumbnail|ucfirst}</h3>
 		</div>
+
+        <div class="options labelWidthLong">
+            <p>
+                <label for="thumbnailResolution">{$lblResolution|ucfirst}</label>
+                {$ddmThumbnailResolution} {$ddmThumbnailResolutionError}
+            </p>
+        </div>
 	
-		<div class="options labelWidthLong">
+		<div class="options labelWidthLong hidden">
 			<p>
 				<label for="thumbnailWidth">{$lblWidth|ucfirst}</label>
 				{$txtThumbnailWidth} {$txtThumbnailWidthError}
@@ -29,7 +36,15 @@
 		<div class="heading">
 			<h3>{$lblLarge|ucfirst}</h3>
 		</div>
-		<div class="options labelWidthLong">
+
+        <div class="options labelWidthLong">
+            <p>
+                <label for="largeResolution">{$lblResolution|ucfirst}</label>
+                {$ddmLargeResolution} {$ddmLargeResolutionError}
+            </p>
+        </div>
+
+		<div class="options labelWidthLong hidden">
 			<p>
 				<label for="largeWidth">{$lblWidth|ucfirst}</label>
 				{$txtLargeWidth} {$txtLargeWidthError}

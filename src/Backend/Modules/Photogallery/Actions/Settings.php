@@ -50,6 +50,8 @@ class Settings extends BackendBaseActionEdit
         // general number of items
         $this->frm->addDropdown('general_number_of_items', array_combine(range(1, 30), range(1, 30)), BackendModel::getModuleSetting($this->URL->getModule(), 'general_number_of_items', 10));
         $this->frm->addCheckbox('specific_number_of_items', BackendModel::getModuleSetting($this->URL->getModule(), 'specific_number_of_items', false));
+        // disable all paging checkboxes
+        $this->frm->addCheckbox('no_specific_number_of_items', BackendModel::getModuleSetting($this->URL->getModule(), 'no_specific_number_of_items', false));
         
         // specific number of items
         $this->frm->addDropdown('overview_albums_number_of_items', array_combine(range(1, 30), range(1, 30)), BackendModel::getModuleSetting($this->URL->getModule(), 'overview_albums_number_of_items', 10));
@@ -58,6 +60,13 @@ class Settings extends BackendBaseActionEdit
         $this->frm->addDropdown('related_list_tags_number_of_items', array_combine(range(1, 30), range(1, 30)), BackendModel::getModuleSetting($this->URL->getModule(), 'related_list_tags_number_of_items', 10));
         $this->frm->addDropdown('related_categories_number_of_items', array_combine(range(1, 30), range(1, 30)), BackendModel::getModuleSetting($this->URL->getModule(), 'related_categories_number_of_items', 10));
         $this->frm->addDropdown('related_tags_number_of_items', array_combine(range(1, 30), range(1, 30)), BackendModel::getModuleSetting($this->URL->getModule(), 'related_tags_number_of_items', 10));
+        // disable paging checkboxes
+        $this->frm->addCheckbox('no_overview_albums_number_of_items', BackendModel::getModuleSetting($this->URL->getModule(), 'no_overview_albums_number_of_items', false));
+        $this->frm->addCheckbox('no_overview_categories_number_of_items', BackendModel::getModuleSetting($this->URL->getModule(), 'no_overview_categories_number_of_items', false));
+        $this->frm->addCheckbox('no_related_list_categories_number_of_items', BackendModel::getModuleSetting($this->URL->getModule(), 'no_related_list_categories_number_of_items', false));
+        $this->frm->addCheckbox('no_related_list_tags_number_of_items', BackendModel::getModuleSetting($this->URL->getModule(), 'no_related_list_tags_number_of_items', false));
+        $this->frm->addCheckbox('no_related_categories_number_of_items', BackendModel::getModuleSetting($this->URL->getModule(), 'no_related_categories_number_of_items', false));
+        $this->frm->addCheckbox('no_related_tags_number_of_items', BackendModel::getModuleSetting($this->URL->getModule(), 'no_related_tags_number_of_items', false));        
 
         // add fields for SEO
         $this->frm->addCheckbox('ping_services', BackendModel::getModuleSetting($this->URL->getModule(), 'ping_services', false));
@@ -130,6 +139,14 @@ class Settings extends BackendBaseActionEdit
                 BackendModel::setModuleSetting($this->URL->getModule(), 'specific_number_of_items', (bool) $this->frm->getField('specific_number_of_items')->getValue());
                 if($this->frm->getField('specific_number_of_items')->getChecked())
                 {
+                    BackendModel::setModuleSetting($this->URL->getModule(), 'no_specific_number_of_items', (bool) $this->frm->getField('no_specific_number_of_items')->getValue());
+                    BackendModel::setModuleSetting($this->URL->getModule(), 'no_overview_albums_number_of_items', (bool) $this->frm->getField('no_overview_albums_number_of_items')->getValue());
+                    BackendModel::setModuleSetting($this->URL->getModule(), 'no_overview_categories_number_of_items', (bool) $this->frm->getField('no_overview_categories_number_of_items')->getValue());
+                    BackendModel::setModuleSetting($this->URL->getModule(), 'no_related_list_categories_number_of_items', (bool) $this->frm->getField('no_related_list_categories_number_of_items')->getValue());
+                    BackendModel::setModuleSetting($this->URL->getModule(), 'no_related_list_tags_number_of_items', (bool) $this->frm->getField('no_related_list_tags_number_of_items')->getValue());
+                    BackendModel::setModuleSetting($this->URL->getModule(), 'no_related_categories_number_of_items', (bool) $this->frm->getField('no_related_categories_number_of_items')->getValue());
+                    BackendModel::setModuleSetting($this->URL->getModule(), 'no_related_tags_number_of_items', (bool) $this->frm->getField('no_related_tags_number_of_items')->getValue());
+
                     BackendModel::setModuleSetting($this->URL->getModule(), 'overview_albums_number_of_items', (int) $this->frm->getField('overview_albums_number_of_items')->getValue());
                     BackendModel::setModuleSetting($this->URL->getModule(), 'overview_categories_number_of_items', (int) $this->frm->getField('overview_categories_number_of_items')->getValue());
                     BackendModel::setModuleSetting($this->URL->getModule(), 'related_list_categories_number_of_items', (int) $this->frm->getField('related_list_categories_number_of_items')->getValue());
@@ -137,6 +154,14 @@ class Settings extends BackendBaseActionEdit
                     BackendModel::setModuleSetting($this->URL->getModule(), 'related_categories_number_of_items', (int) $this->frm->getField('related_categories_number_of_items')->getValue());
                     BackendModel::setModuleSetting($this->URL->getModule(), 'related_tags_number_of_items', (int) $this->frm->getField('related_tags_number_of_items')->getValue());
                 } else {
+                    BackendModel::setModuleSetting($this->URL->getModule(), 'no_specific_number_of_items', (bool) $this->frm->getField('no_specific_number_of_items')->getValue());
+                    BackendModel::setModuleSetting($this->URL->getModule(), 'no_overview_albums_number_of_items', (bool) $this->frm->getField('no_specific_number_of_items')->getValue());
+                    BackendModel::setModuleSetting($this->URL->getModule(), 'no_overview_categories_number_of_items', (bool) $this->frm->getField('no_specific_number_of_items')->getValue());
+                    BackendModel::setModuleSetting($this->URL->getModule(), 'no_related_list_categories_number_of_items', (bool) $this->frm->getField('no_specific_number_of_items')->getValue());
+                    BackendModel::setModuleSetting($this->URL->getModule(), 'no_related_list_tags_number_of_items', (bool) $this->frm->getField('no_specific_number_of_items')->getValue());
+                    BackendModel::setModuleSetting($this->URL->getModule(), 'no_related_categories_number_of_items', (bool) $this->frm->getField('no_specific_number_of_items')->getValue());
+                    BackendModel::setModuleSetting($this->URL->getModule(), 'no_related_tags_number_of_items', (bool) $this->frm->getField('no_specific_number_of_items')->getValue());
+
                     BackendModel::setModuleSetting($this->URL->getModule(), 'overview_albums_number_of_items', (int) $this->frm->getField('general_number_of_items')->getValue());
                     BackendModel::setModuleSetting($this->URL->getModule(), 'overview_categories_number_of_items', (int) $this->frm->getField('general_number_of_items')->getValue());
                     BackendModel::setModuleSetting($this->URL->getModule(), 'related_list_categories_number_of_items', (int) $this->frm->getField('general_number_of_items')->getValue());

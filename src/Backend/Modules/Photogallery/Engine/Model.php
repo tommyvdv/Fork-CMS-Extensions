@@ -26,6 +26,18 @@ class Model
 		FROM photogallery_resolutions AS i
 		GROUP BY i.id';
 
+	public static function getResolutionsForDropdown()
+	{
+		$db = BackendModel::get('database');
+		$return =  (array) $db->getPairs(
+			'SELECT i.kind AS value,
+				CONCAT(i.kind, " (", IF(i.width_null = "Y", "*" , i.width), " x ", IF(i.height_null = "Y", "*" , i.height), " ", i.method, ")") AS label
+			FROM photogallery_resolutions AS i'
+		);
+
+		return $return;
+	}
+
 	public static function insertResolution(array $item)
 	{
 		$db = BackendModel::get('database');
@@ -697,9 +709,14 @@ class Model
 		$return =  (array) BackendModel::get('database')->getRecord(
 			'SELECT i.*
 			FROM photogallery_extras_resolutions AS i
-			WHERE i.extra_id = ? AND i.kind = ?
+			WHERE i.extra_id = ?
+				AND i.kind = ?
 			LIMIT 1',
-			array((int) $extra_id, (string) $kind));
+			array(
+				(int) $extra_id,
+				(string) $kind
+			)
+		);
 
 		return $return;
 	}
@@ -841,9 +858,10 @@ class Model
 	public static function getCategory($id)
 	{
 		return (array) BackendModel::get('database')->getRecord(
-			'SELECT i.*
-			 FROM photogallery_categories AS i
-			 WHERE i.id = ? AND i.language = ?',
+			'SELECT i.*, m.url
+			FROM photogallery_categories AS i
+				JOIN meta AS m ON i.meta_id = m.id
+			WHERE i.id = ? AND i.language = ?',
 			array((int) $id, BL::getWorkingLanguage())
 		);
 	}
@@ -918,6 +936,15 @@ class Model
 		}
 
 		return empty($output) ? array() : $output;
+	}
+	public static function getCategoriesCount()
+	{
+		return (int) BackendModel::get('database')->getVar(
+			'SELECT count(i.id)
+			FROM photogallery_categories AS i
+			WHERE i.language = ?',
+			array(BL::getWorkingLanguage())
+		);
 	}
 
 	/**

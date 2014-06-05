@@ -24,8 +24,6 @@
         </div>
     </div>
 
-
-
     <div class="tabs">
         <ul>
             <li><a href="#tabContent">{$lblContent|ucfirst}</a></li>

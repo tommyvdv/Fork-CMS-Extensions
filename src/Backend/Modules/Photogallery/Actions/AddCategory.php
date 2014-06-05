@@ -28,6 +28,7 @@ class AddCategory extends BackendBaseActionAdd
         // get id
         $this->category_id = $this->getParameter('category_id', 'int', 0);
         $this->category = BackendPhotogalleryModel::getCategory($this->category_id);
+        $this->categories_depth = is_null(BackendModel::getModuleSetting($this->URL->getModule(), 'categories_depth')) ? false : true;
 
         // load the form
         $this->loadForm();
@@ -51,9 +52,17 @@ class AddCategory extends BackendBaseActionAdd
         parent::parse();
 
         // assign category (if there is one)
-        $this->tpl->assign('category', $this->category);
+        if($this->category) $this->tpl->assign('category', $this->category);
         $this->tpl->assign('categories', $this->categories);
-        $this->tpl->assign('categories_depth', is_null(BackendModel::getModuleSetting('photogallery', 'categories_depth')) ? false : true);
+        $this->tpl->assign('categories_depth', $this->categories_depth);
+        $this->tpl->assign('categories_count', $this->categories_count);
+
+        // get url
+        $url = BackendModel::getURLForBlock($this->URL->getModule(), 'category');
+        $url404 = BackendModel::getURL(404);
+
+        // parse additional variables
+        if($url404 != $url) $this->tpl->assign('detailURL', SITE_URL . $url);
     }
 
     /**
@@ -64,13 +73,28 @@ class AddCategory extends BackendBaseActionAdd
         // create form
         $this->frm = new BackendForm('addCategory');
 
+        // determine depth
+        $allowedDepth = BackendModel::getModuleSetting($this->URL->getModule(), 'categories_depth', 0);
+        $allowedDepthStart = BackendModel::getModuleSetting($this->URL->getModule(), 'categories_depth_start', 0);
+
         // get categories
+        $this->categories_count = BackendPhotogalleryModel::getCategoriesCount();
+        $this->categories = BackendPhotogalleryModel::getCategoriesForDropdown(
+            array(
+                $allowedDepthStart,
+                $allowedDepth == 0 ? 0 : $allowedDepth
+            )
+        );
+
+        // get categories
+        /*
         $this->categories = BackendPhotogalleryModel::getCategoriesForDropdown(
             BackendModel::getModuleSetting('photogallery', 'categories_depth')
         );
+        */
 
         // create elements
-        $this->frm->addText('title', null, 255);
+        $this->frm->addText('title', null, 255, 'inputText title', 'inputTextError title');
         $this->frm->addDropdown('parent_id', $this->categories, \SpoonFilter::getGetValue('category_id', null, null, 'int'))->setDefaultElement('');
 
         // meta

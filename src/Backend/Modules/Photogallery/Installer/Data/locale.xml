@@ -389,8 +389,8 @@
             </item>
             
             <item type="label" name="ViewSubcategories">
-                <translation language="en"><![CDATA[view subcategories]]></translation>
-                <translation language="nl"><![CDATA[bekijk subcategorieën]]></translation>
+                <translation language="en"><![CDATA[view subcategories (%1$s)]]></translation>
+                <translation language="nl"><![CDATA[bekijk subcategorieën (%1$s)]]></translation>
             </item>
             
             <item type="label" name="Root">
@@ -408,6 +408,10 @@
                 <translation language="nl"><![CDATA[subcategorieën voor "%1$s"]]></translation>
             </item>
             
+             <item type="label" name="AddSubCategory">
+                <translation language="en"><![CDATA[add subcategory]]></translation>
+                <translation language="nl"><![CDATA[subcategorie toevoegen]]></translation>
+            </item>
             <item type="label" name="AddCategoryToParent">
                 <translation language="en"><![CDATA[add subcategory to "%1$s"]]></translation>
                 <translation language="nl"><![CDATA[voeg subcategorie toe aan "%1$s"]]></translation>
@@ -717,9 +721,13 @@
                 <translation language="en"><![CDATA[infinity]]></translation>
                 <translation language="nl"><![CDATA[oneindig]]></translation>
             </item>
+            <item type="label" name="CategoriesDepthStart">
+                <translation language="en"><![CDATA[categories depth starts at]]></translation>
+                <translation language="nl"><![CDATA[diepte voor subcategorieën start aan]]></translation>
+            </item>
             <item type="label" name="CategoriesDepth">
-                <translation language="en"><![CDATA[allowed depth for subcategories]]></translation>
-                <translation language="nl"><![CDATA[toegelaten diepte voor subcategorieën]]></translation>
+                <translation language="en"><![CDATA[and maxes out on]]></translation>
+                <translation language="nl"><![CDATA[en gaat tot]]></translation>
             </item>
             <item type="label" name="Yes">
                 <translation language="en"><![CDATA[yes]]></translation>

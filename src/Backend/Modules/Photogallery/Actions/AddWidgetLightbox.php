@@ -51,6 +51,10 @@ class AddWidgetLightbox extends BackendBaseActionAdd
         // create form
         $this->frm = new BackendForm('addWidget');
 
+        // resolution mode
+        $this->frm->addDropdown('thumbnail_resolution', BackendPhotogalleryModel::getResolutionsForDropdown(), 'overview_thumbnail');
+        $this->frm->addDropdown('large_resolution', BackendPhotogalleryModel::getResolutionsForDropdown(), 'large');
+
         // create elements
         $this->frm->addText('title', null, null, 'inputText title', 'inputTextError title');
         $this->frm->addText('thumbnail_width');
@@ -126,13 +130,13 @@ class AddWidgetLightbox extends BackendBaseActionAdd
 
             // validate fields
             $this->frm->getField('title')->isFilled(BL::getError('TitleIsRequired'));
-            self::validateResolution('thumbnail_width');
-            self::validateResolution('thumbnail_height');
-            self::validateResolution('large_width');
-            self::validateResolution('large_height');
+            //self::validateResolution('thumbnail_width');
+            //self::validateResolution('thumbnail_height');
+            //self::validateResolution('large_width');
+            //self::validateResolution('large_height');
 
-            $this->frm->getField('thumbnail_method')->isFilled(BL::getError('FieldIsRequired'));
-            $this->frm->getField('large_method')->isFilled(BL::getError('FieldIsRequired'));
+            //$this->frm->getField('thumbnail_method')->isFilled(BL::getError('FieldIsRequired'));
+            //$this->frm->getField('large_method')->isFilled(BL::getError('FieldIsRequired'));
 
             $this->frm->getField('padding')->isFilled(BL::getError('FieldIsRequired'));
             $this->frm->getField('margin')->isFilled(BL::getError('FieldIsRequired'));
@@ -189,12 +193,14 @@ class AddWidgetLightbox extends BackendBaseActionAdd
                 $resolutionThumbnail['height'] = $this->frm->getField('thumbnail_height')->getValue();
                 $resolutionThumbnail['method'] = $this->frm->getField('thumbnail_method')->getValue();
                 $resolutionThumbnail['kind'] = 'thumbnail';
+                $resolutionThumbnail['resolution'] = $this->frm->getField('thumbnail_resolution')->getValue();
 
                 $resolutionLarge['extra_id'] = $item['id'];
                 $resolutionLarge['width'] = $this->frm->getField('large_width')->getValue();
                 $resolutionLarge['height'] = $this->frm->getField('large_height')->getValue();
                 $resolutionLarge['method'] = $this->frm->getField('large_method')->getValue();
                 $resolutionLarge['kind'] = 'large';
+                $resolutionLarge['resolution'] = $this->frm->getField('large_resolution')->getValue();
 
                 BackendPhotogalleryModel::insertExtraResolution($resolutionThumbnail);
 

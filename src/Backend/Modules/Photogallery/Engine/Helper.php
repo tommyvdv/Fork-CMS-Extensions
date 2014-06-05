@@ -19,12 +19,24 @@ use Backend\Core\Engine\Language as BL;
  */
 class Helper
 {
+	public static function getTitleWithNumAlbums($num_albums, $title, $edit_link = null)
+	{
+		return ($edit_link ? '<a href="' . $edit_link . '">' : '') . ($num_albums ? $title . ' (' . $num_albums . ')' : $title) . ($edit_link ? '</a>' : '');
+	}
+
+	public static function getNumchildrenButton($num_children, $id)
+	{
+		return $num_children = $num_children ? "<a href=\"" . BackendModel::createURLForAction("categories") . "&amp;category_id=" . $id . "\">" . vsprintf(BL::lbl("ViewSubcategories"), $num_children) . "</a>" : '';
+	}
+
 	public static function refreshResolution($resolution, $backend = false)
 	{
 		$backend_path = false;
 		$frontend_path = FRONTEND_FILES_PATH . '/' . 'photogallery/sets/';
 
 		$targetDir = ($resolution['width_null'] == 'Y' ? '' : $resolution['width']) . 'x' . ($resolution['height_null'] == 'Y' ? '' : $resolution['height'])  . $resolution['method'];
+		//\Spoon::dump($targetDir);
+		//\Spoon::dump($frontend_path);
 		
 		$finder = new Finder();
         $fs = new Filesystem();
@@ -37,6 +49,31 @@ class Helper
         ) {
         	$fs->remove($directory);
         }
+		/*
+		$objects = scandir($frontend_path);
+		$targetDir = ($resolution['width_null'] == 'Y' ? '' : $resolution['width']) . 'x' . ($resolution['height_null'] == 'Y' ? '' : $resolution['height'])  . $resolution['method'];
+		foreach($objects as $object)
+		{
+			if($object != "." && $object != ".." && $object != '.DS_Store')
+			{
+				if(
+					$backend_path &&
+					\SpoonDirectory::exists($backend_path . '/' . $object . '/' . $targetDir) &&
+					filetype($backend_path . '/' . $object . '/' . $targetDir) == 'dir'
+				)
+					\SpoonDirectory::delete($backend_path . '/' . $object . '/' . $targetDir);
+				
+				if(
+					\SpoonDirectory::exists($frontend_path . '/' . $object . '/' . $targetDir) &&
+					filetype($frontend_path . '/' . $object . '/' . $targetDir) == 'dir'
+				)
+					\SpoonDirectory::delete($frontend_path . '/' . $object . '/' . $targetDir);
+					//rmdir($frontend_path . '/' . $object . '/' . $targetDir);
+				//else
+					//unlink($frontend_path . '/' . $object . '/' . $targetDir);
+			} 
+		}
+		*/
 	}
 
     public static function getResolutionEditButton($id, $allow_edit)

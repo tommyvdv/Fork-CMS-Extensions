@@ -115,7 +115,7 @@
         {/option:record.allow_delete}
         <div class="buttonHolderRight">
             {option:record.allow_edit}
-                <input id="addButton" class="inputButton button mainButton" type="submit" name="add" value="{$lblAdd|ucfirst}" />
+                <input id="saveButton" class="inputButton button mainButton" type="submit" name="save" value="{$lblSave|ucfirst}" />
             {/option:record.allow_edit}
         </div>
     </div>

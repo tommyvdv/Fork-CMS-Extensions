@@ -8,16 +8,16 @@
 {form:settings}
     <div class="box">
         <div class="heading">
-            <h3>{$lblInterface|ucfirst}</h3>
+            <h3>{$lblCategories|ucfirst}</h3>
         </div>
 
         <div class="options">
+            <p>{$msgHelpCategoriesDepth}</p>
+
             <label for="categoriesDepthStart">{$lblCategoriesDepthStart|ucfirst}</label>
             {$ddmCategoriesDepthStart}
             {$ddmCategoriesDepthStartError}
-        </div>
 
-        <div class="options">
             <label for="categoriesDepth">{$lblCategoriesDepth|ucfirst}</label>
             {$ddmCategoriesDepth}
             {$ddmCategoriesDepthError}
@@ -33,6 +33,8 @@
             <label for="generalNumberOfItems">{$lblGeneralItemsPerPage|ucfirst}</label>
             {$ddmGeneralNumberOfItems}
             {$ddmGeneralNumberOfItemsError}
+
+            <label for="noSpecificNumberOfItems">{$chkNoSpecificNumberOfItems} {$lblNoSpecificNumberOfItems|ucfirst}</label>
         </div>
 
         <div class="options">
@@ -46,36 +48,48 @@
                 <label for="overviewAlbumsNumberOfItems">{$lblItemsPerPage|ucfirst}</label>
                 {$ddmOverviewAlbumsNumberOfItems}
                 {$ddmOverviewAlbumsNumberOfItemsError}
+
+                <label for="noOverviewAlbumsNumberOfItems">{$chkNoOverviewAlbumsNumberOfItems} {$lblNoOverviewAlbumsNumberOfItems|ucfirst}</label>
             </div>
 
             <div class="options">
                 <label for="overviewCategoriesNumberOfItems">{$lblItemsPerCategoryPage|ucfirst}</label>
                 {$ddmOverviewCategoriesNumberOfItems}
                 {$ddmOverviewCategoriesNumberOfItemsError}
+
+                <label for="noOverviewCategoriesNumberOfItems">{$chkNoOverviewCategoriesNumberOfItems} {$lblNoOverviewCategoriesNumberOfItems|ucfirst}</label>
             </div>
 
             <div class="options">
                 <label for="relatedListCategoriesNumberOfItems">{$msgNumItemsInRelatedCategoryList|ucfirst}</label>
                 {$ddmRelatedListCategoriesNumberOfItems}
                 {$ddmRelatedListCategoriesNumberOfItemsError}
+
+                <label for="noRelatedListCategoriesNumberOfItems">{$chkNoRelatedListCategoriesNumberOfItems} {$lblNoRelatedListCategoriesNumberOfItems|ucfirst}</label>
             </div>
 
             <div class="options">
                 <label for="relatedListTagsNumberOfItems">{$msgNumItemsInRelatedTagsList|ucfirst}</label>
                 {$ddmRelatedListTagsNumberOfItems}
                 {$ddmRelatedListTagsNumberOfItemsError}
+
+                <label for="noRelatedListTagsNumberOfItems">{$chkNoRelatedListTagsNumberOfItems} {$lblNoRelatedListTagsNumberOfItems|ucfirst}</label>
             </div>
 
             <div class="options">
                 <label for="relatedCategoriesNumberOfItems">{$msgNumItemsByRelatedCategories|ucfirst}</label>
                 {$ddmRelatedCategoriesNumberOfItems}
                 {$ddmRelatedCategoriesNumberOfItemsError}
+
+                <label for="noRelatedCategoriesNumberOfItems">{$chkNoRelatedCategoriesNumberOfItems} {$lblNoRelatedCategoriesNumberOfItems|ucfirst}</label>
             </div>
 
             <div class="options">
                 <label for="relatedTagsNumberOfItems">{$msgNumItemsByRelatedTags|ucfirst}</label>
                 {$ddmRelatedTagsNumberOfItems}
                 {$ddmRelatedTagsNumberOfItemsError}
+
+                <label for="noRelatedTagsNumberOfItems">{$chkNoRelatedTagsNumberOfItems} {$lblNoRelatedTagsNumberOfItems|ucfirst}</label>
             </div>
         </div>
     </div>
@@ -85,7 +99,7 @@
             <h3>{$lblSEO}</h3>
         </div>
         <div class="options">
-            <p>{$msgHelpPingServices}:</p>
+            <p>{$msgHelpPingServices}</p>
             <ul class="inputList p0">
                 <li><label for="pingServices">{$chkPingServices} {$lblPingBlogServices|ucfirst}</label></li>
             </ul>
@@ -148,7 +162,7 @@
             <h3>{$lblWatermark}</h3>
         </div>
         <div class="options">
-            <p>{$msgHelpWatermark}:</p>
+            <p>{$msgHelpWatermark}</p>
             <ul class="inputList p0">
                 <li><label for="allowWatermark">{$chkAllowWatermark} {$lblAllowWatermark|ucfirst}</label></li>
             </ul>

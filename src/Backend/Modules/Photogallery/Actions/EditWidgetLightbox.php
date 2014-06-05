@@ -92,6 +92,10 @@ class EditWidgetLightbox extends BackendBaseActionEdit
 
         $this->frm->addText('title', $this->record['data']['settings']['title'], null, 'inputText title', 'inputTextError title');
 
+        // resolution mode
+        $this->frm->addDropdown('thumbnail_resolution', BackendPhotogalleryModel::getResolutionsForDropdown(), $this->thumbnail['resolution']);
+        $this->frm->addDropdown('large_resolution', BackendPhotogalleryModel::getResolutionsForDropdown(), $this->large['resolution']);
+
         // create elements
         $this->frm->addText('thumbnail_width', $this->thumbnail['width']);
         $this->frm->addText('thumbnail_height', $this->thumbnail['height']);
@@ -209,6 +213,14 @@ class EditWidgetLightbox extends BackendBaseActionEdit
 
                 // insert the item
                 BackendPhotogalleryModel::updateExtra($item);
+
+                // resolutions @todo
+                $resolutionThumbnail['resolution'] = $this->frm->getField('thumbnail_resolution')->getValue();
+                $resolutionThumbnail['id'] = $this->thumbnail['id'];
+                BackendPhotogalleryModel::updateExtraResolution($resolutionThumbnail);
+                $resolutionLarge['resolution'] = $this->frm->getField('large_resolution')->getValue();
+                $resolutionLarge['id'] = $this->large['id'];
+                BackendPhotogalleryModel::updateExtraResolution($resolutionLarge);
 
                 $resolutionThumbnail['width'] = $this->frm->getField('thumbnail_width')->getValue();
                 $resolutionThumbnail['height'] = $this->frm->getField('thumbnail_height')->getValue();

@@ -99,7 +99,7 @@ jsBackend.photogallery =
 			$('#method').attr('disabled','disabled');
 			if($target)
 			{
-				$toggleTarget = $target.closest('.options').find('input[type="checkbox"]').not("#"+$target.attr('id'))
+				$toggleTarget = $target.closest('.options').find('input[type="checkbox"]').not('#allowWatermark').not("#"+$target.attr('id'))
 				if($target.is(':checked')) $toggleTarget.removeAttr('checked','checked');
 			}
 		}

@@ -92,6 +92,9 @@ class EditWidgetSlideshow extends BackendBaseActionEdit
 
         $this->frm->addText('title', $this->record['data']['settings']['title'], null, 'inputText title', 'inputTextError title');
 
+        // resolution mode
+        $this->frm->addDropdown('large_resolution', BackendPhotogalleryModel::getResolutionsForDropdown(), $this->large['resolution']);
+
         $this->frm->addText('large_width', $this->large['width']);
         $this->frm->addText('large_height', $this->large['height']);
         $this->frm->addDropdown('large_method', array('crop' => BL::getLabel('Crop'), 'resize' => BL::getLabel('Resize')), $this->large['method'])->setDefaultElement(\SpoonFilter::ucfirst(BL::getLabel('ChooseAResizeMethod')));
@@ -176,6 +179,11 @@ class EditWidgetSlideshow extends BackendBaseActionEdit
 
                 // insert the item
                 BackendPhotogalleryModel::updateExtra($item);
+
+                // resolutions @todo
+                $resolutionLarge['resolution'] = $this->frm->getField('large_resolution')->getValue();
+                $resolutionLarge['id'] = $this->large['id'];
+                BackendPhotogalleryModel::updateExtraResolution($resolutionLarge);
 
                 $resolutionLarge['width'] = $this->frm->getField('large_width')->getValue();
                 $resolutionLarge['height'] = $this->frm->getField('large_height')->getValue();

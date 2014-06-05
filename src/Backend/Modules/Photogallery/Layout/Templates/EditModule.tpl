@@ -23,6 +23,13 @@
 
             <div class="options labelWidthLong">
                 <p>
+                    <label for="overviewResolution">{$lblResolution|ucfirst}</label>
+                    {$ddmOverviewResolution} {$ddmOverviewResolutionError}
+                </p>
+            </div>
+
+            <div class="options labelWidthLong hidden">
+                <p>
                     <label for="albumOverviewThumbnail">{$lblWidth|ucfirst}</label>
                     {$txtAlbumOverviewThumbnailWidth} {$txtAlbumOverviewThumbnailWidthError}
                 </p>
@@ -42,8 +49,15 @@
             <div class="heading">
                 <h3>{$lblAlbumDetailOverviewThumbnail|ucfirst}</h3>
             </div>
-        
+
             <div class="options labelWidthLong">
+                <p>
+                    <label for="detailOverviewResolution">{$lblResolution|ucfirst}</label>
+                    {$ddmDetailOverviewResolution} {$ddmDetailOverviewResolutionError}
+                </p>
+            </div>
+        
+            <div class="options labelWidthLong hidden">
                 <p>
                     <label for="albumDetailOverviewThumbnailWidth">{$lblWidth|ucfirst}</label>
                     {$txtAlbumDetailOverviewThumbnailWidth} {$txtAlbumDetailOverviewThumbnailWidthError}
@@ -64,7 +78,15 @@
             <div class="heading">
                 <h3>{$lblLarge|ucfirst}</h3>
             </div>
+
             <div class="options labelWidthLong">
+                <p>
+                    <label for="largeResolution">{$lblResolution|ucfirst}</label>
+                    {$ddmLargeResolution} {$ddmLargeResolutionError}
+                </p>
+            </div>
+
+            <div class="options labelWidthLong hidden">
                 <p>
                     <label for="largeWidth">{$lblWidth|ucfirst}</label>
                     {$txtLargeWidth} {$txtLargeWidthError}

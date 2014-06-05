@@ -51,6 +51,9 @@ class AddWidgetSlideshow extends BackendBaseActionAdd
         // create form
         $this->frm = new BackendForm('addWidget');
 
+        // resolution mode
+        $this->frm->addDropdown('large_resolution', BackendPhotogalleryModel::getResolutionsForDropdown(), 'large');
+
         // create elements
         $this->frm->addText('title', null, null, 'inputText title', 'inputTextError title');
         $this->frm->addText('large_width');
@@ -98,9 +101,9 @@ class AddWidgetSlideshow extends BackendBaseActionAdd
             $this->frm->cleanupFields();
 
             // validate fields
-            self::validateResolution('large_width');
-            self::validateResolution('large_height');
-            $this->frm->getField('large_method')->isFilled(BL::getError('FieldIsRequired'));
+            //self::validateResolution('large_width');
+            //self::validateResolution('large_height');
+            //$this->frm->getField('large_method')->isFilled(BL::getError('FieldIsRequired'));
         
             $this->frm->getField('title')->isFilled(BL::getError('TitleIsRequired'));
             $this->frm->getField('slideshow_speed')->isFilled(BL::getError('FieldIsRequired'));
@@ -145,6 +148,7 @@ class AddWidgetSlideshow extends BackendBaseActionAdd
                 $resolutionLarge['height'] = $this->frm->getField('large_height')->getValue();
                 $resolutionLarge['method'] = $this->frm->getField('large_method')->getValue();
                 $resolutionLarge['kind'] = 'large';
+                $resolutionLarge['resolution'] = $this->frm->getField('large_resolution')->getValue();
 
                 BackendPhotogalleryModel::insertExtraResolution($resolutionLarge);
 

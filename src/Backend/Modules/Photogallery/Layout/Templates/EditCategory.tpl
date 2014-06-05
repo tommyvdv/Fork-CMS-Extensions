@@ -16,10 +16,16 @@
             <table border="0" cellspacing="0" cellpadding="0" width="100%">
                 <tr>
                     <td id="leftColumn">
-                        <p>
-                            <label for="title">{$lblTitle|ucfirst}<abbr title="{$lblRequiredField}">*</abbr></label>
-                            {$txtTitle} {$txtTitleError}
-                        </p>
+                        <label for="title">{$lblTitle|ucfirst}<abbr title="{$lblRequiredField}">*</abbr></label>
+                        {$txtTitle} {$txtTitleError}
+
+                        <div id="pageUrl">
+                            <div class="oneLiner">
+                                {option:detailURL}<p><span><a href="{$detailURL}">{$detailURL}/<span id="generatedUrl">{$item.url}</span></a></span></p>{/option:detailURL}
+                                {option:!detailURL}<p class="infoMessage">{$errNoModuleLinked}</p>{/option:!detailURL}
+                            </div>
+                        </div>
+
                         {option:categories_depth}
                             <div class="options">
                                 {option:categories}

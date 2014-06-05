@@ -7,7 +7,15 @@
 		<div class="heading">
 			<h3>{$lblLarge|ucfirst}</h3>
 		</div>
-		<div class="options labelWidthLong">
+
+        <div class="options labelWidthLong">
+            <p>
+                <label for="largeResolution">{$lblResolution|ucfirst}</label>
+                {$ddmLargeResolution} {$ddmLargeResolutionError}
+            </p>
+        </div>
+
+		<div class="options labelWidthLong hidden">
 			<p>
 				<label for="largeWidth">{$lblWidth|ucfirst}</label>
 				{$txtLargeWidth} {$txtLargeWidthError}
