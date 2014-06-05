@@ -25,16 +25,28 @@
                                 {option:!detailURL}<p class="infoMessage">{$errNoModuleLinked}</p>{/option:!detailURL}
                             </div>
                         </div>
-                        
+
                         {option:categories_depth}
-                            <div class="options">
-                                {option:categories}
-                                    <label for="parentId">{$lblParent|ucfirst}</label>
-                                    {$ddmParentId} {$ddmParentIdError}
-                                {/option:categories}
-                                {option:!categories}
-                                    {$msgNoParents|sprintf:{$var|geturl:'add_category'}}
-                                {/option:!categories}
+                            <div class="box">
+                                <div class="heading">
+                                    <h3>{$lblHierarchy|ucfirst}</h3>
+                                </div>
+                                <div class="options">
+                                    {option:categories_depth}
+                                        {option:categories}
+                                            <label for="parentId">{$lblParent|ucfirst}</label>
+                                            {$ddmParentId} {$ddmParentIdError}
+                                        {/option:categories}
+                                        {option:!categories}
+                                            {option:categories_count}
+                                                {$msgHasParentsButNotAllowed}
+                                            {/option:categories_count}
+                                            {option:!categories_count}
+                                                {$msgNoParents|sprintf:{$var|geturl:'add_category'}}
+                                            {/option:!categories_count}
+                                        {/option:!categories}
+                                    {/option:categories_depth}
+                                </div>
                             </div>
                         {/option:categories_depth}
                     </td>

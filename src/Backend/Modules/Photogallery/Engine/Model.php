@@ -927,7 +927,7 @@ class Model
 					$depth >= $startAllowedDepth
 				) $output[$key] =  $value;
 				
-				$children = self::getCategoriesForDropdown($allowedDepth, $includeCount, $key, $depth + 1, $value);
+				$children = self::getCategoriesForDropdown(isset($startAllowedDepth) && $startAllowedDepth ? array($startAllowedDepth, $allowedDepth) : $allowedDepth, $includeCount, $key, $depth + 1, $value);
 				foreach($children as $c_key => $c_value)
 				{
 					$output[$c_key] = $value . $space . $seperator . $space . $c_value;
@@ -937,6 +937,7 @@ class Model
 
 		return empty($output) ? array() : $output;
 	}
+	
 	public static function getCategoriesCount()
 	{
 		return (int) BackendModel::get('database')->getVar(

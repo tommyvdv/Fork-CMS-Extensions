@@ -71,16 +71,16 @@ class EditCategory extends BackendBaseActionEdit
         $this->frm = new BackendForm('editCategory');
 
         // get categories
-        $allowedDepth = BackendModel::getModuleSetting($this->URL->getModule(), 'categories_depth', 0);
-        $allowedDepthStart = BackendModel::getModuleSetting($this->URL->getModule(), 'categories_depth_start', 0);
+        $allowedDepth = BackendModel::getModuleSetting($this->URL->getModule(), 'categories_depth');
+        $allowedDepthStart = BackendModel::getModuleSetting($this->URL->getModule(), 'categories_depth_start');
         $this->categoriesCount = BackendPhotogalleryModel::getCategoriesCount();
         $this->categories = BackendPhotogalleryModel::getCategoriesForDropdown(
             array(
                 $allowedDepthStart,
-                $allowedDepth == 0 ? 0 : $allowedDepth
+                $allowedDepth
             )
         );
-
+        
         // create elements
         $this->frm->addText('title', $this->record['title'], null, 'inputText title');
         $this->frm->addDropdown('parent_id', $this->categories, $this->record['parent_id'])->setDefaultElement('');
