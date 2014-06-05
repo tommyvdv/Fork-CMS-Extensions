@@ -59,7 +59,7 @@ class Categories extends BackendBaseActionIndex
         $this->limit_depth = (int) BackendModel::getModuleSetting($this->URL->getModule(), 'categories_depth');
         $this->limit_depth_is_infinity = BackendModel::getModuleSetting($this->URL->getModule(), 'categories_depth') == "0";
         $this->limit_depth_is_allowed = !is_null(BackendModel::getModuleSetting($this->URL->getModule(), 'categories_depth'));
-        $this->add_allowed = $this->depth > $this->start_depth && (($this->depth <= $this->limit_depth) || $this->limit_depth_is_infinity);
+        $this->add_allowed = ($this->depth > $this->start_depth && (($this->depth <= $this->limit_depth) || $this->limit_depth_is_infinity)) || $this->depth == 0;
         $this->add_child_allowed = $this->depth + 1 > $this->start_depth && ($this->depth + 1 <= $this->limit_depth || $this->limit_depth_is_infinity);
 /*
         \Spoon::dump(
