@@ -150,7 +150,7 @@ class Categories extends BackendBaseActionIndex
         //}
 
         // disable paging
-        $this->dataGrid->setPaging(false);      
+        $this->dataGrid->setPaging(false);
         
         $this->dataGrid->setAttributes(array('data-action' => "category_sequence"));
 

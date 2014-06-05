@@ -28,6 +28,12 @@ class Slideshow extends FrontendBaseWidget
         // parent execute
         parent::execute();
         
+        // testing
+        //$resolution = FrontendPhotogalleryHelper::getResolution('deleteable');
+        //\Spoon::dump($resolution);
+        //\Spoon::dump(FrontendPhotogalleryHelper::hasResolutionBeenUpdatedSinceImageGeneration(1, "1401974635_grass-blades.jpg", "deleteable", $resolution['edited_on_unix']));
+        //\Spoon::dump(FrontendPhotogalleryHelper::createImageResolution(null, 1, "1401974635_grass-blades.jpg", "deleteable", $resolution['edited_on_unix']));
+
         // data
         $this->getData();
         
@@ -55,6 +61,7 @@ class Slideshow extends FrontendBaseWidget
             $this->record['extra'] = FrontendPhotogalleryModel::getExtra($this->data['extra_id']);
 
             $large_resolution = FrontendPhotogalleryModel::getExtraResolutionForKind($this->data['extra_id'], 'large');
+
             $this->tpl->assign('widgetPhotogallerySlideshow', $this->record);
             $this->tpl->assign('widgetPhotogallerySlideshowResolution', $large_resolution);
             $this->tpl->assign('widgetPhotogallerySlideshowShowCaption', $this->record['extra']['data']['settings']['show_caption'] == 'true');
@@ -70,6 +77,8 @@ class Slideshow extends FrontendBaseWidget
      */
     private function parse()
     {
+        // map modifiers
+        FrontendPhotogalleryHelper::mapModifiers($this->tpl);
 
         $this->header->addCSS(
             FrontendPhotogalleryHelper::getPathJS('/flexslider/' . FrontendPhotogalleryModel::FLEXSLIDER_VERSION . '/flexslider.css', $this->getModule())
@@ -80,7 +89,7 @@ class Slideshow extends FrontendBaseWidget
             false
         );
 
-        $this->header->addCSS('/frontend/modules/' . $this->getModule() . '/layout/css/photogallery.css');
+        $this->header->addCSS('/src/Frontend/Modules/' . $this->getModule() . '/Layout/Css/photogallery.css');
 
 
         $this->header->addJS(

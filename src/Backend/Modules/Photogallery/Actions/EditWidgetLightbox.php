@@ -165,13 +165,13 @@ class EditWidgetLightbox extends BackendBaseActionEdit
             $this->frm->cleanupFields();
 
             // validate fields
-            self::validateResolution('thumbnail_width');
-            self::validateResolution('thumbnail_height');
-            self::validateResolution('large_width');
-            self::validateResolution('large_height');
+            //self::validateResolution('thumbnail_width');
+            //self::validateResolution('thumbnail_height');
+            //self::validateResolution('large_width');
+            //self::validateResolution('large_height');
 
-            $this->frm->getField('thumbnail_method')->isFilled(BL::getError('FieldIsRequired'));
-            $this->frm->getField('large_method')->isFilled(BL::getError('FieldIsRequired'));
+            //$this->frm->getField('thumbnail_method')->isFilled(BL::getError('FieldIsRequired'));
+            //$this->frm->getField('large_method')->isFilled(BL::getError('FieldIsRequired'));
 
             // no errors?
             if($this->frm->isCorrect())

@@ -42,6 +42,9 @@ class Model
 	{
 		$db = BackendModel::get('database');
 
+		$item['created_on'] = BackendModel::getUTCDate();
+		$item['edited_on'] = BackendModel::getUTCDate();
+
 		// insert and return the new id
 		$item['id'] = $db->insert('photogallery_resolutions', $item);
 
@@ -51,6 +54,8 @@ class Model
 	public static function updateResolution(array $item)
 	{
 		$db = BackendModel::get('database');
+
+		$item['edited_on'] = BackendModel::getUTCDate();
 
 		// update category
 		$db->update('photogallery_resolutions', $item, 'id = ?', array($item['id']));
@@ -118,7 +123,7 @@ class Model
 
 
 	const QRY_DATAGRID_BROWSE_EXTRAS =
-		'SELECT i.id, i.kind, i.action
+		'SELECT i.id, i.kind, i.action, i.data
 		FROM photogallery_extras AS i
 		INNER JOIN  photogallery_extras_resolutions AS r on r.extra_id = i.id
 		GROUP BY i.id';

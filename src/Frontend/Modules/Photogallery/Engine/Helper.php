@@ -24,7 +24,7 @@ class Helper
         $tpl->mapModifier('createimageresolution', array('Frontend\Modules\Photogallery\Engine\Helper', 'createImageResolution'));
     }
 
-    public static function createImageResolution($var, $set_id, $filename, $kind = 'backend_thumb', $dir = 'photogallery', $watermark = false)
+    public static function createImageResolution($var, $set_id, $filename, $kind = 'backend_thumb', $dir = 'photogallery', $watermark = false, $force_regeneration = false)
     {
         $resolution = self::getResolution($kind);
         if(!$resolution) return false;
@@ -43,12 +43,15 @@ class Helper
         //if($resolution['regenerate'] == 'Y')
             //Spoon::dump($dir);
 
+        if(self::hasResolutionBeenUpdatedSinceImageGeneration($set_id, $filename, $kind, $resolution['edited_on_unix'])) $force_regeneration = true;
+
         if(
             (!\SpoonFile::exists(FRONTEND_FILES_PATH . '/' . $image) && \SpoonFile::exists(FRONTEND_FILES_PATH . '/' . $original)) ||
-            $resolution['regenerate'] == 'Y'
+            $resolution['regenerate'] == 'Y' ||
+            $force_regeneration
         )
         {
-            if($resolution['regenerate'] == 'Y') self::updateResolution(array('regenerate' => 'N', 'id' => $resolution['id']));
+            //if($resolution['regenerate'] == 'Y') self::updateResolution(array('regenerate' => 'N', 'id' => $resolution['id']));
 
             $forceOriginalAspectRatio = $method == 'crop' ? false : true;
             $allowEnlargement = true;
@@ -64,18 +67,48 @@ class Helper
                 $thumb->setWatermark($watermark);
             }
             $thumb->parseToFile(FRONTEND_FILES_PATH . '/' . $image, 100);
+
+            self::updateImageGenerationInformation($set_id, $filename, $kind);
         }
 
         return FRONTEND_FILES_URL . '/' . $image;
     }
 
+    public static function hasResolutionBeenUpdatedSinceImageGeneration($image_set_id, $image_filename, $resolution_kind, $edited_on_unix)
+    {
+        return (bool) FrontendModel::get('database')->getVar(
+            'SELECT COUNT(i.id) AS count
+            FROM photogallery_resolutions_images AS i
+            WHERE image_set_id = ?
+                AND image_filename = ? #"1401974635_grass-blades.jpg"
+                AND resolution_kind =  ?#"deleteable"
+                AND UNIX_TIMESTAMP(generated_on) < ? #1401969055',
+            array(
+                (int) $image_set_id,
+                $image_filename,
+                $resolution_kind,
+                $edited_on_unix
+            )
+        );
+    }
+
+    public static function updateImageGenerationInformation($image_set_id, $image_filename, $resolution_kind)
+    {
+        FrontendModel::get('database')->execute(
+            'INSERT INTO photogallery_resolutions_images (image_set_id, image_filename, resolution_kind, generated_on) VALUES ('.
+                $image_set_id . ',"' . $image_filename . '","' . $resolution_kind . '","' . FrontendModel::getUTCDate() . '")'
+            .' ON DUPLICATE KEY UPDATE generated_on = "' . FrontendModel::getUTCDate() . '"'
+        );
+    }
+
     public static function getResolution($kind)
     {
-        return (array) FrontendModel::getContainer()->get('database')->getRecord(
+        return (array) FrontendModel::get('database')->getRecord(
             'SELECT *,
                 IF(width_null = "Y", NULL, width) AS width,
                 IF(height_null = "Y", NULL, height) AS height,
-                IF(watermark IS NULL, NULL, CONCAT("/products/watermarks/source/", watermark)) AS watermark
+                IF(watermark IS NULL, NULL, CONCAT("/products/watermarks/source/", watermark)) AS watermark,
+                UNIX_TIMESTAMP(edited_on) AS edited_on_unix
             FROM photogallery_resolutions
             WHERE kind = ?',
             $kind,

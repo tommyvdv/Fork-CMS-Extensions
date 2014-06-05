@@ -149,6 +149,11 @@ class EditResolution extends BackendBaseActionEdit
         }
     }
 
+    private function validateKindTitle($field)
+    {
+        $this->frm->getField($field)->isValidAgainstRegexp('|^([a-z0-9_-])+$|i', BL::err('InvalidName'));
+    }
+
     /**
      * Validate the form
      */
@@ -168,6 +173,8 @@ class EditResolution extends BackendBaseActionEdit
             
             $save_width = self::validateResolution('width');
             $save_height = self::validateResolution('height');
+
+            $this->validateKindTitle('kind');
 
             // no errors?
             if($this->frm->isCorrect())

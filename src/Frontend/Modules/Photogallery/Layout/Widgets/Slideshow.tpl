@@ -19,7 +19,9 @@
 							<a href="{$widgetPhotogallerySlideshow.images.data.external_link.url}" class="linkedImage targetBlank">
 							{/option:widgetPhotogallerySlideshow.images.data.external_link}
 
-							<img src="{$var|createimagephotogallery:{$widgetPhotogallerySlideshow.images.set_id}:{$widgetPhotogallerySlideshow.images.filename}:{$widgetPhotogallerySlideshowResolution.width}:{$widgetPhotogallerySlideshowResolution.height}:{$widgetPhotogallerySlideshowResolution.method}}" />
+							{*<img src="{$var|createimagephotogallery:{$widgetPhotogallerySlideshow.images.set_id}:{$widgetPhotogallerySlideshow.images.filename}:{$widgetPhotogallerySlideshowResolution.width}:{$widgetPhotogallerySlideshowResolution.height}:{$widgetPhotogallerySlideshowResolution.method}}" />*}
+
+							<img src="{$var|createimageresolution:{$widgetPhotogallerySlideshow.images.set_id}:{$widgetPhotogallerySlideshow.images.filename}:{$widgetPhotogallerySlideshowResolution.resolution}}" />
 							
 							{* With internal link *}
 							{option:widgetPhotogallerySlideshow.images.data.internal_link}

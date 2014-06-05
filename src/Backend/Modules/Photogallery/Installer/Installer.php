@@ -207,6 +207,9 @@ class Installer extends ModuleInstaller
         BackendModel::setModuleSetting($this->URL->getModule(), 'albums_categories_depth_start', '0');
         BackendModel::setModuleSetting($this->URL->getModule(), 'albums_categories_depth', '1');
 
+        // watermark
+        BackendModel::setModuleSetting($this->URL->getModule(), 'allow_watermark', false);
+
         // general paging and no paging
         BackendModel::setModuleSetting($this->URL->getModule(), 'general_number_of_items', 10;
         BackendModel::setModuleSetting($this->URL->getModule(), 'no_specific_number_of_items', false);

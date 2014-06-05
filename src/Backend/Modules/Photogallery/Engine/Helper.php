@@ -19,6 +19,12 @@ use Backend\Core\Engine\Language as BL;
  */
 class Helper
 {
+	public static function getExtraTitleForDataGrid($data)
+	{
+		$data = unserialize($data);
+		if(isset($data['settings']) && isset($data['settings']['title'])) return $data['settings']['title'];
+	}
+
 	public static function getTitleWithNumAlbums($num_albums, $title, $edit_link = null)
 	{
 		return ($edit_link ? '<a href="' . $edit_link . '">' : '') . ($num_albums ? $title . ' (' . $num_albums . ')' : $title) . ($edit_link ? '</a>' : '');
@@ -223,6 +229,38 @@ class Helper
 		// Remove last <br />
 		$return = rtrim($return,'<br />');
 		
+		return $return;
+	}
+
+	public static function getSeperateResolutionsForDataGrid($extra_id)
+	{
+		$extras = BackendModel::get('database')->getRecords(
+			'SELECT e.id as extra_id, r.*
+			FROM photogallery_extras_resolutions AS e
+				JOIN photogallery_resolutions AS r ON r.kind = e.resolution
+			WHERE e.extra_id = ?',
+			array(
+				(int) $extra_id
+			)
+		);
+
+		if(empty($extras)) return '';
+
+		$return = '';
+
+		foreach($extras as &$resolution)
+		{
+			$resolution['width_null'] = $resolution['width_null'] == 'Y' ? true : false;
+			$resolution['height_null'] = $resolution['height_null'] == 'Y' ? true : false;
+			$resolution['allow_watermark'] = $resolution['allow_watermark'] == 'Y' ? true : false;
+			$resolution['regenerate'] = $resolution['regenerate'] == 'Y' ? true : false;
+			$resolution['allow_delete'] = $resolution['allow_delete'] == 'Y' ? true : false;
+			$resolution['allow_edit'] = $resolution['allow_edit'] == 'Y' ? true : false;
+
+			$return .=  '<small>' . ($resolution['allow_edit'] ? '<a href="' . BackendModel::createURLForAction('edit_resolution') . '&id=' . $resolution['id'] . '">' : '') . $resolution['kind'] . ($resolution['allow_edit'] ? '</a>' : '') . ':</small> ' . ($resolution['width_null'] ? '*' : $resolution['width']) . 'x' . ($resolution['height_null'] ? '*' : $resolution['height']) . ' <small>(' . strtolower(BackendTemplateModifiers::toLabel($resolution['method'])) . ')</small>';
+			$return .= '<br />';
+		}
+
 		return $return;
 	}
 

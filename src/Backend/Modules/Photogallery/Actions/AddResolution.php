@@ -90,6 +90,11 @@ class AddResolution extends BackendBaseActionAdd
         }
     }
 
+    private function validateKindTitle($field)
+    {
+        $this->frm->getField($field)->isValidAgainstRegexp('|^([a-z0-9_-])+$|i', BL::err('InvalidName'));
+    }
+
     /**
      * Validate the form
      */
@@ -108,6 +113,8 @@ class AddResolution extends BackendBaseActionAdd
             
             $save_width = self::validateResolution('width');
             $save_height = self::validateResolution('height');
+
+            $this->validateKindTitle('kind');
 
             // no errors?
             if($this->frm->isCorrect())

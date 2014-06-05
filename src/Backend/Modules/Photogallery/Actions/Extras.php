@@ -55,6 +55,11 @@ class Extras extends BackendBaseActionIndex
 
         // functions
         $this->dataGrid->setColumnFunction(array('Backend\Modules\Photogallery\Engine\Helper', 'getResolutionsForDataGrid'), array('[id]'), 'resolutions', true);
+        $this->dataGrid->setColumnFunction(array('Backend\Modules\Photogallery\Engine\Helper', 'getSeperateResolutionsForDataGrid'), array('[id]'), 'resolutions', true);
+
+        // add title
+        $this->dataGrid->addColumn('title', \SpoonFilter::ucfirst(BL::getLabel('Title')));
+        $this->dataGrid->setColumnFunction(array('Backend\Modules\Photogallery\Engine\Helper', 'getExtraTitleForDataGrid'), array('[data]'), 'title', true);
         
         $this->dataGrid->addColumn('edit', null, BL::getLabel('Edit'), BackendModel::createURLForAction('edit') . '&amp;id=[id]', BL::getLabel('Edit'));
 
@@ -65,6 +70,15 @@ class Extras extends BackendBaseActionIndex
         
         $this->dataGrid->setColumnFunction(array('Backend\Core\Engine\TemplateModifiers', 'toLabel'), array('[kind]'), 'kind', true);
         $this->dataGrid->setColumnURL('action', BackendModel::createURLForAction('edit') . '&amp;id=[id]');
+
+        // hide data
+        $this->dataGrid->setColumnHidden('data');
+
+        // disable paging
+        $this->dataGrid->setPaging(false);
+
+        // sequence columns
+        $this->dataGrid->setColumnsSequence(array('title', 'kind', 'action', 'resolutions', 'edit'));
     }
 
     /**

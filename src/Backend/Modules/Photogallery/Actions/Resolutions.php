@@ -60,6 +60,9 @@ class Resolutions extends BackendBaseActionIndex
 
         // hide redundant columns
         $this->dataGrid->setColumnsHidden(array('allow_delete', 'allow_edit'));
+
+        // disable paging
+        $this->dataGrid->setPaging(false);
     }
 
     /**

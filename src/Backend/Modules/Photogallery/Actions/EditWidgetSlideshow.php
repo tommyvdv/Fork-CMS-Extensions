@@ -140,16 +140,15 @@ class EditWidgetSlideshow extends BackendBaseActionEdit
             $this->frm->cleanupFields();
 
             // validate fields
-            self::validateResolution('large_width');
-            self::validateResolution('large_height');
-
-            $this->frm->getField('large_method')->isFilled(BL::getError('FieldIsRequired'));
+            //self::validateResolution('large_width');
+            //self::validateResolution('large_height');
+            //$this->frm->getField('large_method')->isFilled(BL::getError('FieldIsRequired'));
 
             $this->frm->getField('title')->isFilled(BL::getError('TitleIsRequired'));
             $this->frm->getField('slideshow_speed')->isFilled(BL::getError('FieldIsRequired'));
             $this->frm->getField('animation_speed')->isFilled(BL::getError('FieldIsRequired'));
 
-            if($this->frm->getField('slideshow_item_width')->isFilled(BL::getError('FieldIsRequired'))) $this->frm->getField('slideshow_item_width')->isNumeric(BL::getError('InvalidNumber'));
+            //if($this->frm->getField('slideshow_item_width')->isFilled(BL::getError('FieldIsRequired'))) $this->frm->getField('slideshow_item_width')->isNumeric(BL::getError('InvalidNumber'));
 
             // no errors?
             if($this->frm->isCorrect())
