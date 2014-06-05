@@ -18,9 +18,39 @@
             {$ddmCategoriesDepthStart}
             {$ddmCategoriesDepthStartError}
 
-            <label for="categoriesDepth">{$lblCategoriesDepth|ucfirst}</label>
+            <label for="categoriesDepth">{$lblCategoriesDepth}</label>
             {$ddmCategoriesDepth}
             {$ddmCategoriesDepthError}
+        </div>
+    </div>
+
+    <div class="box">
+        <div class="heading">
+            <h3>{$lblAlbums|ucfirst}</h3>
+        </div>
+
+        <div class="options">
+            <p>{$msgHelpAlbumsCategoriesDepth}</p>
+
+            <label for="albumsCategoriesDepthStart">{$lblAlbumsCategoriesDepthStart|ucfirst}</label>
+            {$ddmAlbumsCategoriesDepthStart}
+            {$ddmAlbumsCategoriesDepthStartError}
+
+            <label for="albumsCategoriesDepth">{$lblAlbumsCategoriesDepth}</label>
+            {$ddmAlbumsCategoriesDepth}
+            {$ddmAlbumsCategoriesDepthError}
+        </div>
+    </div>
+
+    <div class="box">
+        <div class="heading">
+            <h3>{$lblResolutions|ucfirst}</h3>
+        </div>
+        <div class="options">
+            <p>{$msgHelpWatermark}</p>
+            <ul class="inputList p0">
+                <li><label for="allowWatermark">{$chkAllowWatermark} {$lblAllowWatermark|ucfirst}</label></li>
+            </ul>
         </div>
     </div>
     
@@ -34,7 +64,7 @@
             {$ddmGeneralNumberOfItems}
             {$ddmGeneralNumberOfItemsError}
 
-            <label for="noSpecificNumberOfItems">{$chkNoSpecificNumberOfItems} {$lblNoSpecificNumberOfItems|ucfirst}</label>
+            <label for="noSpecificNumberOfItems">{$chkNoSpecificNumberOfItems} {$lblNoNumberOfItems|ucfirst}</label>
         </div>
 
         <div class="options">
@@ -49,7 +79,7 @@
                 {$ddmOverviewAlbumsNumberOfItems}
                 {$ddmOverviewAlbumsNumberOfItemsError}
 
-                <label for="noOverviewAlbumsNumberOfItems">{$chkNoOverviewAlbumsNumberOfItems} {$lblNoOverviewAlbumsNumberOfItems|ucfirst}</label>
+                <label for="noOverviewAlbumsNumberOfItems">{$chkNoOverviewAlbumsNumberOfItems} {$lblNoNumberOfItems|ucfirst}</label>
             </div>
 
             <div class="options">
@@ -57,7 +87,7 @@
                 {$ddmOverviewCategoriesNumberOfItems}
                 {$ddmOverviewCategoriesNumberOfItemsError}
 
-                <label for="noOverviewCategoriesNumberOfItems">{$chkNoOverviewCategoriesNumberOfItems} {$lblNoOverviewCategoriesNumberOfItems|ucfirst}</label>
+                <label for="noOverviewCategoriesNumberOfItems">{$chkNoOverviewCategoriesNumberOfItems} {$lblNoNumberOfItems|ucfirst}</label>
             </div>
 
             <div class="options">
@@ -65,7 +95,7 @@
                 {$ddmRelatedListCategoriesNumberOfItems}
                 {$ddmRelatedListCategoriesNumberOfItemsError}
 
-                <label for="noRelatedListCategoriesNumberOfItems">{$chkNoRelatedListCategoriesNumberOfItems} {$lblNoRelatedListCategoriesNumberOfItems|ucfirst}</label>
+                <label for="noRelatedListCategoriesNumberOfItems">{$chkNoRelatedListCategoriesNumberOfItems} {$lblNoNumberOfItems|ucfirst}</label>
             </div>
 
             <div class="options">
@@ -73,7 +103,7 @@
                 {$ddmRelatedListTagsNumberOfItems}
                 {$ddmRelatedListTagsNumberOfItemsError}
 
-                <label for="noRelatedListTagsNumberOfItems">{$chkNoRelatedListTagsNumberOfItems} {$lblNoRelatedListTagsNumberOfItems|ucfirst}</label>
+                <label for="noRelatedListTagsNumberOfItems">{$chkNoRelatedListTagsNumberOfItems} {$lblNoNumberOfItems|ucfirst}</label>
             </div>
 
             <div class="options">
@@ -81,7 +111,7 @@
                 {$ddmRelatedCategoriesNumberOfItems}
                 {$ddmRelatedCategoriesNumberOfItemsError}
 
-                <label for="noRelatedCategoriesNumberOfItems">{$chkNoRelatedCategoriesNumberOfItems} {$lblNoRelatedCategoriesNumberOfItems|ucfirst}</label>
+                <label for="noRelatedCategoriesNumberOfItems">{$chkNoRelatedCategoriesNumberOfItems} {$lblNoNumberOfItems|ucfirst}</label>
             </div>
 
             <div class="options">
@@ -89,7 +119,7 @@
                 {$ddmRelatedTagsNumberOfItems}
                 {$ddmRelatedTagsNumberOfItemsError}
 
-                <label for="noRelatedTagsNumberOfItems">{$chkNoRelatedTagsNumberOfItems} {$lblNoRelatedTagsNumberOfItems|ucfirst}</label>
+                <label for="noRelatedTagsNumberOfItems">{$chkNoRelatedTagsNumberOfItems} {$lblNoNumberOfItems|ucfirst}</label>
             </div>
         </div>
     </div>
@@ -154,18 +184,6 @@
                 {$txtLicenseDomain} {$txtLicenseDomainError}
             </div>
             
-        </div>
-    </div>
-
-    <div class="box">
-        <div class="heading">
-            <h3>{$lblWatermark}</h3>
-        </div>
-        <div class="options">
-            <p>{$msgHelpWatermark}</p>
-            <ul class="inputList p0">
-                <li><label for="allowWatermark">{$chkAllowWatermark} {$lblAllowWatermark|ucfirst}</label></li>
-            </ul>
         </div>
     </div>
 

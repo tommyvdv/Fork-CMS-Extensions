@@ -43,9 +43,13 @@ class Settings extends BackendBaseActionEdit
             array_combine(range(1, 5), range(1, 5))
         );
 
-        // add fields for pagination
+        // categories depth
         $this->frm->addDropdown('categories_depth_start', array_combine(range(0, 5), range(0, 5)), BackendModel::getModuleSetting($this->URL->getModule(), 'categories_depth_start'));
         $this->frm->addDropdown('categories_depth', $depths, BackendModel::getModuleSetting($this->URL->getModule(), 'categories_depth'));
+
+        // albums categories depth
+        $this->frm->addDropdown('albums_categories_depth_start', array_combine(range(0, 5), range(0, 5)), BackendModel::getModuleSetting($this->URL->getModule(), 'albums_categories_depth_start'));
+        $this->frm->addDropdown('albums_categories_depth', $depths, BackendModel::getModuleSetting($this->URL->getModule(), 'albums_categories_depth'));
 
         // general number of items
         $this->frm->addDropdown('general_number_of_items', array_combine(range(1, 30), range(1, 30)), BackendModel::getModuleSetting($this->URL->getModule(), 'general_number_of_items', 10));

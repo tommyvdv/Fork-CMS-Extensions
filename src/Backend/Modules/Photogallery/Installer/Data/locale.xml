@@ -721,6 +721,11 @@
                 <translation language="en"><![CDATA[infinity]]></translation>
                 <translation language="nl"><![CDATA[oneindig]]></translation>
             </item>
+
+            <item type="message" name="HelpCategoriesDepth">
+                <translation language="en"><![CDATA[Allow (sub)categories and define which level to start/end on.]]></translation>
+                <translation language="nl"><![CDATA[Laat (sub)categorieën toe en bepaal van/tot welk niveau.]]></translation>
+            </item>
             <item type="label" name="CategoriesDepthStart">
                 <translation language="en"><![CDATA[categories depth starts at]]></translation>
                 <translation language="nl"><![CDATA[diepte voor subcategorieën start aan]]></translation>
@@ -729,6 +734,41 @@
                 <translation language="en"><![CDATA[and maxes out on]]></translation>
                 <translation language="nl"><![CDATA[en gaat tot]]></translation>
             </item>
+            <item type="message" name="HelpAlbumsCategoriesDepth">
+                <translation language="en"><![CDATA[Allow an album to be linked to (sub)categories and define which level to start/end on.]]></translation>
+                <translation language="nl"><![CDATA[Sta toe dat albums aan (sub)categorieën gekoppeld worden en bepaal van/tot welk niveau.]]></translation>
+            </item>
+            <item type="label" name="AlbumsCategoriesDepthStart">
+                <translation language="en"><![CDATA[categories depth for an album starts at]]></translation>
+                <translation language="nl"><![CDATA[diepte voor subcategorieën bij een album start aan]]></translation>
+            </item>
+            <item type="label" name="AlbumsCategoriesDepth">
+                <translation language="en"><![CDATA[and maxes out on]]></translation>
+                <translation language="nl"><![CDATA[en gaat tot]]></translation>
+            </item>
+
+            <item type="message" name="HelpWatermark">
+                <translation language="en"><![CDATA[Allow a resolution to have a watermark on a global level.]]></translation>
+                <translation language="nl"><![CDATA[Sta, in het algemeen, toe dat een resolutie een watermerk krijgt.]]></translation>
+            </item>
+            <item type="label" name="AllowWatermark">
+                <translation language="en"><![CDATA[allow watermark]]></translation>
+                <translation language="nl"><![CDATA[laat watermerk toe]]></translation>
+            </item>
+
+            <item type="label" name="GeneralItemsPerPage">
+                <translation language="en"><![CDATA[items per page]]></translation>
+                <translation language="nl"><![CDATA[aantal artikels per pagina]]></translation>
+            </item>
+            <item type="label" name="NoNumberOfItems">
+                <translation language="en"><![CDATA[no pagination]]></translation>
+                <translation language="nl"><![CDATA[geen paginatie]]></translation>
+            </item>
+            <item type="label" name="SpecificNumberOfItems">
+                <translation language="en"><![CDATA[more specific]]></translation>
+                <translation language="nl"><![CDATA[specifieker]]></translation>
+            </item>
+
             <item type="label" name="Yes">
                 <translation language="en"><![CDATA[yes]]></translation>
                 <translation language="nl"><![CDATA[ja]]></translation>
