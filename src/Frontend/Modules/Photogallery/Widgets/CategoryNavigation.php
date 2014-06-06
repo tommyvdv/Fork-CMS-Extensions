@@ -44,8 +44,12 @@ class CategoryNavigation extends FrontendBaseWidget
      */
     private function getData()
     {   
+        // Get category id (if any)
+        $this->category_id = FrontendPhotogalleryModel::getCategoryIdByUrl($this->URL->getParameter(1));
+        if(!$this->category_id) $this->category_id = FrontendPhotogalleryModel::getCategoryIdByUrl($this->URL->getParameter(0));
+
         // Get categories html
-        $this->navigation = FrontendPhotogalleryModel::buildCategoriesNavigation(0, $this->URL->getParameter(1));
+        $this->navigation = FrontendPhotogalleryModel::buildCategoriesNavigation(0, $this->category_id ? $this->category_id : 0);
     }
 
     /**
