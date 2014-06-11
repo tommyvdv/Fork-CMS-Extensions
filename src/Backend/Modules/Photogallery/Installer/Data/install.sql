@@ -47,9 +47,9 @@ CREATE TABLE `photogallery_resolutions` (
 INSERT INTO `photogallery_resolutions` (`id`, `width`, `width_null`, `height`, `height_null`, `method`, `kind`, `allow_watermark`, `watermark`, `regenerate`, `watermark_position`, `watermark_padding`, `allow_delete`, `allow_edit`)
 VALUES
   (1, 125, 'N', 125, 'N', 'crop', 'backend_thumb', 'N', NULL, 'N', NULL, NULL, 'N', 'N'),
-  (2, 320, 'N', 240, 'N', 'crop', 'overview_thumbnail', 'N', NULL, 'N', NULL, NULL, 'N', 'N'),
-  (3, 800, 'N', 600, 'N', 'crop', 'detail_thumbnail', 'N', NULL, 'N', NULL, NULL, 'N', 'N'),
-  (4, 1200, 'N', 1200, 'N', 'resize', 'large', 'N', NULL, 'N', NULL, NULL, 'N', 'N');
+  (2, 320, 'N', 240, 'N', 'crop', 'overview_thumbnail', 'N', NULL, 'N', NULL, NULL, 'N', 'Y'),
+  (3, 800, 'N', 600, 'N', 'crop', 'detail_thumbnail', 'N', NULL, 'N', NULL, NULL, 'N', 'Y'),
+  (4, 1200, 'N', 1200, 'N', 'resize', 'large', 'N', NULL, 'N', NULL, NULL, 'N', 'Y');
 
 --
 -- Table structure for table `photogallery_categories_albums`
