@@ -36,7 +36,7 @@ class Model implements FrontendTagsInterface
         $db = FrontendModel::get('database');
 
         // redefine
-        $tpl = (string) FRONTEND_MODULES_PATH . '/photogallery/layout/widgets/partials/CategoryNavigationChildren.tpl';
+        $tpl = (string) FRONTEND_MODULES_PATH . '/Photogallery/Layout/Widgets/Partials/CategoryNavigationChildren.tpl';
         $tpl = FrontendTheme::getPath($tpl);
 
         $selectedId = self::getCategoryIdByUrl($selectedUrl);

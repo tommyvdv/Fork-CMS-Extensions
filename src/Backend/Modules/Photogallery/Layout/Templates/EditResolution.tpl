@@ -2,7 +2,7 @@
 {include:{$BACKEND_CORE_PATH}/Layout/Templates/StructureStartModule.tpl}
 
 <div class="pageTitle">
-    <h2>{$lblProducts|ucfirst}: {option:record.allow_edit}{$lblEditResolution}{/option:record.allow_edit}{option:!record.allow_edit}{$lblDetailsResolution}{/option:!record.allow_edit}</h2>
+    <h2>{$lblPhotogallery|ucfirst}: {option:record.allow_edit}{$lblEditResolution}{/option:record.allow_edit}{option:!record.allow_edit}{$lblDetailsResolution}{/option:!record.allow_edit}</h2>
 
     <div class="buttonHolderRight">
         <a href="{$var|geturl:'resolutions'}" class="button icon iconBack"><span>{$lblBack|ucfirst}</span></a>
@@ -64,7 +64,7 @@
                     <div class="options clearfix">
                         {option:record.watermark}
                             <p class="watermarkHolder">
-                                <img src="{$FRONTEND_FILES_URL}/products/watermarks/source/{$record.watermark}" width="100%" alt="{$lblWatermark|ucfirst}" />
+                                <img src="{$FRONTEND_FILES_URL}/photogallery/watermarks/source/{$record.watermark}" width="100%" alt="{$lblWatermark|ucfirst}" />
                                 <label for="deleteWatermark">{$chkDeleteWatermark} {$lblDelete|ucfirst}</label>
                                 {$chkDeleteWatermarkError}
                             </p>

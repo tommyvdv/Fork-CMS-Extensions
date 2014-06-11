@@ -18,7 +18,7 @@ use Backend\Modules\Photogallery\Engine\Model as BackendPhotogalleryModel;
  * @author Frederik Heyninck <frederik@figure8.be>
  * @author Tommy Van de Velde <tommy@figure8.be>
  */
-class Helper 
+class Helper
 {
     /**
      * The keys an structural data for pages
@@ -95,48 +95,48 @@ class Helper
         self::getResolutions();
 
         // get the resolution
-        $resolution = self::getResolution($kind);
-        if(!$resolution) return false;
+        $resolution = self::getResolution($kind); if(!$resolution) return false;
         $width = $resolution['width']; $height = $resolution['height']; $method = $resolution['method']; $watermark = $resolution['watermark'];
-//\Spoon::dump(FRONTEND_FILES_PATH . '/photogallery/watermarks/source/' . ($watermark ? $watermark : $resolution['watermark']));
-        $watermark = \SpoonFile::exists(FRONTEND_FILES_PATH . '/photogallery/watermarks/source/' . ($watermark ? $watermark : $resolution['watermark'])) ? (FRONTEND_FILES_PATH . '/photogallery/watermarks/source/' . ($watermark ? $watermark : $resolution['watermark'])) : null;
-        $allow_watermark = $resolution['allow_watermark'] == 'Y';
-        $watermark_position = self::translatePosition($resolution['watermark_position']);
-        $watermark_padding = (int) $resolution['watermark_padding'];
-
-        //\Spoon::dump($watermark);
-
-        $original   = self::getOriginalPath($set_id, $filename, $dir);
-        $image      = self::getImagePath($set_id, $filename, array('width' => $width, 'height' => $height, 'method' => $method), $dir);
         
-        //Spoon::dump(SpoonFile::exists(FRONTEND_FILES_PATH . '/' . $original));
-//Spoon::dump($original);
-        //if($resolution['regenerate'] == 'Y')
-            //Spoon::dump($dir);
+        // get the watermark if allowed locally and globally
+        $allow_watermark = $resolution['allow_watermark'] == 'Y' && FrontendModel::getModuleSetting('Photogallery', 'allow_watermark') == 'Y';
+        if($allow_watermark)
+        {
+            $watermark = \SpoonFile::exists(FRONTEND_FILES_PATH . '/photogallery/watermarks/source/' . ($watermark ? $watermark : $resolution['watermark'])) ? (FRONTEND_FILES_PATH . '/photogallery/watermarks/source/' . ($watermark ? $watermark : $resolution['watermark'])) : null;
+            $watermark_position = self::translatePosition($resolution['watermark_position']);
+            $watermark_padding = (int) $resolution['watermark_padding'];
+        } else $watermark = $watermark_position = $watermark_padding = null;
 
+        // get image
+        $original = self::getOriginalPath($set_id, $filename, $dir);
+        $image = self::getImagePath($set_id, $filename, array('width' => $width, 'height' => $height, 'method' => $method), $dir);
+
+        // has the resolution been updated since the image was generated
         if(self::hasResolutionBeenUpdatedSinceImageGeneration($set_id, $filename, $kind, $resolution['edited_on_unix'])) $force_regeneration = true;
 
+        // if the original file exists…
+            // …but the thumb does not
+            // …regenerate is forced manually
+            // …regenerate is forced by image.generated_on VS resolution.edited_on
         if(
-            (!\SpoonFile::exists(FRONTEND_FILES_PATH . '/' . $image) && \SpoonFile::exists(FRONTEND_FILES_PATH . '/' . $original)) ||
-            $resolution['regenerate'] == 'Y' ||
-            $force_regeneration
+            (!\SpoonFile::exists(FRONTEND_FILES_PATH . '/' . $image) && \SpoonFile::exists(FRONTEND_FILES_PATH . '/' . $original)) || $force_regeneration
         )
         {
-            //if($resolution['regenerate'] == 'Y') self::updateResolution(array('regenerate' => 'N', 'id' => $resolution['id']));
-
             $forceOriginalAspectRatio = $method == 'crop' ? false : true;
             $allowEnlargement = true;
             
             $thumb = new \SpoonThumbnail(FRONTEND_FILES_PATH . '/' . $original, $width, $height);
-            //if(!$height) Spoon::dump($height);
             $thumb->setAllowEnlargement($allowEnlargement);
             $thumb->setForceOriginalAspectRatio($width && $height ? $forceOriginalAspectRatio : true);
+
+            // set watermark properties
             if($watermark && $allow_watermark && FrontendModel::getModuleSetting('Photogallery', 'allow_watermark'))
             {
                 if($watermark_position) $thumb->setWatermarkPosition($watermark_position[0], $watermark_position[1]);
                 if($watermark_padding) $thumb->setWatermarkPadding($watermark_padding);
                 $thumb->setWatermark($watermark);
             }
+
             $thumb->parseToFile(FRONTEND_FILES_PATH . '/' . $image, 100);
 
             self::updateImageGenerationInformation($set_id, $filename, $kind);
@@ -159,22 +159,6 @@ class Helper
         }
 
         else return false;
-/*
-        return (bool) FrontendModel::get('database')->getVar(
-            'SELECT COUNT(i.id) AS count
-            FROM photogallery_resolutions_images AS i
-            WHERE image_set_id = ?
-                AND image_filename = ? #"1401974635_grass-blades.jpg"
-                AND resolution_kind =  ?#"deleteable"
-                AND UNIX_TIMESTAMP(generated_on) < ? #1401969055',
-            array(
-                (int) $image_set_id,
-                $image_filename,
-                $resolution_kind,
-                $edited_on_unix
-            )
-        );
-*/
     }
 
     public static function updateImageGenerationInformation($image_set_id, $image_filename, $resolution_kind)
@@ -192,19 +176,6 @@ class Helper
     public static function getResolution($kind)
     {
         if(isset(self::$resolution[FRONTEND_LANGUAGE][$kind])) return self::$resolution[FRONTEND_LANGUAGE][$kind];
-/*
-        return (array) FrontendModel::get('database')->getRecord(
-            'SELECT *,
-                IF(width_null = "Y", NULL, width) AS width,
-                IF(height_null = "Y", NULL, height) AS height,
-                IF(watermark IS NULL, NULL, CONCAT("/products/watermarks/source/", watermark)) AS watermark,
-                UNIX_TIMESTAMP(edited_on) AS edited_on_unix
-            FROM photogallery_resolutions
-            WHERE kind = ?',
-            $kind,
-            'id'
-        );
-*/
     }
 
     public static function translatePosition($positionInt = 0)
