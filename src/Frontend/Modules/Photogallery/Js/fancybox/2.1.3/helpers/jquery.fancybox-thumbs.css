@@ -25,6 +25,7 @@
 	float: left;
 	padding: 1px;
 	opacity: 0.5;
+	box-sizing: border-box;
 }
 
 #fancybox-thumbs ul li.active {
@@ -44,6 +45,7 @@
 	border: 1px solid #222;
 	background: #111;
 	outline: none;
+	border: 0;
 }
 
 #fancybox-thumbs ul li img {
