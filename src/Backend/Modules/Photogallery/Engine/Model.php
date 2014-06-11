@@ -2,6 +2,9 @@
 
 namespace Backend\Modules\Photogallery\Engine;
 
+use Symfony\Component\Filesystem\Filesystem;
+use Symfony\Component\Filesystem\Exception\IOException;
+
 use Backend\Core\Engine\Exception;
 use Backend\Core\Engine\Authentication as BackendAuthentication;
 use Backend\Core\Engine\Model as BackendModel;
@@ -16,6 +19,118 @@ use Backend\Modules\Tags\Engine\Model as BackendTagsModel;
  */
 class Model
 {
+	public static function buildImagesGenerationCache($language = null)
+	{
+		// redefine
+        $language = ($language !== null) ? (string) $language : BL::getWorkingLanguage();
+
+        $generated_images = self::getAllResolutionsImages();
+
+        $generatedImagesString = self::generateFileHeader();
+
+        // loop all keys
+        foreach ($generated_images as $image) {
+        	//$generatedImagesString .= '$resolution[' . $pageID . '] = \'' . $URL . '\';' . "\n";
+			$generatedImagesString .= '$generated_images[\''.$image['resolution_kind'].'\']['.$image['image_set_id'].'][\''.$image['image_filename'].'\'][\'id\'] = \'' . $image['id'] . '\';' . "\n";
+			$generatedImagesString .= '$generated_images[\''.$image['resolution_kind'].'\']['.$image['image_set_id'].'][\''.$image['image_filename'].'\'][\'image_set_id\'] = \'' . $image['image_set_id'] . '\';' . "\n";
+			$generatedImagesString .= '$generated_images[\''.$image['resolution_kind'].'\']['.$image['image_set_id'].'][\''.$image['image_filename'].'\'][\'image_filename\'] = \'' . $image['image_filename'] . '\';' . "\n";
+			$generatedImagesString .= '$generated_images[\''.$image['resolution_kind'].'\']['.$image['image_set_id'].'][\''.$image['image_filename'].'\'][\'resolution_kind\'] = \'' . $image['resolution_kind'] . '\';' . "\n";
+			$generatedImagesString .= '$generated_images[\''.$image['resolution_kind'].'\']['.$image['image_set_id'].'][\''.$image['image_filename'].'\'][\'generated_on\'] = \'' . $image['generated_on'] . '\';' . "\n";
+			$generatedImagesString .= '$generated_images[\''.$image['resolution_kind'].'\']['.$image['image_set_id'].'][\''.$image['image_filename'].'\'][\'generated_on_unix\'] = \'' . $image['generated_on_unix'] . '\';' . "\n";
+			
+			// end
+			$generatedImagesString .= "\n";
+        }
+
+        // end file
+        $generatedImagesString .= '?>';
+
+        // init filesystem
+        $fs = new Filesystem();
+
+        // write the file
+        $fs->dumpFile(FRONTEND_CACHE_PATH . '/Photogallery/generated_images_' . $language . '.php', $generatedImagesString);
+	}
+
+	public static function buildResolutionCache($language = null)
+    {
+    	// redefine
+        $language = ($language !== null) ? (string) $language : BL::getWorkingLanguage();
+
+        $resolutions = self::getAllResolutions();
+//\Spoon::dump($resolutions);
+        // write the key-file
+        $resolutionString = self::generateFileHeader();
+
+        // loop all keys
+        foreach ($resolutions as $resolution) {
+        	//$resolutionString .= '$resolution[' . $pageID . '] = \'' . $URL . '\';' . "\n";
+			$resolutionString .= '$resolution[\''.$resolution['kind'].'\'][\'id\'] = \'' . $resolution['id'] . '\';' . "\n";
+			$resolutionString .= '$resolution[\''.$resolution['kind'].'\'][\'width\'] = \'' . $resolution['width'] . '\';' . "\n";
+			$resolutionString .= '$resolution[\''.$resolution['kind'].'\'][\'width_null\'] = \'' . $resolution['width_null'] . '\';' . "\n";
+			$resolutionString .= '$resolution[\''.$resolution['kind'].'\'][\'height\'] = \'' . $resolution['height'] . '\';' . "\n";
+			$resolutionString .= '$resolution[\''.$resolution['kind'].'\'][\'height_null\'] = \'' . $resolution['height_null'] . '\';' . "\n";
+			$resolutionString .= '$resolution[\''.$resolution['kind'].'\'][\'method\'] = \'' . $resolution['method'] . '\';' . "\n";
+			$resolutionString .= '$resolution[\''.$resolution['kind'].'\'][\'kind\'] = \'' . $resolution['kind'] . '\';' . "\n";
+			$resolutionString .= '$resolution[\''.$resolution['kind'].'\'][\'allow_watermark\'] = \'' . $resolution['allow_watermark'] . '\';' . "\n";
+			$resolutionString .= '$resolution[\''.$resolution['kind'].'\'][\'watermark\'] = \'' . $resolution['watermark'] . '\';' . "\n";
+			$resolutionString .= '$resolution[\''.$resolution['kind'].'\'][\'regenerate\'] = \'' . $resolution['regenerate'] . '\';' . "\n";
+			$resolutionString .= '$resolution[\''.$resolution['kind'].'\'][\'watermark_position\'] = \'' . $resolution['watermark_position'] . '\';' . "\n";
+			$resolutionString .= '$resolution[\''.$resolution['kind'].'\'][\'watermark_padding\'] = \'' . $resolution['watermark_padding'] . '\';' . "\n";
+			$resolutionString .= '$resolution[\''.$resolution['kind'].'\'][\'allow_delete\'] = \'' . $resolution['allow_delete'] . '\';' . "\n";
+			$resolutionString .= '$resolution[\''.$resolution['kind'].'\'][\'allow_edit\'] = \'' . $resolution['allow_edit'] . '\';' . "\n";
+			$resolutionString .= '$resolution[\''.$resolution['kind'].'\'][\'created_on\'] = \'' . $resolution['created_on'] . '\';' . "\n";
+			$resolutionString .= '$resolution[\''.$resolution['kind'].'\'][\'edited_on\'] = \'' . $resolution['edited_on'] . '\';' . "\n";
+			$resolutionString .= '$resolution[\''.$resolution['kind'].'\'][\'edited_on_unix\'] = \'' . $resolution['edited_on_unix'] . '\';' . "\n";
+			
+			// end
+			$resolutionString .= "\n";
+        }
+
+        // end file
+        $resolutionString .= '?>';
+
+        // init filesystem
+        $fs = new Filesystem();
+
+        // write the file
+        $fs->dumpFile(FRONTEND_CACHE_PATH . '/Photogallery/resolution_' . $language . '.php', $resolutionString);
+
+        self::buildImagesGenerationCache($language);
+
+        //\Spoon::dump($resolutionString);
+    }
+
+    public static function generateFileHeader()
+    {
+        $string = '<?php' . "\n\n";
+        $string .= '/**' . "\n";
+        $string .= ' * This file is generated by the Photogallery module, it contains' . "\n";
+        $string .= ' * the mapping between a resolution title and the data' . "\n";
+        $string .= ' * ' . "\n";
+        $string .= ' * Photogallery' . "\n";
+        $string .= ' * @generated	' . date('Y-m-d H:i:s') . "\n";
+        $string .= ' */' . "\n\n";
+        $string .= '// init var' . "\n";
+        $string .= '$resolution = array();' . "\n\n";
+
+        return $string;
+    }
+
+    public static function getAllResolutionsImages()
+    {
+    	return (array) BackendModel::get('database')->getRecords(
+    		'SELECT i.*, UNIX_TIMESTAMP(i.generated_on) AS generated_on_unix FROM photogallery_resolutions_images AS i GROUP BY i.id'
+    	);
+    }
+
+    public static function getAllResolutions()
+    {
+    	return (array) BackendModel::get('database')->getRecords(
+    		'SELECT i.*, UNIX_TIMESTAMP(i.edited_on) AS edited_on_unix FROM photogallery_resolutions AS i GROUP BY i.id'
+    	);
+    }
+
 	const QRY_DATAGRID_BROWSE_RESOLUTIONS =
 		'SELECT i.id,
 			CONCAT(IF(i.width_null = "Y", "*" , i.width), " x ", IF(i.height_null = "Y", "*" , i.height)) AS resolution,
@@ -48,6 +163,9 @@ class Model
 		// insert and return the new id
 		$item['id'] = $db->insert('photogallery_resolutions', $item);
 
+		// build lookup file
+		self::buildResolutionCache();
+
 		return $item['id'];
 	}
 
@@ -59,6 +177,9 @@ class Model
 
 		// update category
 		$db->update('photogallery_resolutions', $item, 'id = ?', array($item['id']));
+
+		// build lookup file
+		self::buildResolutionCache();
 		
 		return $item['id'];
 	}
@@ -105,6 +226,7 @@ class Model
 		LEFT OUTER JOIN photogallery_categories_albums AS a ON i.id = a.category_id
 		WHERE i.language = ? AND i.parent_id = ?
 		GROUP BY i.id';
+
 	/*	
 	const QRY_DATAGRID_BROWSE_CATEGORIES =
 		'SELECT i.id, i.title, COUNT(a.album_id) AS num_albums, i.sequence

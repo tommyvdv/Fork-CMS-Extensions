@@ -13,6 +13,8 @@ use Frontend\Modules\Photogallery\Engine\Model as FrontendPhotogalleryModel;
 use Frontend\Modules\Photogallery\Engine\Helper as FrontendPhotogalleryHelper;
 use Frontend\Modules\Tags\Engine\Model as FrontendTagsModel;
 
+use Backend\Modules\Photogallery\Engine\Model as BackendPhotogalleryModel;
+
 /**
  * This is the detail-action
  *
@@ -57,7 +59,7 @@ class Detail extends FrontendBaseBlock
      * @return void
      */
     private function getData()
-    {   
+    {
         // validate incoming parameters
         if($this->URL->getParameter(1) === null && $this->URL->getParameter(0) === null) $this->redirect(FrontendNavigation::getURL(404));
         

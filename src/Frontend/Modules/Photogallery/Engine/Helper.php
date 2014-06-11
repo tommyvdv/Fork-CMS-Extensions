@@ -10,30 +10,101 @@ use Frontend\Core\Engine\Theme as FrontendTheme;
 use Frontend\Modules\Tags\Engine\Model as FrontendTagsModel;
 use Frontend\Modules\Tags\Engine\TagsInterface as FrontendTagsInterface;
 
+use Backend\Modules\Photogallery\Engine\Model as BackendPhotogalleryModel;
+
 /**
  * In this file we store all generic functions that we will be using in the photogallery module
  *
  * @author Frederik Heyninck <frederik@figure8.be>
  * @author Tommy Van de Velde <tommy@figure8.be>
  */
-class Helper
+class Helper 
 {
+    /**
+     * The keys an structural data for pages
+     *
+     * @var    array
+     */
+    private static $resolution = array();
+    private static $generated_images = array();
+
     public static function mapModifiers($tpl)
     {
         // parse image methods
         $tpl->mapModifier('createimageresolution', array('Frontend\Modules\Photogallery\Engine\Helper', 'createImageResolution'));
     }
 
+    public static function getResolutions($language = null)
+    {
+        // redefine
+        $language = ($language !== null) ? (string) $language : FRONTEND_LANGUAGE;
+
+        // do the keys exists in the cache?
+        if (!isset(self::$resolution[$language]) || empty(self::$resolution[$language])) {
+            // validate file @later: the file should be regenerated
+            if (!is_file(FRONTEND_CACHE_PATH . '/Photogallery/resolution_' . $language . '.php')) {
+                throw new Exception('No navigation-file (navigation_' . $language . '.php) found.');
+            }
+
+            // init var
+            $resolution = array();
+
+            // require file
+            require FRONTEND_CACHE_PATH . '/Photogallery/resolution_' . $language . '.php';
+
+            // store
+            self::$resolution[$language] = $resolution;
+        }
+
+        // also get the generated images
+        self::getGeneratedImages($language);
+
+        // return from cache
+        return self::$resolution[$language];
+    }
+
+    public static function getGeneratedImages($language = null)
+    {
+        // redefine
+        $language = ($language !== null) ? (string) $language : FRONTEND_LANGUAGE;
+
+        // do the keys exists in the cache?
+        if (!isset(self::$generated_images[$language]) || empty(self::$generated_images[$language])) {
+            // validate file @later: the file should be regenerated
+            if (!is_file(FRONTEND_CACHE_PATH . '/Photogallery/generated_images_' . $language . '.php')) {
+                throw new Exception('No navigation-file (navigation_' . $language . '.php) found.');
+            }
+
+            // init var
+            $generated_images = array();
+
+            // require file
+            require FRONTEND_CACHE_PATH . '/Photogallery/generated_images_' . $language . '.php';
+
+            // store
+            self::$generated_images[$language] = $generated_images;
+        }
+
+        // return from cache
+        return self::$generated_images[$language];
+    }
+
     public static function createImageResolution($var, $set_id, $filename, $kind = 'backend_thumb', $dir = 'photogallery', $watermark = false, $force_regeneration = false)
     {
+        // make sure the resolutions are in here
+        self::getResolutions();
+
+        // get the resolution
         $resolution = self::getResolution($kind);
         if(!$resolution) return false;
         $width = $resolution['width']; $height = $resolution['height']; $method = $resolution['method']; $watermark = $resolution['watermark'];
-
-        $watermark = \SpoonFile::exists(FRONTEND_FILES_PATH . '/' . $watermark) ? FRONTEND_FILES_PATH . '/' . $watermark : null;
+//\Spoon::dump(FRONTEND_FILES_PATH . '/photogallery/watermarks/source/' . ($watermark ? $watermark : $resolution['watermark']));
+        $watermark = \SpoonFile::exists(FRONTEND_FILES_PATH . '/photogallery/watermarks/source/' . ($watermark ? $watermark : $resolution['watermark'])) ? (FRONTEND_FILES_PATH . '/photogallery/watermarks/source/' . ($watermark ? $watermark : $resolution['watermark'])) : null;
         $allow_watermark = $resolution['allow_watermark'] == 'Y';
         $watermark_position = self::translatePosition($resolution['watermark_position']);
         $watermark_padding = (int) $resolution['watermark_padding'];
+
+        //\Spoon::dump($watermark);
 
         $original   = self::getOriginalPath($set_id, $filename, $dir);
         $image      = self::getImagePath($set_id, $filename, array('width' => $width, 'height' => $height, 'method' => $method), $dir);
@@ -71,11 +142,24 @@ class Helper
             self::updateImageGenerationInformation($set_id, $filename, $kind);
         }
 
-        return FRONTEND_FILES_URL . '/' . $image;
+        return FRONTEND_FILES_URL . '/' . $image . ($resolution['edited_on_unix'] ? '?unix=' . $resolution['edited_on_unix'] : '');
     }
 
     public static function hasResolutionBeenUpdatedSinceImageGeneration($image_set_id, $image_filename, $resolution_kind, $edited_on_unix)
     {
+        //return true;
+
+        if(isset(self::$generated_images[FRONTEND_LANGUAGE][$resolution_kind][$image_set_id][$image_filename]))
+        {
+            if(self::$generated_images[FRONTEND_LANGUAGE][$resolution_kind][$image_set_id][$image_filename]['generated_on_unix'] < $edited_on_unix)
+            {
+                set_time_limit(0);
+                return true;
+            }
+        }
+
+        else return false;
+/*
         return (bool) FrontendModel::get('database')->getVar(
             'SELECT COUNT(i.id) AS count
             FROM photogallery_resolutions_images AS i
@@ -90,6 +174,7 @@ class Helper
                 $edited_on_unix
             )
         );
+*/
     }
 
     public static function updateImageGenerationInformation($image_set_id, $image_filename, $resolution_kind)
@@ -99,10 +184,15 @@ class Helper
                 $image_set_id . ',"' . $image_filename . '","' . $resolution_kind . '","' . FrontendModel::getUTCDate() . '")'
             .' ON DUPLICATE KEY UPDATE generated_on = "' . FrontendModel::getUTCDate() . '"'
         );
+
+        // build resolutions cache
+        BackendPhotogalleryModel::buildResolutionCache(FRONTEND_LANGUAGE);
     }
 
     public static function getResolution($kind)
     {
+        if(isset(self::$resolution[FRONTEND_LANGUAGE][$kind])) return self::$resolution[FRONTEND_LANGUAGE][$kind];
+/*
         return (array) FrontendModel::get('database')->getRecord(
             'SELECT *,
                 IF(width_null = "Y", NULL, width) AS width,
@@ -114,6 +204,7 @@ class Helper
             $kind,
             'id'
         );
+*/
     }
 
     public static function translatePosition($positionInt = 0)

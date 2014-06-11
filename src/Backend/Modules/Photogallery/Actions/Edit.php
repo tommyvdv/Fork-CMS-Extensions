@@ -164,10 +164,10 @@ class Edit extends BackendBaseActionEdit
         $this->dataGrid->setColumnFunction(create_function('$title_hidden, $title','return $title_hidden == "Y" ? "" : $title;'),array('[title_hidden]','[title]'),'title',true);
 
         // make sure the column with the handler is the first one
-        $this->dataGrid->setColumnsSequence('dragAndDropHandle','checkbox','preview','is_hidden','title','text','edit');
+        $this->dataGrid->setColumnsSequence('dragAndDropHandle','checkbox','preview', 'filename','is_hidden','title','text','edit');
         
         // Hidden
-        $this->dataGrid->setColumnsHidden(array('filename', 'title_hidden'));
+        $this->dataGrid->setColumnsHidden(array('title_hidden'));
 
         // add a class on the handler column, so JS knows this is just a handler
         $this->dataGrid->setColumnAttributes('dragAndDropHandle', array('class' => 'dragAndDropHandle'));

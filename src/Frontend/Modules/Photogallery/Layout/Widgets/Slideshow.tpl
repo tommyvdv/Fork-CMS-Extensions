@@ -56,7 +56,7 @@
 			<div  id="photogallery-flexslider-navigation-id-{$widgetPhotogallerySlideshow.id}" class="flexslider photogallery-flexslider-thumbnail-navigation">
 				<ul class="slides">
 					{iteration:widgetPhotogallerySlideshow.images}
-						<li><img src="{$var|createimagephotogallery:{$widgetPhotogallerySlideshow.images.set_id}:{$widgetPhotogallerySlideshow.images.filename}:150:150:'crop'}" /></li>
+						<li>{*<img src="{$var|createimagephotogallery:{$widgetPhotogallerySlideshow.images.set_id}:{$widgetPhotogallerySlideshow.images.filename}:150:150:'crop'}" />*}<img src="{$var|createimageresolution:{$widgetPhotogallerySlideshow.images.set_id}:{$widgetPhotogallerySlideshow.images.filename}:'navigation_thumb'}" /></li>
 					{/iteration:widgetPhotogallerySlideshow.images}
 				</ul>
 			</div>

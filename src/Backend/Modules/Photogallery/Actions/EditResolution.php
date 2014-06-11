@@ -197,7 +197,7 @@ class EditResolution extends BackendBaseActionEdit
                 $id = BackendPhotogalleryModel::updateResolution($item);
 
                 if($this->frm->getField('regenerate')->isChecked())
-                    BackendProductsHelper::refreshResolution($item);
+                    BackendPhotogalleryHelper::refreshResolution($item);
 
                 // everything is saved, so redirect to the overview
                 $this->redirect(BackendModel::createURLForAction('resolutions') . '&report=edited-resolution&highlight=row-' . $id);
@@ -210,7 +210,7 @@ class EditResolution extends BackendBaseActionEdit
         $item['watermark'] = $this->record['watermark'];
 
         // the image path
-        $imagePath = FRONTEND_FILES_PATH . '/products/watermarks';
+        $imagePath = FRONTEND_FILES_PATH . '/photogallery/watermarks';
 
         // create folders if needed
         $fs = new Filesystem();
